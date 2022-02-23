@@ -7,8 +7,7 @@
   "Exclude": [
     "\\.bats_.*",
     "^.gitmodules$",
-    "^LICENSE$",
-    "\\.md$"
+    "^LICENSE$"
   ],
   "AllowedContentTypes": [],
   "PassedFiles": [],
