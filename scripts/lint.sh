@@ -63,8 +63,6 @@ function lint_shellcheck
     '--wiki-link-count=5'
     '--check-sourced'
     '--external-sources'
-    '--exclude=SC2310'
-    '--exclude=SC2312'
     "--source-path=${ROOT_DIRECTORY}"
   )
 
@@ -76,7 +74,7 @@ function lint_shellcheck
     --cap-drop=ALL \
     --user=999 \
     --volume "${ROOT_DIRECTORY}:${ROOT_DIRECTORY}:ro" \
-    --workdir "/ci" \
+    --workdir "${ROOT_DIRECTORY}" \
     "${IMAGE}" \
       "${ARGUMENTS[@]}" \
       "${FILES[@]}"
