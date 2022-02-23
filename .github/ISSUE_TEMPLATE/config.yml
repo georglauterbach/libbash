@@ -1,0 +1,10 @@
+---
+blank_issues_enabled: false
+
+contact_links:
+  - name: Contributing Guidelines
+    url: https://github.com/georglauterbach/libbash/blob/main/CONTRIBUTING.md
+    about: Visit this project's contributing standards and guidelines
+  - name: Available Modules
+    url: https://github.com/georglauterbach/libbash#modules
+    about: Overview over all available library modules
