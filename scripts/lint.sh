@@ -87,6 +87,33 @@ function lint_shellcheck
   fi
 }
 
+function lint_yamllint
+{
+  local VERSION IMAGE
+  VERSION=1.26-0.9
+  IMAGE="docker.io/cytopia/yamllint:${VERSION}"
+
+  notify 'deb' "Running YAMLLint (${VERSION})"
+
+  if "${CRI}" run \
+    --rm \
+    --cap-drop=ALL \
+    --user=999 \
+    --volume "${ROOT_DIRECTORY}/.github:/data/.github" \
+    "${IMAGE}" \
+      --strict \
+      --config-file "/data/.github/linters/.yaml-lint.yml" \
+      --format colored \
+      -- .
+  then
+    notify 'inf' 'YAMLLint succeeded'
+    return 0
+  else
+    notify 'err' 'YAMLLint reported problems'
+    return 1
+  fi
+}
+
 function usage
 {
   cat << "EOM" 
@@ -102,6 +129,7 @@ OPTIONS
 ACTIONS
     editorcinfig | ec          Run the EditorConfig linter
     shellcheck   | sc          Run the ShellCheck linter
+    yamllint     | yl          Run the YAMLLint linter
 
 EOM
 }
@@ -129,6 +157,10 @@ function main
         lint_shellcheck || ERROR_OCCURRED=true
         ;;
 
+      ( 'yamllint' | 'yl' )
+        lint_yamllint || ERROR_OCCURRED=true
+        ;;
+
       ( * )
         notify 'err' "'${1}' is not a valid linter ('sh' or 'gsl' are valid)"
         exit 1
@@ -137,6 +169,7 @@ function main
   else
     lint_editorconfig || ERROR_OCCURRED=true
     lint_shellcheck || ERROR_OCCURRED=true
+    lint_yamllint || ERROR_OCCURRED=true
   fi
 
   if ${ERROR_OCCURRED}

@@ -1,6 +1,7 @@
+---
 name: Question
 description: As a question
-title: "[QUESTION] "
+title: '[QUESTION] '
 labels:
   - kind/question
   - priority/low
