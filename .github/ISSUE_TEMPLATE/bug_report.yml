@@ -12,11 +12,20 @@ body:
       value: |
         # Filing a report
 
-        Thank you for participating in this project and reporting a bug. `libbash` is a community-driven project, and each contribution counts.
+        Thank you for participating in this project and reporting a bug. `libbash`
+        is a community-driven project, and each contribution counts.
 
-        Please **fill out all the fields and checkboxes of this form** to make it easier for maintainers to understand the problem and to solve it. The maintainers and moderators are volunteers that need you to fill this template with accurate informations in order to help you in the best and quickest way. We will have to label your request with `meta/no template - no support` if your request is sloppy and provides no way to help you correctly.
+        Please **fill out all the fields and checkboxes of this form** to make it
+        easier for maintainers to understand the problem and to solve it. The
+        maintainers and moderators are volunteers that need you to fill this template
+        with accurate informations in order to help you in the best and quickest way.
+        We will have to label your request with `meta/no template - no support` if
+        your request is sloppy and provides no way to help you correctly.
 
-        **Make sure** you read through the whole [README](https://github.com/georglauterbach/libbash/blob/main/README.md) and the [issue tracker](https://github.com/georglauterbach/libbash/issues) before opening a new bug report.
+        **Make sure** you read through the whole
+        [README](https://github.com/georglauterbach/libbash/blob/main/README.md) and
+        the [issue tracker](https://github.com/georglauterbach/libbash/issues) before
+        opening a new bug report.
 
   - type: checkboxes
     id: initial-checks
@@ -86,7 +95,9 @@ body:
     id: relevant-log-output
     attributes:
       label: Relevant log output
-      description: Show us relevant log output here. You can enable debug output by setting the environment variable `DMS_DEBUG` to `1`.
+      description: >
+        Show us relevant log output here. You can enable debug output
+        by setting the environment variable `DMS_DEBUG` to `1`.
       render: Shell
 
 
@@ -104,7 +115,8 @@ body:
       description: >
         **You are not obliged to answer this question**.
         We do encourage answering though as it provides context to better assist you.
-        Less experienced users tend to make common mistakes, which is ok; by letting us know we can spot those more easily.
+        Less experienced users tend to make common mistakes, which is ok; by
+        letting us know we can spot those more easily.
       options:
         - I'm very inexperienced with Bash
         - I'm inexperienced with Bash
@@ -120,14 +132,21 @@ body:
     attributes:
       label: Code of conduct
       options:
-        - label: By submitting this issue, I agree to follow [our code of conduct (Contributor Covenant)](https://www.contributor-covenant.org/).
+        - label: >
+            I agree to follow [our code of conduct
+            (Contributor Covenant)](https://www.contributor-covenant.org/).
           required: true
-        - label: I have read the [README](https://github.com/georglauterbach/libbash/blob/main/README.md) and I searched the [issue tracker](https://github.com/georglauterbach/libbash/issues) but could not find a solution
+        - label: >
+            I have read the [README](https://github.com/georglauterbach/libbash/blob/main/README.md)
+            and I searched the [issue tracker](https://github.com/georglauterbach/libbash/issues)
+            but could not find a solution.
           required: true
 
   - type: textarea
     id: form-improvements
     attributes:
       label: Improvements to this form?
-      description: If you have criticism or general feedback about this issue form, feel free to tell us so we can enhance the experience for everyone.
+      description: >
+        If you have criticism or general feedback about this issue form, feel free
+        to tell us so we can enhance the experience for everyone.
       render: Markdown

@@ -1,15 +1,11 @@
 load 'bats_support/load'
 load 'bats_assert/load'
 
-# shellcheck disable=SC2154,SC2164
-# shellcheck disable=SC2030,SC2031
-# shellcheck disable=SC2181
-
 BATS_TEST_FILE='20-log              ::'
 
 function setup_file
 {
-  cd "${ROOT_DIRECTORY}"
+  cd "${ROOT_DIRECTORY}" || exit 1
   export LOG_LEVEL='tra'
   export TEST_STRING='jfk FJHAE aea728 djKJ  k/('
 }

@@ -1,15 +1,11 @@
 load 'bats_support/load'
 load 'bats_assert/load'
 
-# shellcheck disable=SC2154,SC2164
-# shellcheck disable=SC2030,SC2031
-# shellcheck disable=SC2181
-
 BATS_TEST_FILE='90-generic          ::'
 
 function setup_file
 {
-  cd "${ROOT_DIRECTORY}"
+  cd "${ROOT_DIRECTORY}" || exit 1
 }
 
 @test "${BATS_TEST_FILE} 'cri.sh' makes the correct decision" {

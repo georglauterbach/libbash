@@ -45,10 +45,15 @@ function lint_shellcheck
 
   VERSION='0.8.0'
   IMAGE="docker.io/koalaman/shellcheck:v${VERSION}"
-  readarray -d '' FILES < <(find \
-    "${ROOT_DIRECTORY}/scripts/" \
-    "${ROOT_DIRECTORY}/src/"     \
-    -type f -iname "*.sh" -print0)
+  readarray -d '' FILES < <(find  \
+    "${ROOT_DIRECTORY}/scripts/"  \
+    "${ROOT_DIRECTORY}/src/"      \
+    "${ROOT_DIRECTORY}/tests/"    \
+    -maxdepth 1                   \
+    -type f                       \
+    -regextype egrep              \
+    -iregex ".*\.(sh|bats)"       \
+    -print0)
 
   ARGUMENTS=(
     '--shell=bash'
