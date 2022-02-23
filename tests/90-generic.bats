@@ -5,7 +5,7 @@ BATS_TEST_FILE='90-generic          ::'
 
 function setup_file
 {
-  cd "${ROOT_DIRECTORY}"
+  cd "${ROOT_DIRECTORY}" || exit 1
 }
 
 @test "${BATS_TEST_FILE} 'cri.sh' makes the correct decision" {

@@ -45,10 +45,15 @@ function lint_shellcheck
 
   VERSION='0.8.0'
   IMAGE="docker.io/koalaman/shellcheck:v${VERSION}"
-  readarray -d '' FILES < <(find \
-    "${ROOT_DIRECTORY}/scripts/" \
-    "${ROOT_DIRECTORY}/src/"     \
-    -type f -iname "*.sh" -print0)
+  readarray -d '' FILES < <(find  \
+    "${ROOT_DIRECTORY}/scripts/"  \
+    "${ROOT_DIRECTORY}/src/"      \
+    "${ROOT_DIRECTORY}/tests/"    \
+    -maxdepth 1                   \
+    -type f                       \
+    -regextype egrep              \
+    -iregex ".*\.(sh|bats)"       \
+    -print0)
 
   ARGUMENTS=(
     '--shell=bash'
@@ -58,8 +63,6 @@ function lint_shellcheck
     '--wiki-link-count=5'
     '--check-sourced'
     '--external-sources'
-    '--exclude=SC2310'
-    '--exclude=SC2312'
     "--source-path=${ROOT_DIRECTORY}"
   )
 
@@ -71,7 +74,7 @@ function lint_shellcheck
     --cap-drop=ALL \
     --user=999 \
     --volume "${ROOT_DIRECTORY}:${ROOT_DIRECTORY}:ro" \
-    --workdir "/ci" \
+    --workdir "${ROOT_DIRECTORY}" \
     "${IMAGE}" \
       "${ARGUMENTS[@]}" \
       "${FILES[@]}"

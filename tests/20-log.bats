@@ -5,7 +5,7 @@ BATS_TEST_FILE='20-log              ::'
 
 function setup_file
 {
-  cd "${ROOT_DIRECTORY}"
+  cd "${ROOT_DIRECTORY}" || exit 1
   export LOG_LEVEL='tra'
   export TEST_STRING='jfk FJHAE aea728 djKJ  k/('
 }

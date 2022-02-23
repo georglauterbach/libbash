@@ -5,7 +5,7 @@ BATS_TEST_FILE='10-sourcing         ::'
 
 function setup_file
 {
-  cd "${ROOT_DIRECTORY}"
+  cd "${ROOT_DIRECTORY}" || exit 1
   LOG_LEVEL='inf'
 }
 
@@ -17,6 +17,7 @@ function setup_file
 @test "${BATS_TEST_FILE} sourcing succeeds from 'scripts/' directory" {
   (
     cd "${ROOT_DIRECTORY}/scripts/"
+    # shellcheck source=src/init.sh
     source ../src/init.sh
     assert_success
   )
@@ -24,7 +25,8 @@ function setup_file
 
 @test "${BATS_TEST_FILE} sourcing succeeds from 'src/' directory" {
   (
-    cd "${ROOT_DIRECTORY}/src/"
+    cd "${ROOT_DIRECTORY}/src/" || exit 1
+    # shellcheck source=src/init.sh
     source init.sh
     assert_success
   )
@@ -37,7 +39,7 @@ function setup_file
 
 @test "${BATS_TEST_FILE} sourcing with parameters succeeds from 'scripts/' directory" {
   (
-    cd "${ROOT_DIRECTORY}/scripts/"
+    cd "${ROOT_DIRECTORY}/scripts/" || exit 1
     run source ../src/init.sh 'log' 'cri'
     assert_success
   )
