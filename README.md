@@ -2,6 +2,8 @@
 
 [![ci::bats::status]][ci::bats::action] [![ci::lint::status]][ci::lint::action]
 
+[//]: # (editorconfig-checker-disable)
+
 <!-- markdownlint-disable-next-line ine-length  -->
 [ci::bats::status]: https://img.shields.io/github/workflow/status/georglauterbach/libbash/Bash%20Unit%20Testing?color=blue&label=BASH%20UNIT%20TESTS&logo=github&logoColor=white&style=for-the-badge
 [ci::bats::action]: https://github.com/georglauterbach/libbash/actions/workflows/bats.yml
@@ -9,6 +11,8 @@
 <!-- markdownlint-disable-next-line ine-length  -->
 [ci::lint::status]: https://img.shields.io/github/workflow/status/georglauterbach/libbash/Linting?color=blue&label=LINTING&logo=github&logoColor=white&style=for-the-badge
 [ci::lint::action]: https://github.com/georglauterbach/libbash/actions/workflows/linting.yml
+
+[//]: # (editorconfig-checker-enable)
 
 ## About
 
