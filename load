@@ -1,7 +1,103 @@
 #! /bin/bash
 
-# version       0.1.0
-# executed by   scripts that want to use `libbash`
-# task          wraps the call to src/init.sh
+# version       0.1.2
+# executed by   scripts that use `libbash`
+# task          perform library initialization
 
-source "$(dirname "${BASH_SOURCE[0]}")/src/init.sh" "${@}"
+SCRIPT='libbash initialization'
+LIBBASH_LOAD_FILE_LOCATION="${BASH_SOURCE[0]}"
+
+function __libbash_show_error
+{
+  printf "\e[0m[  \e[91mERROR\e[0m  ] %30s | \e[91m%s\e[0m\n" \
+    "${SCRIPT:-${0}}" "${*}" >&2
+}
+
+function __libbash_show_error_and_exit
+{
+  __libbash_show_error "${*}"
+  exit 1
+}
+
+function basic_setup
+{
+  # ! export all variables here first, even if not
+  # ! all modules are sourced to satisfy shellcheck
+  # ! in applications that use `libbash`
+  export CRI LOG_LEVEL LIBBASH_DIRECTORY SCRIPT
+
+  LOG_LEVEL=${LOG_LEVEL:-inf}
+  LIBBASH_DIRECTORY="$(dirname "${LIBBASH_LOAD_FILE_LOCATION}")"
+}
+
+function load_module
+{
+  [[ -z ${1+set} ]] && __libbash_show_error_and_exit "module loading failed (no module provided)"
+
+  local MODULE_PATH
+  MODULE_PATH="${LIBBASH_DIRECTORY}/src/${1}.sh"
+
+  if [[ -e "${MODULE_PATH}" ]]
+  then
+    # shellcheck source=/dev/null
+    source "${MODULE_PATH}"
+  else
+    __libbash_show_error_and_exit "module '${1:-}' not found"
+  fi
+}
+
+function source_files
+{
+  local MODULE
+  for MODULE in "${@}"
+  do
+    [[ ${*} =~ ${MODULE} ]] && load_module "${MODULE}"
+  done
+
+  unset load_module MODULES
+}
+
+function debug_libbash
+{
+  notify 'deb' "Showing 'libbash' debug information"
+  notify 'deb' "Call / source stack:"
+  for (( INDEX=${#BASH_SOURCE[@]} - 1 ; INDEX>1 ; INDEX-- ))
+  do
+    printf "%45s%s\n" '' "${BASH_SOURCE[INDEX]}"
+  done
+}
+
+function setup_default_notify_error
+{
+  function notify
+  {
+    if [[ ${1:-} != 'err' ]]
+    then
+      __libbash_show_error                                  \
+        "log module was not loaded but 'notify' was called" \
+        "with log level not 'err'"
+      return 1
+    fi
+
+    __libbash_show_error "${@}"
+  }
+  export -f notify
+}
+
+function main
+{
+  basic_setup
+  source_files "${@}"
+
+  if [[ ! $(type -t notify) == 'function' ]]
+  then
+    setup_default_notify_error
+    return 0
+  fi
+
+  notify 'tra' "Finished 'libbash' initialization"
+}
+
+main "${@}"
+unset LIBBASH_LOAD_FILE_LOCATION
+unset basic_setup load_module source_files setup_default_notify_error main

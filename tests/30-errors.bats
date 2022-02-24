@@ -10,7 +10,7 @@ function setup_file
 }
 
 @test "${BATS_TEST_FILE} checking 'error.sh' is sourced correctly" {
-  source src/init.sh 'errors' 'log'
+  source load 'errors' 'log'
   # shellcheck disable=SC2181
   [[ ${?} -eq 0 ]]
 }

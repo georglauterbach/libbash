@@ -9,7 +9,7 @@ function setup_file
 }
 
 @test "${BATS_TEST_FILE} 'cri.sh' makes the correct decision" {
-  source src/init.sh 'log' 'cri'
+  source load 'log' 'cri'
   assert_success
 
   local DOCKER_IS_IN_PATH PODMAN_IS_IN_PATH
