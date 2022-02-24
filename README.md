@@ -37,8 +37,8 @@ your_repository/
 ├── some_dir/
 │   └── some_other_script.sh
 └── libbash/
-    ├── init.sh
-    ├── log.sh
+    ├── ...
+    ├── load
     └── ...
 ```
 
@@ -47,7 +47,7 @@ script, which handles the complete initialization of `libbash`, you can use the 
 command:
 
 ``` BASH
-source libbash/init.sh 'errors' 'log'
+source libbash/load 'errors' 'log'
 SCRIPT='some script'
 ```
 
@@ -58,9 +58,12 @@ location, you may use this more elaborate call to `source`:
 ``` BASH
 #! /bin/bash
 
-source "$(realpath "$(dirname "$(realpath -eL "${0}")")/../libbash/init.sh" 'errors' 'log'
+source "$(realpath "$(dirname "$(realpath -eL "${0}")")/../libbash/load" 'errors' 'log'
 SCRIPT='some other script'
 ```
+
+**Note** that `libbash` does not care about the caller location - it is written in a way
+that sets it free from this constraint. The example above was just for educational purposes.
 
 ## Modules
 

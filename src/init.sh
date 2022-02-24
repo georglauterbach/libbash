@@ -51,7 +51,7 @@ function source_files
   unset load_module MODULES
 }
 
-function debug
+function debug_libbash
 {
   notify 'deb' "Showing 'libbash' debug information"
   notify 'deb' "Call / source stack:"
@@ -67,11 +67,13 @@ function setup_default_notify_error
   {
     if [[ ${1:-} != 'err' ]]
     then
-      __libbash_show_error_and_exit "log module was not loaded but 'notify' was called"
+      __libbash_show_error                                  \
+        "log module was not loaded but 'notify' was called" \
+        "with log level not 'err'"
       return 1
     fi
 
-    __libbash_show_error "${*}"
+    __libbash_show_error "${@}"
   }
   export -f notify
 }
@@ -87,9 +89,8 @@ function main
     return 0
   fi
 
-  [[ ${LOG_LEVEL} == 'tra' ]] && debug
   notify 'tra' "Finished 'libbash' initialization"
 }
 
 main "${@}"
-unset basic_setup load_module source_files debug setup_default_notify_error main
+unset basic_setup load_module source_files setup_default_notify_error main
