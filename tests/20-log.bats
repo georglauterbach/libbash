@@ -23,7 +23,7 @@ function setup_file
   run notify 'tra' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '.*[  TRACE  ].*'
+  assert_output --regexp '.*\[  .*TRACE.*  \].*'
 }
 
 @test "${BATS_TEST_FILE} checking log output for debug messages" {
@@ -32,7 +32,7 @@ function setup_file
   run notify 'deb' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '.*[  DEBUG  ].*'
+  assert_output --regexp '.*\[  .*DEBUG.*  \].*'
 }
 
 @test "${BATS_TEST_FILE} checking log output for info messages" {
@@ -41,7 +41,7 @@ function setup_file
   run notify 'inf' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '.*[   INF   ].*'
+  assert_output --regexp '.*\[   .*INF.*   \].*'
 }
 
 @test "${BATS_TEST_FILE} checking log output for warning messages" {
@@ -50,7 +50,7 @@ function setup_file
   run notify 'war' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '.*[ WARNING ].*'
+  assert_output --regexp '\[\ .*WARNING.* \].*'
 }
 
 @test "${BATS_TEST_FILE} checking log output for error messages" {
@@ -59,7 +59,7 @@ function setup_file
   run notify 'err' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '.*[  ERROR  ].*'
+  assert_output --regexp '.*\[  .*ERROR.*  \].*'
 }
 
 @test "${BATS_TEST_FILE} checking trace messages on log level 'tra'" {
@@ -69,7 +69,7 @@ function setup_file
   run notify 'tra' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '.*[  TRACE  ].*'
+  assert_output --regexp '.*\[  .*TRACE.*  \].*'
 }
 
 @test "${BATS_TEST_FILE} checking debug messages on log level 'deb'" {
@@ -79,7 +79,7 @@ function setup_file
   run notify 'deb' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '.*[  DEBUG  ].*'
+  assert_output --regexp '.*\[  .*DEBUG.*  \].*'
 }
 
 @test "${BATS_TEST_FILE} checking info messages on log level 'inf'" {
@@ -89,7 +89,7 @@ function setup_file
   run notify 'inf' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '.*[   INF   ].*'
+  assert_output --regexp '.*\[   .*INF.*   \].*'
 }
 
 @test "${BATS_TEST_FILE} checking warning messages on log level 'war'" {
@@ -99,7 +99,7 @@ function setup_file
   run notify 'war' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '.*[ WARNING ].*'
+  assert_output --regexp '.*\[ .*WARNING.* \].*'
 }
 
 @test "${BATS_TEST_FILE} checking error messages on log level 'error'" {
@@ -109,7 +109,7 @@ function setup_file
   run notify 'err' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '.*[  ERROR  ].*'
+  assert_output --regexp '.*\[  .*ERROR.*  \].*'
 }
 
 @test "${BATS_TEST_FILE} checking trace messages on log level 'deb'" {
@@ -119,7 +119,7 @@ function setup_file
   run notify 'tra' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
-  refute_output --regexp '.*[  TRACE  ].*'
+  refute_output --regexp '.*\[  .*TRACE.*  \].*'
 }
 
 
@@ -130,7 +130,7 @@ function setup_file
   run notify 'deb' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
-  refute_output --regexp '.*[  DEBUG  ].*'
+  refute_output --regexp '.*\[  .*DEBUG.*  \].*'
 }
 
 
@@ -141,7 +141,7 @@ function setup_file
   run notify 'inf' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
-  refute_output --regexp '.*[   INF   ].*'
+  refute_output --regexp '.*\[   .*INF.*   \].*'
 }
 
 
@@ -152,7 +152,7 @@ function setup_file
   run notify 'war' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
-  refute_output --regexp '.*[ WARNING ].*'
+  refute_output --regexp '.*\[ .*WARNING.* \].*'
 }
 
 function teardown_file

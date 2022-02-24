@@ -14,7 +14,7 @@ function notify
 
   function __log_debug
   {
-    printf "\e[0m[ \e[94mDEBUG\e[0m  ] %30s | \e[94m%s\e[0m\n" \
+    printf "\e[0m[  \e[94mDEBUG\e[0m  ] %30s | \e[94m%s\e[0m\n" \
       "${SCRIPT:-${0}}" "${*}"
   }
 
@@ -26,13 +26,13 @@ function notify
 
   function __log_warning
   {
-    printf "\e[0m[\e[93mWARNING\e[0m ] %30s | \e[93m%s\e[0m\n" \
+    printf "\e[0m[ \e[93mWARNING\e[0m ] %30s | \e[93m%s\e[0m\n" \
       "${SCRIPT:-${0}}" "${*}"
   }
 
   function __log_error
   {
-    printf "\e[0m[ \e[91mERROR\e[0m  ] %30s | \e[91m%s\e[0m\n" \
+    printf "\e[0m[  \e[91mERROR\e[0m  ] %30s | \e[91m%s\e[0m\n" \
       "${SCRIPT:-${0}}" "${*}" >&2
   }
 
