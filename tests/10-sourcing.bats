@@ -10,15 +10,15 @@ function setup_file
 }
 
 @test "${BATS_TEST_FILE} sourcing succeeds from repository root" {
-  source src/init.sh
+  source load
   assert_success
 }
 
 @test "${BATS_TEST_FILE} sourcing succeeds from 'scripts/' directory" {
   (
     cd "${ROOT_DIRECTORY}/scripts/"
-    # shellcheck source=src/init.sh
-    source ../src/init.sh
+    # shellcheck source=load
+    source ../load
     assert_success
   )
 }
@@ -26,21 +26,21 @@ function setup_file
 @test "${BATS_TEST_FILE} sourcing succeeds from 'src/' directory" {
   (
     cd "${ROOT_DIRECTORY}/src/" || exit 1
-    # shellcheck source=src/init.sh
-    source init.sh
+    # shellcheck source=load
+    source ../load
     assert_success
   )
 }
 
 @test "${BATS_TEST_FILE} sourcing with parameters succeeds from repository root" {
-  source src/init.sh 'log' 'cri'
+  source load 'log' 'cri'
   assert_success
 }
 
 @test "${BATS_TEST_FILE} sourcing with parameters succeeds from 'scripts/' directory" {
   (
     cd "${ROOT_DIRECTORY}/scripts/" || exit 1
-    run source ../src/init.sh 'log' 'cri'
+    run source ../load 'log' 'cri'
     assert_success
   )
 }
@@ -48,13 +48,22 @@ function setup_file
 @test "${BATS_TEST_FILE} sourcing with parameters succeeds from 'src/' directory" {
   (
     cd "${ROOT_DIRECTORY}/src/"
-    run source init.sh 'log' 'cri'
+    run source ../load 'log' 'cri'
     assert_success
   )
 }
 
+@test "${BATS_TEST_FILE} sourcing with parameters succeeds from '.github/linters' directory" {
+  (
+    cd "${ROOT_DIRECTORY}/.github/linters/"
+    run source ../../load 'log' 'cri'
+    assert_success
+  )
+}
+
+
 @test "${BATS_TEST_FILE} sourcing an unknown module results in an error" {
-  run source src/init.sh 'somethingOdd'
+  run source load 'somethingOdd'
   assert_failure 1
 }
 

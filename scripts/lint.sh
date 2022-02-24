@@ -4,10 +4,11 @@
 # executed by   Make or manually
 # task          lints the codebase against various linters
 
-# shellcheck source=src/init.sh
-source src/init.sh 'errors' 'log' 'cri'
-SCRIPT='linting'
 ROOT_DIRECTORY=${ROOT_DIRECTORY:-"$(realpath "$(dirname "$(realpath -eL "${0}")")/..")"}
+
+# shellcheck source=load
+source "${ROOT_DIRECTORY}/load" 'errors' 'log' 'cri'
+SCRIPT='linting'
 
 # shellcheck disable=SC2154
 
@@ -54,6 +55,7 @@ function lint_shellcheck
     -regextype egrep              \
     -iregex ".*\.(sh|bats)"       \
     -print0)
+  FILES+=("${ROOT_DIRECTORY}/load")
 
   ARGUMENTS=(
     '--shell=bash'
