@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # version       0.1.0
-# executed by   scripts that want to use `libbash`
+# executed by   ../load
 # task          perform library initialization
 
 export SCRIPT='libbash initialization'
