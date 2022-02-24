@@ -9,7 +9,7 @@ function setup_file
   export LOG_LEVEL='tra'
 }
 
-@test "${BATS_TEST_FILE} checking 'error.sh'" {
+@test "${BATS_TEST_FILE} checking 'error.sh' is sourced correctly" {
   source src/init.sh 'errors' 'log'
   # shellcheck disable=SC2181
   [[ ${?} -eq 0 ]]

@@ -1,6 +1,7 @@
+---
 name: Feature request
 description: Request a new feature
-title: "[FEATURE] "
+title: '[FEATURE] '
 labels:
   - area/features
   - kind/new-feature
@@ -15,7 +16,7 @@ body:
       options:
         - label: I checked that the feature is now already implemented.
           required: true
-  
+
   - type: textarea
     id: question
     attributes:

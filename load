@@ -1,0 +1,7 @@
+#! /bin/bash
+
+# version       0.1.0
+# executed by   scripts that want to use `libbash`
+# task          wraps the call to src/init.sh
+
+source "$(dirname "${BASH_SOURCE[0]}")/src/init.sh" "${@}"
