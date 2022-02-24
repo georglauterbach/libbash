@@ -102,7 +102,7 @@ This module provides the `notify` function. `notify` is invoked by specifying th
 and then the message (i.e. `notify 'inf' 'Some info message`). You can supply many
 arguments to `notify`, only the first argument should be the log level. This function
 is guaranteed to not fail. If called with a string that is not representative if the
-log level, `war` is assumed.
+log level, `war` is assumed. The default `LOG_LEVEL` is `war`.
 
 The log level itself can be changed anytime by setting `LOG_LEVEL` to one of the
 levels described above. Naturally, messages below the log level are not shown.
