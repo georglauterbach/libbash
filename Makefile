@@ -10,9 +10,7 @@ export ROOT_DIRECTORY := $(shell realpath -eL .)
 
 tests: test
 test:
-	@ ./tests/bats_core/bin/bats  \
-		--timing              \
-		tests/*.bats
+	@ ./tests/bats_core/bin/bats --timing tests/*.bats
 
 lint:
 	@ bash ./scripts/lint.sh
