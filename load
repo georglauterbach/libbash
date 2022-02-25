@@ -4,8 +4,6 @@
 # executed by   scripts that use `libbash`
 # task          perform library initialization
 
-SCRIPT='libbash initialization'
-LIBBASH_LOAD_FILE_LOCATION="${BASH_SOURCE[0]}"
 
 # ### Show an Error
 #
@@ -49,7 +47,8 @@ function basic_setup
   export CRI LOG_LEVEL LIBBASH_DIRECTORY SCRIPT
 
   LOG_LEVEL=${LOG_LEVEL:-inf}
-  LIBBASH_DIRECTORY="$(dirname "${LIBBASH_LOAD_FILE_LOCATION}")"
+  LIBBASH_DIRECTORY="$(dirname "${BASH_SOURCE[0]}")"
+  SCRIPT='libbash init'
 }
 
 # ### Load a `libbash` Module
@@ -81,10 +80,10 @@ function source_files
   local MODULE
   for MODULE in "${@}"
   do
-    [[ ${*} =~ ${MODULE} ]] && load_module "${MODULE}"
+    load_module "${MODULE}"
   done
 
-  unset load_module MODULES
+  unset load_module
 }
 
 # ### Provide Debug Information
@@ -110,18 +109,19 @@ function setup_default_notify_error
   {
     if [[ ${1:-} != 'err' ]]
     then
-      __libbash_show_error                                  \
+      __libbash_show_error_and_exit                         \
         "log module was not loaded but 'notify' was called" \
-        "with log level not 'err'"
-      return 1
+        "with log level not 'err'"                          \
+        "(arguments were: ${*})"
+      __show_call_stack
     fi
 
-    __libbash_show_error "${@}"
+    shift 1
+    __libbash_show_error "${*}"
   }
   export -f notify
 }
 
-function main
 # ### The Start of `libbash`
 #
 # This function calls the initialization routines for `libbash`
@@ -139,7 +139,6 @@ function libbash_main
 
   notify 'tra' "Finished 'libbash' initialization"
 }
-
-main "${@}"
-unset LIBBASH_LOAD_FILE_LOCATION
-unset basic_setup load_module source_files setup_default_notify_error main
+libbash_main "${@}"
+unset basic_setup source_files setup_default_notify_error main
+SCRIPT='none (global)'
