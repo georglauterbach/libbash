@@ -48,7 +48,7 @@ function lint_shellcheck
   IMAGE="docker.io/koalaman/shellcheck:v${VERSION}"
   readarray -d '' FILES < <(find  \
     "${ROOT_DIRECTORY}/scripts/"  \
-    "${ROOT_DIRECTORY}/src/"      \
+    "${ROOT_DIRECTORY}/modules/"  \
     "${ROOT_DIRECTORY}/tests/"    \
     -maxdepth 1                   \
     -type f                       \

@@ -4,6 +4,11 @@
 # sourced by    init.sh
 # task          provides container-runtime-related functions
 
+# ### Checks Whether Docker or Podman is Installed
+#
+# Checks whether `docker` or `podman` is in `${PATH}` and
+# sets the `CRI` variable accordingly. Docker is chosen
+# first if both Docker and Podman are installed.
 function setup_container_runtime
 {
   command -v 'docker' &>/dev/null && export CRI='docker' && return 0

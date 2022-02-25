@@ -23,9 +23,9 @@ function setup_file
   )
 }
 
-@test "${BATS_TEST_FILE} sourcing succeeds from 'src/' directory" {
+@test "${BATS_TEST_FILE} sourcing succeeds from 'modules/' directory" {
   (
-    cd "${ROOT_DIRECTORY}/src/" || exit 1
+    cd "${ROOT_DIRECTORY}/modules/" || exit 1
     # shellcheck source=load
     source ../load
     assert_success
@@ -45,9 +45,9 @@ function setup_file
   )
 }
 
-@test "${BATS_TEST_FILE} sourcing with parameters succeeds from 'src/' directory" {
+@test "${BATS_TEST_FILE} sourcing with parameters succeeds from 'modules/' directory" {
   (
-    cd "${ROOT_DIRECTORY}/src/"
+    cd "${ROOT_DIRECTORY}/modules/"
     run source ../load 'log' 'cri'
     assert_success
   )

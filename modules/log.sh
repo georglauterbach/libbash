@@ -4,6 +4,17 @@
 # sourced by    init.sh
 # task          provides logging functionality
 
+# ### The Logging Functions
+#
+# `notify` is used for logging. It uses five different log levels
+#
+# - `err`
+# - `war`
+# - `inf`
+# - `deb`
+# - `tra`
+#
+# and behaves as you would expect from a log function.
 function notify
 {
   function __log_trace
