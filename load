@@ -7,18 +7,40 @@
 SCRIPT='libbash initialization'
 LIBBASH_LOAD_FILE_LOCATION="${BASH_SOURCE[0]}"
 
+# ### Show an Error
+#
+# Indicates an error has happend in `libbash`.
+#
+# #### Special
+# 
+# Underscored functions are not unset at the end of the sourcing
+# process, but they should only be used by `libbash` modules, not
+# by applications / other libraries using `libbash`.
 function __libbash_show_error
 {
   printf "\e[0m[  \e[91mERROR\e[0m  ] %30s | \e[91m%s\e[0m\n" \
     "${SCRIPT:-${0}}" "${*}" >&2
 }
 
+# ### Show an Error and Exit
+#
+# Indicates an error has happend in `libbash`. Exits with exit code
+# 1 afterwards.
+#
+# #### Special
+# 
+# Underscored functions are not unset at the end of the sourcing
+# process, but they should only be used by `libbash` modules, not
+# by applications / other libraries using `libbash`.
 function __libbash_show_error_and_exit
 {
   __libbash_show_error "${*}"
   exit 1
 }
 
+# ### Perform Basic `libbash` Initialization
+#
+# Mostly sets corrects environment variables.
 function basic_setup
 {
   # ! export all variables here first, even if not
@@ -30,9 +52,13 @@ function basic_setup
   LIBBASH_DIRECTORY="$(dirname "${LIBBASH_LOAD_FILE_LOCATION}")"
 }
 
+# ### Load a `libbash` Module
+#
+# Checks if the given modules is present (exits unsuccessfully)
+# otherwise. Then loads the module by sourcing it.
 function load_module
 {
-  [[ -z ${1+set} ]] && __libbash_show_error_and_exit "module loading failed (no module provided)"
+  [[ -z ${1+set} ]] && __libbash_show_error_and_exit "no module provided"
 
   local MODULE_PATH
   MODULE_PATH="${LIBBASH_DIRECTORY}/src/${1}.sh"
@@ -46,6 +72,10 @@ function load_module
   fi
 }
 
+# ### Go Through Arguments
+#
+# Iterates through arguments and calls `load_module` to
+# load the corresponding module.
 function source_files
 {
   local MODULE
@@ -57,6 +87,9 @@ function source_files
   unset load_module MODULES
 }
 
+# ### Provide Debug Information
+#
+# Shows some debug information that `libbash` has collected.
 function debug_libbash
 {
   notify 'deb' "Showing 'libbash' debug information"
@@ -67,6 +100,10 @@ function debug_libbash
   done
 }
 
+# ### Fallback `notify`
+#
+# If the `log` module was not sourced, provide a fallback
+# `notify` implementation, but onyl for `err` messages.
 function setup_default_notify_error
 {
   function notify
@@ -85,6 +122,11 @@ function setup_default_notify_error
 }
 
 function main
+# ### The Start of `libbash`
+#
+# This function calls the initialization routines for `libbash`
+# in proper order. 
+function libbash_main
 {
   basic_setup
   source_files "${@}"
