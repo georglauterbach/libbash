@@ -53,3 +53,23 @@ function escape_backslash
   # shellcheck disable=SC1003
   printf '%s' "${1//'\'/'\\'}"
 }
+
+# ### Exit Without Error
+#
+# Just a wrapper around `exit 0`.
+function exit_success { exit 0 ; }
+
+# ### Exit With Error
+#
+# Just a wrapper around `exit 1`.
+function exit_failure { exit 1 ; }
+
+# ### Exit with Error and More Information
+#
+# This function exits with exit code 1 but also
+# prints information about the call stack.
+function exit_failure_and_show_callstack
+{
+  __show_call_stack
+  exit_failure
+}
