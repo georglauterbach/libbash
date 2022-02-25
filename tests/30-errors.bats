@@ -9,10 +9,14 @@ function setup_file
   export LOG_LEVEL='tra'
 }
 
-@test "${BATS_TEST_FILE} checking 'error.sh' is sourced correctly" {
-  source load 'errors' 'log'
-  # shellcheck disable=SC2181
-  [[ ${?} -eq 0 ]]
+@test "${BATS_TEST_FILE} 'error.sh' is correctly sourced" {
+  ( source load 'errors' ; )
+  assert_success
+}
+
+@test "${BATS_TEST_FILE} 'error.sh' is correctly sourced with other modules" {
+  ( source load 'errors' 'log' )
+  assert_success
 }
 
 function teardown_file
