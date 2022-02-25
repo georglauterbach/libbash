@@ -6,18 +6,13 @@ MAKEFLAGS += --no-builtin-rules
 
 export ROOT_DIRECTORY := $(shell realpath -eL .)
 
-.PHONY: test tests lint ci-bats
+.PHONY: test tests lint
 
 tests: test
 test:
 	@ ./tests/bats_core/bin/bats  \
 		--timing              \
 		--pretty              \
-		tests/*.bats
-
-ci-bats:
-	@ ./tests/bats_core/bin/bats  \
-		--timing              \
 		tests/*.bats
 
 lint:

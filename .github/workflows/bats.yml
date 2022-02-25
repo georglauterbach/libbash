@@ -20,4 +20,6 @@ jobs:
         with:
           submodules: recursive
       - name: Run test suite
-        run: bash -c 'make ci-bats'
+        run: bash -c 'make test'
+        env:
+          CI: true
