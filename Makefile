@@ -12,7 +12,6 @@ tests: test
 test:
 	@ ./tests/bats_core/bin/bats  \
 		--timing              \
-		--pretty              \
 		tests/*.bats
 
 lint:
