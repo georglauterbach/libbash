@@ -6,6 +6,8 @@ MAKEFLAGS += --no-builtin-rules
 
 export ROOT_DIRECTORY := $(shell realpath -eL .)
 
+.PHONY: test lint
+
 test:
 	@ ./tests/bats_core/bin/bats  \
 		--timing              \
