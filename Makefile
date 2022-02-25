@@ -8,6 +8,7 @@ export ROOT_DIRECTORY := $(shell realpath -eL .)
 
 .PHONY: test lint
 
+tests: test
 test:
 	@ ./tests/bats_core/bin/bats  \
 		--timing              \
