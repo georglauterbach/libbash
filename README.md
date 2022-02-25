@@ -107,6 +107,11 @@ log level, `war` is assumed. The default `LOG_LEVEL` is `inf`.
 The log level itself can be changed anytime by setting `LOG_LEVEL` to one of the
 levels described above. Naturally, messages below the log level are not shown.
 
+### `utils`
+
+This module provides various miscellaneous functions, like `escape` to escape characters
+or `exit_failure` to exit with an error.
+
 ## Licensing
 
 This project is licensed under the GNU General Public License v3.0 (GPLv3) or higher.
