@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # version       0.2.1
-# sourced by    init.sh
+# sourced by    ../load
 # task          provides error handlers
 
 # `set -u` is not performed here due to `BP_PIPESTATUS` etc.

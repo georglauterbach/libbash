@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # version       0.5.0
-# sourced by    init.sh
+# sourced by    ../load
 # task          provides logging functionality
 
 # ### The Logging Functions
