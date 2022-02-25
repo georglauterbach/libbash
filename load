@@ -1,9 +1,39 @@
 #! /bin/bash
 
-# version       0.1.2
+# version       0.2.0
 # executed by   scripts that use `libbash`
 # task          perform library initialization
 
+# ### Provides Call Stack Information
+#
+# This function prints the call stack to identify where an error
+# originated.
+#
+# This function will only print a call stack if the stack is
+# deeper than 2, because otherwise the error did not originate
+# in a function but at global scope.
+#
+# #### Special
+# 
+# Underscored functions are not unset at the end of the sourcing
+# process, but they should only be used by `libbash` modules, not
+# by applications / other libraries using `libbash`.
+function __show_call_stack
+{
+  [[ ${#FUNCNAME[@]} -le 2 ]] && return 0
+
+  local STACK_DEPTH CUTOFF
+  CUTOFF=2
+  STACK_DEPTH=$(( ${#FUNCNAME[@]} - CUTOFF ))
+
+  printf '\nscall stack (most recent call first):\n' >&2
+  for FUNCTION in "${FUNCNAME[@]:${CUTOFF}:${STACK_DEPTH}}"
+  do
+    printf "  %s\n" "${FUNCTION}" >&2
+  done
+
+  printf '\n' >&2
+}
 
 # ### Show an Error
 #
@@ -33,6 +63,7 @@ function __libbash_show_error
 function __libbash_show_error_and_exit
 {
   __libbash_show_error "${*}"
+  __show_call_stack
   exit 1
 }
 
@@ -139,6 +170,7 @@ function libbash_main
 
   notify 'tra' "Finished 'libbash' initialization"
 }
+
 libbash_main "${@}"
 unset basic_setup source_files setup_default_notify_error main
 SCRIPT='none (global)'

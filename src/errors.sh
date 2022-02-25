@@ -19,5 +19,6 @@ function __log_uerror
   MESSAGE+=" | exit code = ${4}"
 
   notify 'err' "${MESSAGE}" >&2
+  __show_call_stack
   return 0
 }
