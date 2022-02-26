@@ -1,20 +1,23 @@
 #! /bin/bash
 
-# version       0.5.0
-# sourced by    init.sh
+# version       0.5.1
+# sourced by    ../load
 # task          provides logging functionality
 
 # ### The Logging Functions
 #
 # `notify` is used for logging. It uses five different log levels
 #
-# - `err`
-# - `war`
-# - `inf`
-# - `deb`
-# - `tra`
+# `err` | `war` | `inf` | `deb` | `tra`
 #
-# and behaves as you would expect from a log function.
+# and behaves as you would expect from a log function: you provide
+# the log level as the first argument and the message in the con-
+# secutive ones.
+#
+# #### Arguments
+#
+# $1 :: log level
+# $2 :: message (strictly speaking optional, no default / empty string)
 function notify
 {
   function __log_trace
@@ -61,19 +64,22 @@ function notify
   #
   # where a higher level includes the level below. The
   # default log level is 'warning' (2).
-  local LOG_LEVEL_AS_INTEGER=2 LOG_LEVEL_AS_INTEGER_STRING="${1:-}"
+  local LOG_LEVEL_AS_INTEGER=2 MESSAGE_LOG_LEVEL="${1:-}"
   shift 1
 
   case "${LOG_LEVEL:-inf}" in
-    ( 'err'* ) LOG_LEVEL_AS_INTEGER=0 ;;
-    ( 'war'* ) LOG_LEVEL_AS_INTEGER=1 ;;
-    ( 'inf'* ) LOG_LEVEL_AS_INTEGER=2 ;;
-    ( 'deb'* ) LOG_LEVEL_AS_INTEGER=3 ;;
-    ( 'tra'* ) LOG_LEVEL_AS_INTEGER=4 ;;
-    ( *      ) LOG_LEVEL_AS_INTEGER=2 ;;
+    ( 'err' ) LOG_LEVEL_AS_INTEGER=0 ;;
+    ( 'war' ) LOG_LEVEL_AS_INTEGER=1 ;;
+    ( 'inf' ) LOG_LEVEL_AS_INTEGER=2 ;;
+    ( 'deb' ) LOG_LEVEL_AS_INTEGER=3 ;;
+    ( 'tra' ) LOG_LEVEL_AS_INTEGER=4 ;;
+    ( * )
+      printf "Log level '%s' unknown\n" "${LOG_LEVEL}" >&2
+      exit 1
+      ;;
   esac
 
-  case "${LOG_LEVEL_AS_INTEGER_STRING}" in
+  case "${MESSAGE_LOG_LEVEL}" in
     ( 'tra' )
       [[ ${LOG_LEVEL_AS_INTEGER} -lt 4 ]] && return 0
       __log_trace "${*}"
@@ -99,8 +105,8 @@ function notify
       ;;
 
     ( * )
-      [[ "${LOG_LEVEL_AS_INTEGER}" -lt 1 ]] && return 0
-      __log_warning "${*}"
+      printf "Provided log level '%s' unknown" "${MESSAGE_LOG_LEVEL}" >&2
+      return 0
       ;;
   esac
 

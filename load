@@ -18,7 +18,7 @@
 # Underscored functions are not unset at the end of the sourcing
 # process, but they should only be used by `libbash` modules, not
 # by applications / other libraries using `libbash`.
-function __show_call_stack
+function __libbash_show_call_stack
 {
   [[ ${#FUNCNAME[@]} -le 2 ]] && return 0
 
@@ -63,7 +63,7 @@ function __libbash_show_error
 function __libbash_show_error_and_exit
 {
   __libbash_show_error "${*}"
-  __show_call_stack
+  __libbash_show_call_stack
   exit 1
 }
 
@@ -77,8 +77,11 @@ function basic_setup
   # ! in applications that use `libbash`
   export CRI LOG_LEVEL LIBBASH_DIRECTORY SCRIPT
 
+  unset LIBBASH_LOADED_MODULES
+  export LIBBASH_LOADED_MODULES
+
   LOG_LEVEL=${LOG_LEVEL:-inf}
-  LIBBASH_DIRECTORY="$(dirname "${BASH_SOURCE[0]}")"
+  LIBBASH_DIRECTORY="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
   SCRIPT='libbash init'
 }
 
@@ -95,8 +98,14 @@ function load_module
 
   if [[ -e "${MODULE_PATH}" ]]
   then
+    if [[ ${LIBBASH_LOADED_MODULES[*]} =~ ${1} ]]
+    then
+      __libbash_show_error_and_exit "module '${1}' loaded more than once"
+    fi
+
     # shellcheck source=/dev/null
     source "${MODULE_PATH}"
+    LIBBASH_LOADED_MODULES+=("${1}")
   else
     __libbash_show_error_and_exit "module '${1:-}' not found"
   fi
@@ -123,11 +132,17 @@ function source_files
 function debug_libbash
 {
   notify 'deb' "Showing 'libbash' debug information"
-  notify 'deb' "Call / source stack:"
+
+  if [[ $(( ${#BASH_SOURCE[@]} - 1 )) -gt 1 ]]
+  then
+    notify 'deb' 'Call / source stack:'
+  fi
   for (( INDEX=${#BASH_SOURCE[@]} - 1 ; INDEX>1 ; INDEX-- ))
   do
     printf "%45s%s\n" '' "${BASH_SOURCE[INDEX]}"
   done
+
+  notify 'deb' "Loaded modules: ${LIBBASH_LOADED_MODULES[*]}"
 }
 
 # ### Fallback `notify`
@@ -144,7 +159,7 @@ function setup_default_notify_error
         "log module was not loaded but 'notify' was called" \
         "with log level not 'err'"                          \
         "(arguments were: ${*})"
-      __show_call_stack
+      __libbash_show_call_stack
     fi
 
     shift 1
@@ -159,10 +174,12 @@ function setup_default_notify_error
 # in proper order. 
 function libbash_main
 {
+  ${LIBBASH_IS_LOADED:-false} && unset notify
+
   basic_setup
   source_files "${@}"
 
-  if [[ ! $(type -t notify) == 'function' ]]
+  if [[ ! $(type -t notify || printf 'none') == 'function' ]]
   then
     setup_default_notify_error
     return 0
@@ -172,5 +189,6 @@ function libbash_main
 }
 
 libbash_main "${@}"
-unset basic_setup source_files setup_default_notify_error main
-SCRIPT='none (global)'
+unset basic_setup source_files setup_default_notify_error libbash_main
+SCRIPT='prompt or unknown script'
+export LIBBASH_IS_LOADED=true

@@ -67,6 +67,63 @@ function setup_file
   assert_failure 1
 }
 
+@test "${BATS_TEST_FILE} sourcing a module twice results in an error" {
+  run source load 'log' 'log'
+  assert_failure
+}
+
+@test "${BATS_TEST_FILE} internal helper functions work correctly" {
+  source load
+  assert_success
+
+  __libbash_show_call_stack
+  assert_success
+
+  function test__libbash_show_call_stack_1
+  {
+    __libbash_show_call_stack
+  }
+
+  function test__libbash_show_call_stack_2
+  {
+    test__libbash_show_call_stack_1
+  }
+
+  run test__libbash_show_call_stack_2
+  assert_success
+  assert_output --partial 'call stack (most recent call first):'
+  assert_output --partial 'test__libbash_show_call_stack'
+
+  run __libbash_show_error 'namd'
+  assert_success
+  assert_output --regexp '\[  .*ERROR.*  \].*'
+  assert_output --partial 'namd'
+
+  run __libbash_show_error_and_exit 'namd'
+  assert_failure
+  assert_output --regexp '\[  .*ERROR.*  \].*'
+  assert_output --partial 'namd'
+
+  run load_module
+  assert_failure
+
+  run source_files
+  assert_failure
+
+  run setup_default_notify_error
+  assert_failure
+
+  run libbash_main
+  assert_failure
+
+  source load 'log' 'utils'
+  LOG_LEVEL='tra'
+  run debug_libbash
+  assert_success
+  assert_output --partial 'Loaded modules: log utils'
+
+}
+
 function teardown_file
 {
   :

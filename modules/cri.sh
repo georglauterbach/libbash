@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # version       0.2.0
-# sourced by    init.sh
+# sourced by    ../load
 # task          provides container-runtime-related functions
 
 # ### Checks Whether Docker or Podman is Installed

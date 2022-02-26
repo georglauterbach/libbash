@@ -20,8 +20,9 @@
 POSIX compatible, i.e. they do not work with `sh`, only with `bash`. `libbash` focuses
 on very high **code quality** and **safe** functions without common Bash side-effects.
 Bash is difficult because it is extremely liberal. This project provides robust
-functions, checked by [`shellcheck`](https://github.com/koalaman/shellcheck). This
-project is written in and supports Bash v5 (or higher).
+functions, checked by [_shellcheck_](https://github.com/koalaman/shellcheck) and by
+[_BATS_](https://github.com/bats-core/bats-core). This project is written in and supports
+Bash v5 (or higher).
 
 `libbash` is not supposed to be used in conjunction with `.bashrc` or as
 [_dotfiles_](https://wiki.archlinux.org/title/Dotfiles). Rather, it should satisfy
@@ -72,7 +73,11 @@ When you use `libbash`, you don't have to use all the code that `libbash` contai
 provide the modules you would like to use as arguments.
 
 To load a module, just specify its name after the `source` command as shown in the
-examples above in [usage section](#usage).
+examples above in [usage section](#usage). All modules are located in the `modules`
+directory, and their name is just the file name without `.sh` at the end. When you
+open the file, you will see all the functions the module provides. These functions
+have Rust-like documentation comments above their definitions in order to give you
+a concise overview over what the function does.
 
 `libbash` provides the following modules.
 
@@ -106,6 +111,11 @@ log level, `war` is assumed. The default `LOG_LEVEL` is `inf`.
 
 The log level itself can be changed anytime by setting `LOG_LEVEL` to one of the
 levels described above. Naturally, messages below the log level are not shown.
+
+### `utils`
+
+This module provides various miscellaneous functions, like `escape` to escape characters
+or `exit_failure` to exit with an error.
 
 ## Licensing
 
