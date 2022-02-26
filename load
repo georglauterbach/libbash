@@ -18,7 +18,7 @@
 # Underscored functions are not unset at the end of the sourcing
 # process, but they should only be used by `libbash` modules, not
 # by applications / other libraries using `libbash`.
-function __show_call_stack
+function __libbash_show_call_stack
 {
   [[ ${#FUNCNAME[@]} -le 2 ]] && return 0
 
@@ -63,7 +63,7 @@ function __libbash_show_error
 function __libbash_show_error_and_exit
 {
   __libbash_show_error "${*}"
-  __show_call_stack
+  __libbash_show_call_stack
   exit 1
 }
 
@@ -144,7 +144,7 @@ function setup_default_notify_error
         "log module was not loaded but 'notify' was called" \
         "with log level not 'err'"                          \
         "(arguments were: ${*})"
-      __show_call_stack
+      __libbash_show_call_stack
     fi
 
     shift 1
