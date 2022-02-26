@@ -77,6 +77,8 @@ function basic_setup
   # ! in applications that use `libbash`
   export CRI LOG_LEVEL LIBBASH_DIRECTORY SCRIPT
 
+  unset LIBBASH_LOADED_MODULES
+  export LIBBASH_LOADED_MODULES
   LOG_LEVEL=${LOG_LEVEL:-inf}
   LIBBASH_DIRECTORY="$(dirname "${BASH_SOURCE[0]}")"
   SCRIPT='libbash init'
@@ -97,6 +99,7 @@ function load_module
   then
     # shellcheck source=/dev/null
     source "${MODULE_PATH}"
+    LIBBASH_LOADED_MODULES+=("${1}")
   else
     __libbash_show_error_and_exit "module '${1:-}' not found"
   fi
@@ -128,6 +131,8 @@ function debug_libbash
   do
     printf "%45s%s\n" '' "${BASH_SOURCE[INDEX]}"
   done
+
+  notify 'deb' "Loaded modules: ${LIBBASH_LOADED_MODULES[*]}"
 }
 
 # ### Fallback `notify`
