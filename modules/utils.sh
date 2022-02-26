@@ -33,9 +33,11 @@ function line_is_comment_or_blank
 # $2 :: character that must be escaped
 function escape
 {
-  [[ ${2} == \\ ]] && return 1
-  [[ ${#2} -eq 0 ]] && return 2
-  [[ ${#2} -ge 2 ]] && return 3
+  [[ -z ${1+set} ]] && return 1
+  # shellcheck disable=SC1003
+  [[ ${2:-} == '\\' ]] && return 2
+  [[ ${#2} -eq 0 ]] && return 3
+  [[ ${#2} -ge 2 ]] && return 4
 
   printf '%s' "${1//${2}/\\${2}}"
 }
@@ -69,7 +71,7 @@ function exit_success { exit 0 ; }
 # $1 :: exit code (optional, default=1)
 function exit_failure
 {
-  if [[ ! ${1:-1} =~ ^[1-9]+$ ]]
+  if [[ ! ${1:-1} =~ ^[0-9]+$ ]]
   then
     notify 'err' "'exit_failure' was called with non-number exit code"
     __libbash_show_call_stack

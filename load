@@ -98,6 +98,11 @@ function load_module
 
   if [[ -e "${MODULE_PATH}" ]]
   then
+    if [[ ${LIBBASH_LOADED_MODULES[*]} =~ ${1} ]]
+    then
+      __libbash_show_error_and_exit "module '${1}' loaded more than once"
+    fi
+
     # shellcheck source=/dev/null
     source "${MODULE_PATH}"
     LIBBASH_LOADED_MODULES+=("${1}")
@@ -184,6 +189,6 @@ function libbash_main
 }
 
 libbash_main "${@}"
-unset basic_setup source_files setup_default_notify_error main
+unset basic_setup source_files setup_default_notify_error libbash_main
 SCRIPT='prompt or unknown script'
 export LIBBASH_IS_LOADED=true
