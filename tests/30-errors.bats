@@ -1,7 +1,7 @@
 load 'bats_support/load'
 load 'bats_assert/load'
 
-BATS_TEST_FILE='20-errors           ::'
+BATS_TEST_FILE='30-errors           ::'
 
 function setup_file
 {
@@ -9,13 +9,13 @@ function setup_file
   export LOG_LEVEL='tra'
 }
 
-@test "${BATS_TEST_FILE} 'error.sh' is correctly sourced" {
-  ( source load 'errors' ; )
+@test "${BATS_TEST_FILE} 'errors.sh' is correctly sourced" {
+  ( source load 'utils' ; )
   assert_success
 }
 
-@test "${BATS_TEST_FILE} 'error.sh' is correctly sourced with other modules" {
-  ( source load 'errors' 'log' )
+@test "${BATS_TEST_FILE} 'errors.sh' is correctly sourced with other modules" {
+  ( source load 'errors' 'log' 'utils' )
   assert_success
 }
 
