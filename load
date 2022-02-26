@@ -79,8 +79,9 @@ function basic_setup
 
   unset LIBBASH_LOADED_MODULES
   export LIBBASH_LOADED_MODULES
+
   LOG_LEVEL=${LOG_LEVEL:-inf}
-  LIBBASH_DIRECTORY="$(dirname "${BASH_SOURCE[0]}")"
+  LIBBASH_DIRECTORY="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
   SCRIPT='libbash init'
 }
 
@@ -126,7 +127,11 @@ function source_files
 function debug_libbash
 {
   notify 'deb' "Showing 'libbash' debug information"
-  notify 'deb' "Call / source stack:"
+
+  if [[ $(( ${#BASH_SOURCE[@]} - 1 )) -gt 1 ]]
+  then
+    notify 'deb' 'Call / source stack:'
+  fi
   for (( INDEX=${#BASH_SOURCE[@]} - 1 ; INDEX>1 ; INDEX-- ))
   do
     printf "%45s%s\n" '' "${BASH_SOURCE[INDEX]}"
@@ -164,10 +169,12 @@ function setup_default_notify_error
 # in proper order. 
 function libbash_main
 {
+  ${LIBBASH_IS_LOADED:-false} && unset notify
+
   basic_setup
   source_files "${@}"
 
-  if [[ ! $(type -t notify) == 'function' ]]
+  if [[ ! $(type -t notify || printf 'none') == 'function' ]]
   then
     setup_default_notify_error
     return 0
@@ -178,4 +185,5 @@ function libbash_main
 
 libbash_main "${@}"
 unset basic_setup source_files setup_default_notify_error main
-SCRIPT='none (global)'
+SCRIPT='prompt or unknown script'
+export LIBBASH_IS_LOADED=true
