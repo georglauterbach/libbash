@@ -61,15 +61,42 @@ function exit_success { exit 0 ; }
 
 # ### Exit With Error
 #
-# Just a wrapper around `exit 1`.
-function exit_failure { exit 1 ; }
+# Just a wrapper around `exit 1`. Another exit
+# code can be supplied as well.
+#
+# #### Arguments
+#
+# $1 :: exit code (optional, default=1)
+function exit_failure
+{
+  if [[ ! ${1:-1} =~ ^[1-9]+$ ]]
+  then
+    notify 'err' "'exit_failure' was called with non-number exit code"
+    __libbash_show_call_stack
+    exit 1
+  fi
+
+  if [[ ${1:-1} -eq 0 ]] || [[ ${1:-1} -ge 128 ]]
+  then
+    notify 'err' "'exit_failure' was called with exit code 0 or >127"
+    __libbash_show_call_stack
+    exit 1
+  fi
+
+  exit "${1:-1}"
+}
 
 # ### Exit with Error and More Information
 #
 # This function exits with exit code 1 but also
-# prints information about the call stack.
+# prints information about the call stack. Another
+# exit code can be supplied as well.
+#
+# #### Arguments
+#
+# $1 :: exit code (optional, default=1)
 function exit_failure_and_show_callstack
 {
-  __show_call_stack
-  exit_failure
+  __libbash_show_call_stack
+  exit_failure "${1:-1}"
 }
