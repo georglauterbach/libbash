@@ -9,12 +9,12 @@ function setup_file
   export LOG_LEVEL='tra'
 }
 
-@test "${BATS_TEST_FILE} 'errors.sh' is correctly sourced" {
+@test "${BATS_TEST_FILE} 'errors' is correctly sourced" {
   ( source load 'utils' ; )
   assert_success
 }
 
-@test "${BATS_TEST_FILE} 'errors.sh' is correctly sourced with other modules" {
+@test "${BATS_TEST_FILE} 'errors' is correctly sourced with other modules" {
   ( source load 'errors' 'log' 'utils' )
   assert_success
 }

@@ -14,7 +14,7 @@ function setup_file
   assert_success
 }
 
-@test "${BATS_TEST_FILE} 'utils.sh' is correctly sourced with other modules" {
+@test "${BATS_TEST_FILE} 'utils' is correctly sourced with other modules" {
   run bash -c "( source load 'errors' 'log' 'utils' ; )"
   assert_success
 
@@ -100,6 +100,7 @@ function setup_file
   assert_success
   assert_output 'u\f\f'
 
+  # shellcheck disable=SC1003
   run escape 'dka' '\\'
   assert_failure
   assert_output --partial 'Escape charactor is not allowd to be or contain a backslash'
@@ -132,12 +133,16 @@ function setup_file
   # shellcheck disable=SC1003
   assert_output '\\ \\\\'
 
+  # shellcheck disable=SC1003
   run escape_backslash '\'
   assert_success
+  # shellcheck disable=SC1003
   assert_output '\\'
 
+  # shellcheck disable=SC1003
   run escape_backslash '\\'
   assert_success
+  # shellcheck disable=SC1003
   assert_output '\\\\'
 
   run escape_backslash 'a'
@@ -148,8 +153,10 @@ function setup_file
   assert_success
   assert_output '\\a'
 
+  # shellcheck disable=SC1003
   run escape_backslash 'a\'
   assert_success
+  # shellcheck disable=SC1003
   assert_output 'a\\'
 
   run escape_backslash 'a\a'
