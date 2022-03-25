@@ -96,7 +96,7 @@ reverting some settings, for example with `set +e`.
 
 ### `log`
 
-This module provides the `notify` function. `notify` is invoked by specifying the log level
+This module provides the `log` function. `log` is invoked by specifying the log level
 
 1. `tra` - "trace"
 2. `deb` - "debug"
@@ -104,8 +104,8 @@ This module provides the `notify` function. `notify` is invoked by specifying th
 4. `war` - "warning"
 5. `err` - "error"
 
-and then the message (i.e. `notify 'inf' 'Some info message`). You can supply many
-arguments to `notify`, only the first argument should be the log level. This function
+and then the message (i.e. `log 'inf' 'Some info message`). You can supply many
+arguments to `log`, only the first argument should be the log level. This function
 is guaranteed to not fail. If called with a string that is not representative if the
 log level, `war` is assumed. The default `LOG_LEVEL` is `inf`.
 

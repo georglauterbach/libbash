@@ -73,14 +73,14 @@ function exit_failure
 {
   if [[ ! ${1:-1} =~ ^[0-9]+$ ]]
   then
-    notify 'err' "'exit_failure' was called with non-number exit code"
+    log 'err' "'exit_failure' was called with non-number exit code"
     __libbash_show_call_stack
     exit 1
   fi
 
   if [[ ${1:-1} -eq 0 ]] || [[ ${1:-1} -ge 128 ]]
   then
-    notify 'err' "'exit_failure' was called with exit code 0 or >127"
+    log 'err' "'exit_failure' was called with exit code 0 or >127"
     __libbash_show_call_stack
     exit 1
   fi

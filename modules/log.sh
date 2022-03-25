@@ -6,7 +6,7 @@
 
 # ### The Logging Functions
 #
-# `notify` is used for logging. It uses five different log levels
+# `log` is used for logging. It uses five different log levels
 #
 # `err` | `war` | `inf` | `deb` | `tra`
 #
@@ -18,7 +18,7 @@
 #
 # $1 :: log level
 # $2 :: message (strictly speaking optional, no default / empty string)
-function notify
+function log
 {
   function __log_trace
   {
