@@ -115,7 +115,7 @@ levels described above. Naturally, messages below the log level are not shown.
 ### `utils`
 
 This module provides various miscellaneous functions, like `escape` to escape characters
-or `exit_failure` to exit with an error.
+or `exit_failure` to exit with an error. Please have a look inside the module to find all the functions that are provided by the module.
 
 ## Licensing
 
