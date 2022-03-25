@@ -20,7 +20,7 @@ function lint_editorconfig
   VERSION=latest
   IMAGE="docker.io/mstruebing/editorconfig-checker:${VERSION}"
 
-  notify 'deb' "Running EditorConfig lint (${VERSION})"
+  log 'deb' "Running EditorConfig lint (${VERSION})"
 
   if "${CRI}" run \
     --rm \
@@ -31,10 +31,10 @@ function lint_editorconfig
     "${IMAGE}" ec \
       -config "/ci/.github/linters/.ecrc"
   then
-    notify 'inf' 'EditorConfig lint succeeded'
+    log 'inf' 'EditorConfig lint succeeded'
     return 0
   else
-    notify 'err' 'EditorConfig lint reported problems'
+    log 'err' 'EditorConfig lint reported problems'
     return 1
   fi
 }
@@ -68,7 +68,7 @@ function lint_shellcheck
     "--source-path=${ROOT_DIRECTORY}"
   )
 
-  notify 'deb' "Running ShellCheck (${VERSION})"
+  log 'deb' "Running ShellCheck (${VERSION})"
 
   # shellcheck disable=SC2154
   if "${CRI}" run \
@@ -81,10 +81,10 @@ function lint_shellcheck
       "${ARGUMENTS[@]}" \
       "${FILES[@]}"
   then
-    notify 'inf' 'ShellCheck succeeded'
+    log 'inf' 'ShellCheck succeeded'
     return 0
   else
-    notify 'err' 'ShellCheck reported problems'
+    log 'err' 'ShellCheck reported problems'
     return 1
   fi
 }
@@ -95,7 +95,7 @@ function lint_yamllint
   VERSION=1.26-0.9
   IMAGE="docker.io/cytopia/yamllint:${VERSION}"
 
-  notify 'deb' "Running YAMLLint (${VERSION})"
+  log 'deb' "Running YAMLLint (${VERSION})"
 
   if "${CRI}" run \
     --rm \
@@ -108,10 +108,10 @@ function lint_yamllint
       --format colored \
       -- .
   then
-    notify 'inf' 'YAMLLint succeeded'
+    log 'inf' 'YAMLLint succeeded'
     return 0
   else
-    notify 'err' 'YAMLLint reported problems'
+    log 'err' 'YAMLLint reported problems'
     return 1
   fi
 }
@@ -141,7 +141,7 @@ function main
   setup_container_runtime || return 1
   local ERROR_OCCURRED=false
 
-  notify 'inf' 'Starting the linting process'
+  log 'inf' 'Starting the linting process'
 
   if [[ -n ${1:-} ]]
   then
@@ -164,7 +164,7 @@ function main
         ;;
 
       ( * )
-        notify 'err' "'${1}' is not a valid linter ('sh' or 'gsl' are valid)"
+        log 'err' "'${1}' is not a valid linter ('sh' or 'gsl' are valid)"
         exit 1
         ;;
     esac
@@ -176,10 +176,10 @@ function main
 
   if ${ERROR_OCCURRED}
   then
-    notify 'err' 'Linting not successful'
+    log 'err' 'Linting not successful'
     return 1
   else
-    notify 'inf' 'Linting successful'
+    log 'inf' 'Linting successful'
     return 0
   fi
 }

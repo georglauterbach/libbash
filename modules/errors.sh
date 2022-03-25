@@ -32,7 +32,7 @@ function __log_unexpected_error
   MESSAGE+=" | exit code = ${4:-?}"
   MESSAGE+=" }"
 
-  notify 'err' "${MESSAGE}"
+  log 'err' "${MESSAGE}"
   __libbash_show_call_stack
   return 0
 }

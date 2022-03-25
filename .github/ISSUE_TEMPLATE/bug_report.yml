@@ -63,7 +63,7 @@ body:
     attributes:
       label: What happens and when does it happen?
       description: Tell us what is happening and when.
-      placeholder: I'm notified that I called `notify` without importing the `logs` module.
+      placeholder: I'm notified that I called `log` without importing the `logs` module.
       render: Markdown
     validations:
       required: true
@@ -73,7 +73,7 @@ body:
     attributes:
       label: What did you expect to happen?
       description: Tell us what you expected.
-      placeholder: I expected to be able to use `notify`
+      placeholder: I expected to be able to use `log`
       render: Markdown
     validations:
       required: true

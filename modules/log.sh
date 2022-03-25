@@ -6,7 +6,7 @@
 
 # ### The Logging Functions
 #
-# `notify` is used for logging. It uses five different log levels
+# `log` is used for logging. It uses five different log levels
 #
 # `err` | `war` | `inf` | `deb` | `tra`
 #
@@ -18,7 +18,7 @@
 #
 # $1 :: log level
 # $2 :: message (strictly speaking optional, no default / empty string)
-function notify
+function log
 {
   function __log_trace
   {
@@ -68,11 +68,11 @@ function notify
   shift 1
 
   case "${LOG_LEVEL:-inf}" in
-    ( 'err' ) LOG_LEVEL_AS_INTEGER=0 ;;
-    ( 'war' ) LOG_LEVEL_AS_INTEGER=1 ;;
-    ( 'inf' ) LOG_LEVEL_AS_INTEGER=2 ;;
-    ( 'deb' ) LOG_LEVEL_AS_INTEGER=3 ;;
-    ( 'tra' ) LOG_LEVEL_AS_INTEGER=4 ;;
+    ( 'err' | 'error' ) LOG_LEVEL_AS_INTEGER=0 ;;
+    ( 'war' | 'warn'  ) LOG_LEVEL_AS_INTEGER=1 ;;
+    ( 'inf' | 'info'  ) LOG_LEVEL_AS_INTEGER=2 ;;
+    ( 'deb' | 'debug' ) LOG_LEVEL_AS_INTEGER=3 ;;
+    ( 'tra' | 'trace' ) LOG_LEVEL_AS_INTEGER=4 ;;
     ( * )
       printf "Log level '%s' unknown\n" "${LOG_LEVEL}" >&2
       exit 1
@@ -80,27 +80,27 @@ function notify
   esac
 
   case "${MESSAGE_LOG_LEVEL}" in
-    ( 'tra' )
+    ( 'tra' | 'trace' )
       [[ ${LOG_LEVEL_AS_INTEGER} -lt 4 ]] && return 0
       __log_trace "${*}"
       ;;
 
-    ( 'deb' )
+    ( 'deb' | 'debug' )
       [[ ${LOG_LEVEL_AS_INTEGER} -lt 3 ]] && return 0
       __log_debug "${*}"
       ;;
 
-    ( 'inf' )
+    ( 'inf' | 'info' )
       [[ "${LOG_LEVEL_AS_INTEGER}" -lt 2 ]] && return 0
       __log_info "${*}"
       ;;
 
-    ( 'war' )
+    ( 'war' | 'warning' )
       [[ "${LOG_LEVEL_AS_INTEGER}" -lt 1 ]] && return 0
       __log_warning "${*}"
       ;;
 
-    ( 'err' )
+    ( 'err' | 'error' )
       __log_error "${*}"
       ;;
 

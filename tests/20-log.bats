@@ -10,17 +10,17 @@ function setup_file
   export TEST_STRING='jfk FJHAE aea728 djKJ  k/('
 }
 
-@test "${BATS_TEST_FILE} logs are sourced and 'notify' is a function" {
+@test "${BATS_TEST_FILE} logs are sourced and 'log' is a function" {
   source load log
   assert_success
-  [[ $(type -t notify) == 'function' ]]
+  [[ $(type -t log) == 'function' ]]
   assert_success
 }
 
 @test "${BATS_TEST_FILE} checking log output for trace messages" {
   source load log
   assert_success
-  run notify 'tra' "${TEST_STRING}"
+  run log 'tra' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
   assert_output --regexp '.*\[  .*TRACE.*  \].*'
@@ -29,7 +29,7 @@ function setup_file
 @test "${BATS_TEST_FILE} checking log output for debug messages" {
   source load log
   assert_success
-  run notify 'deb' "${TEST_STRING}"
+  run log 'deb' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
   assert_output --regexp '.*\[  .*DEBUG.*  \].*'
@@ -38,7 +38,7 @@ function setup_file
 @test "${BATS_TEST_FILE} checking log output for info messages" {
   source load log
   assert_success
-  run notify 'inf' "${TEST_STRING}"
+  run log 'inf' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
   assert_output --regexp '.*\[   .*INF.*   \].*'
@@ -47,7 +47,7 @@ function setup_file
 @test "${BATS_TEST_FILE} checking log output for warning messages" {
   source load log
   assert_success
-  run notify 'war' "${TEST_STRING}"
+  run log 'war' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
   assert_output --regexp '\[\ .*WARNING.* \].*'
@@ -56,7 +56,7 @@ function setup_file
 @test "${BATS_TEST_FILE} checking log output for error messages" {
   source load log
   assert_success
-  run notify 'err' "${TEST_STRING}"
+  run log 'err' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
   assert_output --regexp '.*\[  .*ERROR.*  \].*'
@@ -66,7 +66,7 @@ function setup_file
   export LOG_LEVEL='tra'
   source load log
   assert_success
-  run notify 'tra' "${TEST_STRING}"
+  run log 'tra' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
   assert_output --regexp '.*\[  .*TRACE.*  \].*'
@@ -76,7 +76,7 @@ function setup_file
   export LOG_LEVEL='deb'
   source load log
   assert_success
-  run notify 'deb' "${TEST_STRING}"
+  run log 'deb' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
   assert_output --regexp '.*\[  .*DEBUG.*  \].*'
@@ -86,7 +86,7 @@ function setup_file
   export LOG_LEVEL='inf'
   source load log
   assert_success
-  run notify 'inf' "${TEST_STRING}"
+  run log 'inf' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
   assert_output --regexp '.*\[   .*INF.*   \].*'
@@ -96,7 +96,7 @@ function setup_file
   export LOG_LEVEL='war'
   source load log
   assert_success
-  run notify 'war' "${TEST_STRING}"
+  run log 'war' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
   assert_output --regexp '.*\[ .*WARNING.* \].*'
@@ -106,7 +106,7 @@ function setup_file
   export LOG_LEVEL='err'
   source load log
   assert_success
-  run notify 'err' "${TEST_STRING}"
+  run log 'err' "${TEST_STRING}"
   assert_success
   assert_output --partial "${TEST_STRING}"
   assert_output --regexp '.*\[  .*ERROR.*  \].*'
@@ -116,7 +116,7 @@ function setup_file
   export LOG_LEVEL='deb'
   source load log
   assert_success
-  run notify 'tra' "${TEST_STRING}"
+  run log 'tra' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
   refute_output --regexp '.*\[  .*TRACE.*  \].*'
@@ -127,7 +127,7 @@ function setup_file
   export LOG_LEVEL='inf'
   source load log
   assert_success
-  run notify 'deb' "${TEST_STRING}"
+  run log 'deb' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
   refute_output --regexp '.*\[  .*DEBUG.*  \].*'
@@ -138,7 +138,7 @@ function setup_file
   export LOG_LEVEL='war'
   source load log
   assert_success
-  run notify 'inf' "${TEST_STRING}"
+  run log 'inf' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
   refute_output --regexp '.*\[   .*INF.*   \].*'
@@ -149,7 +149,7 @@ function setup_file
   export LOG_LEVEL='err'
   source load log
   assert_success
-  run notify 'war' "${TEST_STRING}"
+  run log 'war' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
   refute_output --regexp '.*\[ .*WARNING.* \].*'
