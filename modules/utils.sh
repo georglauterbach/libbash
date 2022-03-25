@@ -159,3 +159,81 @@ function exit_failure_and_show_callstack
   __libbash_show_call_stack
   exit_failure "${1:-1}"
 }
+
+# ### Tell Whether a Variable is Set and Not Empty
+#
+# This function returns true of the variable given in $1
+# is not null and not empty.
+function var_is_set_and_not_empty
+{
+  [[ -n ${1+set} ]] && [[ -n ${1} ]]
+}
+
+# ### Ask a Question
+#
+# This function states a question and returns the result
+# in a variable name given to this function.
+#
+# #### Arguments
+#
+# $1 :: question
+# $2 :: variable name to store the result in
+function ask_question
+{
+  var_is_set_and_not_empty "${1}" || {
+    log 'err' 'No question provided'
+    return 1
+  }
+
+  var_is_set_and_not_empty "${2}" || {
+    log 'err' 'No variable to store result in provided'
+    return 1
+  }
+
+  local QUESTION=${1}
+  local -n VARIABLE_TO_STORE_ANSWER_IN=${2}
+
+  # shellcheck disable=SC2034
+  read -r -p "${QUESTION} " VARIABLE_TO_STORE_ANSWER_IN
+}
+
+# ### Ask a Question - Special Case
+#
+# This functionis for the special case where the question
+# is a yes-or-no question (binary). It will state the question
+# and it can be given a default answer. It will return true or
+# false depending on the default and the user input.
+#
+# #### Arguments
+#
+# $1 :: question
+# $2 :: default (optional, default=no)
+function ask_yes_no_question
+{
+  var_is_set_and_not_empty "${1}" || {
+    log 'err' 'No question provided'
+    return 1
+  }
+
+  local ANSWER DEFAULT_STRING
+  local DEFAULT=${2:-no} YES_REGEXP='^(y|Y|yes|Yes)$'
+
+  if [[ ${DEFAULT} =~ ${YES_REGEXP} ]]
+  then
+    DEFAULT_STRING=' [Y/n]'
+  else
+    DEFAULT_STRING=' [y/N]'
+  fi
+  
+  ask_question "${1}${DEFAULT_STRING}" ANSWER
+
+  if [[ ${DEFAULT} =~ ${YES_REGEXP} ]] && [[ -z ${ANSWER} ]]
+  then
+    return 0
+  elif [[ ${DEFAULT} =~ ^(n|N|no|No)$ ]] && [[ -z ${ANSWER} ]]
+  then
+    return 1
+  fi
+
+  [[ ${ANSWER} =~ ${YES_REGEXP} ]]
+}
