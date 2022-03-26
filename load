@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# version       0.2.0
+# version       0.2.1
 # executed by   scripts that use `libbash`
 # task          perform library initialization
 
@@ -20,10 +20,10 @@
 # by applications / other libraries using `libbash`.
 function __libbash_show_call_stack
 {
-  [[ ${#FUNCNAME[@]} -le 2 ]] && return 0
+  local STACK_DEPTH CUTOFF=2
 
-  local STACK_DEPTH CUTOFF
-  CUTOFF=2
+  [[ ${#FUNCNAME[@]} -le ${CUTOFF} ]] && return 0
+
   STACK_DEPTH=$(( ${#FUNCNAME[@]} - CUTOFF ))
 
   printf '\ncall stack (most recent call first):\n' >&2
@@ -149,7 +149,7 @@ function debug_libbash
 # ### Fallback `log`
 #
 # If the `log` module was not sourced, provide a fallback
-# `log` implementation, but onyl for `err` messages.
+# `log` implementation, but only for `err` messages.
 function setup_default_notify_error
 {
   function log
