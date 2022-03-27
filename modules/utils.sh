@@ -237,3 +237,33 @@ function ask_yes_no_question
 
   [[ ${ANSWER} =~ ${YES_REGEXP} ]]
 }
+
+# ### Is a Program in ${PATH}?
+#
+# This function returns with exit code 0 (success) if
+# the argument given is in ${PATH}, otherwise exit code
+# 1 (failure) is returned.
+#
+# #### Arguments
+#
+# $1 :: executable to check
+function is_in_path
+{
+  command -v "${1:?}" &>/dev/null
+}
+
+# ### Is a Program Not in ${PATH}?
+#
+# This function returns with exit code 1 (failure) if
+# the argument given is not in ${PATH}, otherwise exit
+# code 0 (success) is returned.
+#
+# #### Arguments
+#
+# $1 :: executable to check
+function is_not_in_path
+{
+  ! command -v "${1:?}" &>/dev/null
+}
+
+
