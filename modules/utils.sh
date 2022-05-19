@@ -119,7 +119,7 @@ function return_success { return 0 ; }
 #
 # Just a wrapper around `return 1`. This should only be
 # used at the very end of a function is it relies on Bash
-# settings the return code of the last command as the exit
+# setting the return code of the last command as the exit
 # code of the function.
 #
 # #### Arguments
@@ -162,8 +162,12 @@ function exit_failure_and_show_callstack
 
 # ### Tell Whether a Variable is Set and Not Empty
 #
-# This function returns true of the variable given in $1
+# This function returns true if the variable given in $1
 # is not null and not empty.
+#
+# Arguments
+#
+# $1 :: the variable in question
 function var_is_set_and_not_empty
 {
   [[ -n ${1+set} ]] && [[ -n ${1} ]]
@@ -216,7 +220,8 @@ function ask_yes_no_question
   }
 
   local ANSWER DEFAULT_STRING
-  local DEFAULT=${2:-no} YES_REGEXP='^(y|Y|yes|Yes)$'
+  local DEFAULT=${2:-no} YES_REGEXP='^(y|yes)$'
+  DEFAULT=${DEFAULT,,}
 
   if [[ ${DEFAULT} =~ ${YES_REGEXP} ]]
   then
@@ -235,7 +240,7 @@ function ask_yes_no_question
     return 1
   fi
 
-  [[ ${ANSWER} =~ ${YES_REGEXP} ]]
+  [[ ${ANSWER,,} =~ ${YES_REGEXP} ]]
 }
 
 # ### Is a Program in ${PATH}?
@@ -249,7 +254,12 @@ function ask_yes_no_question
 # $1 :: executable to check
 function is_in_path
 {
-  command -v "${1:?}" &>/dev/null
+  var_is_set_and_not_empty "${1}" || {
+    log 'err' 'No name for an executable provided'
+    return 1
+  }
+
+  command -v "${1}" &>/dev/null
 }
 
 # ### Is a Program Not in ${PATH}?
@@ -263,7 +273,5 @@ function is_in_path
 # $1 :: executable to check
 function is_not_in_path
 {
-  ! command -v "${1:?}" &>/dev/null
+  ! is_in_path "${1:?}"
 }
-
-
