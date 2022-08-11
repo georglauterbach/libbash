@@ -1,10 +1,14 @@
 ---
-name: Bash Unit Testing
+name: Unit Tests
 
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
   push:
     branches: ['**']
+    paths:
+      - modules/**
+      - tests/**
+      - load
 
 defaults:
   run:
@@ -12,7 +16,7 @@ defaults:
 
 jobs:
   run-unit-tests:
-    name: Run BATS (Bash Automated Testing System)
+    name: Run BATS
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code

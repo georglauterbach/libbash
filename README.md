@@ -43,8 +43,8 @@ your_repository/
     └── ...
 ```
 
-One can then use `libbash` in `some_script.sh` the following way. to source the `init.sh`
-script, which handles the complete initialization of `libbash`, you can use the following
+One can then use `libbash` in `some_script.sh` the following way. To source `load`, the
+script that handles the complete initialization of `libbash`, you can use the following
 command:
 
 ``` BASH
@@ -53,8 +53,9 @@ SCRIPT='some script'
 ```
 
 The former example assumes a constant caller / invocation place (the directory from which
-`some_script.sh` is called is constant). To source `libbash` independently of the invocation
-location, you may use this more elaborate call to `source`:
+`some_script.sh` is called is constant, here `your_repository/`). To source `libbash`
+independently of the invocation location, you may use this more elaborate call to
+`source`:
 
 ``` BASH
 #! /bin/bash
@@ -64,7 +65,8 @@ SCRIPT='some other script'
 ```
 
 **Note** that `libbash` does not care about the caller location - it is written in a way
-that sets it free from this constraint. The example above was just for educational purposes.
+that sets it free from this constraint. The example above was just for educational
+purposes.
 
 ## Modules
 
@@ -83,9 +85,9 @@ a concise overview over what the function does.
 
 ### `cri`
 
-This module provides the `setup_container_runtime` function to detect the container runtime.
-It will set the `CRI` variable to `docker` or `podman` or return with exit status 1 if no
-container runtime could be identified.
+This module provides the `setup_container_runtime` function to detect the container
+runtime. It will set the `CRI` variable to `docker` or `podman` or return with exit
+status 1 if no container runtime could be identified.
 
 ### `errors`
 
@@ -96,16 +98,16 @@ reverting some settings, for example with `set +e`.
 
 ### `log`
 
-This module provides the `log` function. `log` is invoked by specifying the log level
+This module provides the `notify` function. `notify` is invoked by specifying the log level
 
-1. `tra` - "trace"
-2. `deb` - "debug"
-3. `inf` - "info"
-4. `war` - "warning"
-5. `err` - "error"
+1. `tra` or `trace`
+2. `deb` or `debug`
+3. `inf` or `info`
+4. `war` or `warn`
+5. `err` or `error`
 
-and then the message (i.e. `log 'inf' 'Some info message`). You can supply many
-arguments to `log`, only the first argument should be the log level. This function
+and then the message (i.e. `notify 'inf' 'Some info message'`). You can supply many
+arguments to `notify`, but the first argument must be the log level. This function
 is guaranteed to not fail. If called with a string that is not representative if the
 log level, `war` is assumed. The default `LOG_LEVEL` is `inf`.
 
@@ -115,8 +117,7 @@ levels described above. Naturally, messages below the log level are not shown.
 ### `utils`
 
 This module provides various miscellaneous functions, like `escape` to escape characters
-or `exit_failure` to exit with an error. Please have a look inside the module to find all
-the functions that are provided by the module.
+or `exit_failure` to exit with an error.
 
 ## Licensing
 
