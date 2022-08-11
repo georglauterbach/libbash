@@ -13,4 +13,4 @@ test:
 	@ ./tests/bats_core/bin/bats --timing tests/*.bats
 
 lint:
-	@ bash ./scripts/lint.sh
+	@ bash ./tests/lint.sh

@@ -310,6 +310,23 @@ function setup_file
   assert_failure
 }
 
+
+@test "${BATS_TEST_FILE} executble in PATH checks work correctly" {
+  source load 'log' 'utils'
+
+  run is_in_path nadwadkwdnakdnwndakwdnakdnwdnakwdnakjwdnakwjda
+  assert_failure
+
+  run is_in_path ls
+  assert_success
+
+  run is_not_in_path nadwadkwdnakdnwndakwdnakdnwdnakwdnakjwdnakwjda
+  assert_success
+
+  run is_not_in_path ls
+  assert_failure
+}
+
 function teardown_file
 {
   :

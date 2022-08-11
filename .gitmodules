@@ -3,7 +3,7 @@
 	url = https://github.com/bats-core/bats-core.git
 [submodule "tests/bats_support"]
 	path = tests/bats_support
-	url = https://github.com/ztombol/bats-support.git
+	url = https://github.com/bats-core/bats-support.git
 [submodule "tests/bats_assert"]
 	path = tests/bats_assert
-	url = https://github.com/ztombol/bats-assert
+	url = https://github.com/bats-core/bats-assert

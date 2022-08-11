@@ -14,9 +14,9 @@ function setup_file
   assert_success
 }
 
-@test "${BATS_TEST_FILE} sourcing succeeds from 'scripts/' directory" {
+@test "${BATS_TEST_FILE} sourcing succeeds from 'tests/' directory" {
   (
-    cd "${ROOT_DIRECTORY}/scripts/"
+    cd "${ROOT_DIRECTORY}/tests/"
     # shellcheck source=load
     source ../load
     assert_success
@@ -37,9 +37,9 @@ function setup_file
   assert_success
 }
 
-@test "${BATS_TEST_FILE} sourcing with parameters succeeds from 'scripts/' directory" {
+@test "${BATS_TEST_FILE} sourcing with parameters succeeds from 'tests/' directory" {
   (
-    cd "${ROOT_DIRECTORY}/scripts/" || exit 1
+    cd "${ROOT_DIRECTORY}/tests/" || exit 1
     run source ../load 'log' 'cri'
     assert_success
   )
@@ -73,6 +73,8 @@ function setup_file
 }
 
 @test "${BATS_TEST_FILE} internal helper functions work correctly" {
+  bats_require_minimum_version 1.7.0
+
   source load
   assert_success
 
@@ -104,16 +106,16 @@ function setup_file
   assert_output --regexp '\[  .*ERROR.*  \].*'
   assert_output --partial 'namd'
 
-  run load_module
+  run -127 load_module
   assert_failure
 
-  run source_files
+  run -127 source_files
   assert_failure
 
-  run setup_default_notify_error
+  run -127 setup_default_notify_error
   assert_failure
 
-  run libbash_main
+  run -127 libbash_main
   assert_failure
 
   source load 'log' 'utils'
