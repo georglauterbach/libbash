@@ -69,7 +69,7 @@ that sets it free from this constraint. The example above was just for education
 ## Modules
 
 When you use `libbash`, you don't have to use all the code that `libbash` contains.
-`libbash` provides different modules. When you source the `init.sh` script, you can
+`libbash` provides different modules. When you source the `load` script, you can
 provide the modules you would like to use as arguments.
 
 To load a module, just specify its name after the `source` command as shown in the
@@ -104,8 +104,8 @@ This module provides the `log` function. `log` is invoked by specifying the log 
 4. `war` - "warning"
 5. `err` - "error"
 
-and then the message (i.e. `log 'inf' 'Some info message`). You can supply many
-arguments to `log`, only the first argument should be the log level. This function
+and then the message (i.e. `log 'inf' 'Some info message'`). You can supply many
+arguments to `log`, but the first argument must be the log level. This function
 is guaranteed to not fail. If called with a string that is not representative if the
 log level, `war` is assumed. The default `LOG_LEVEL` is `inf`.
 
