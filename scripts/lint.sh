@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# version       0.3.2
+# version       0.3.3
 # executed by   Make or manually
 # task          lints the codebase against various linters
 
@@ -17,7 +17,7 @@ SCRIPT='linting'
 function lint_editorconfig
 {
   local VERSION IMAGE
-  VERSION=latest
+  VERSION='2.4.0'
   IMAGE="docker.io/mstruebing/editorconfig-checker:${VERSION}"
 
   log 'deb' "Running EditorConfig lint (${VERSION})"
