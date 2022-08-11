@@ -43,7 +43,7 @@ your_repository/
     └── ...
 ```
 
-One can then use `libbash` in `some_script.sh` the following way. to source the `init.sh`
+One can then use `libbash` in `some_script.sh` the following way. to source the `load`
 script, which handles the complete initialization of `libbash`, you can use the following
 command:
 
