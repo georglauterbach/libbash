@@ -12,8 +12,8 @@ defaults:
 
 jobs:
   lint:
-    name: Lint against GitHub's Super-Linter
-    runs-on: ubuntu-20.04
+    name: Run GitHub's Super-Linter
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2.4.0
