@@ -3,8 +3,7 @@ load 'bats_assert/load'
 
 BATS_TEST_FILE='90-generic          ::'
 
-function setup_file
-{
+function setup_file {
   cd "${ROOT_DIRECTORY}" || exit 1
 }
 
@@ -36,7 +35,6 @@ function setup_file
 
 }
 
-function teardown_file
-{
+function teardown_file {
   :
 }

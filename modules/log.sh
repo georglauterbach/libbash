@@ -18,8 +18,7 @@
 #
 # $1 :: log level
 # $2 :: message (strictly speaking optional, no default / empty string)
-function log
-{
+function log() {
   function __log_trace
   {
     printf "\e[0m[  \e[94mTRACE\e[0m  ] %30s | \e[94m%s\e[0m\n" \

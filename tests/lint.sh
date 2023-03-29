@@ -14,8 +14,7 @@ SCRIPT='linting'
 
 # -->                   -->                   --> START
 
-function lint_editorconfig
-{
+function lint_editorconfig {
   local VERSION IMAGE
   VERSION='2.4.0'
   IMAGE="docker.io/mstruebing/editorconfig-checker:${VERSION}"
@@ -39,8 +38,7 @@ function lint_editorconfig
   fi
 }
 
-function lint_shellcheck
-{  
+function lint_shellcheck {
   declare -a ARGUMENTS
   local VERSION IMAGE FILES
 
@@ -89,8 +87,7 @@ function lint_shellcheck
   fi
 }
 
-function lint_yamllint
-{
+function lint_yamllint {
   local VERSION IMAGE
   VERSION=1.26-0.9
   IMAGE="docker.io/cytopia/yamllint:${VERSION}"
@@ -116,9 +113,8 @@ function lint_yamllint
   fi
 }
 
-function usage
-{
-  cat << "EOM" 
+function usage {
+  cat << "EOM"
 LINT.SH(1)
 
 SYNOPSIS
@@ -136,8 +132,7 @@ ACTIONS
 EOM
 }
 
-function main
-{
+function main {
   setup_container_runtime || return 1
   local ERROR_OCCURRED=false
 

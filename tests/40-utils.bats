@@ -3,8 +3,7 @@ load 'bats_assert/load'
 
 BATS_TEST_FILE='40-utils            ::'
 
-function setup_file
-{
+function setup_file {
   cd "${ROOT_DIRECTORY}" || exit 1
   export LOG_LEVEL='tra'
 }
@@ -226,7 +225,7 @@ function setup_file
 
 @test "${BATS_TEST_FILE} 'var_is_set_and_not_empty' works correctly" {
   source load 'log' 'utils'
-  
+
   run var_is_set_and_not_empty
   assert_failure
 
@@ -327,7 +326,6 @@ function setup_file
   assert_failure
 }
 
-function teardown_file
-{
+function teardown_file {
   :
 }

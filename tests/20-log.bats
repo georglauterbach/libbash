@@ -3,8 +3,7 @@ load 'bats_assert/load'
 
 BATS_TEST_FILE='20-log              ::'
 
-function setup_file
-{
+function setup_file {
   cd "${ROOT_DIRECTORY}" || exit 1
   export LOG_LEVEL='tra'
   export TEST_STRING='jfk FJHAE aea728 djKJ  k/('
@@ -155,7 +154,6 @@ function setup_file
   refute_output --regexp '.*\[ .*WARNING.* \].*'
 }
 
-function teardown_file
-{
+function teardown_file {
   :
 }

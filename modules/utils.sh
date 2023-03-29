@@ -13,8 +13,7 @@
 #
 # $1 :: line to be checked
 # $2 :: comment symbol (optional, default=#)
-function line_is_comment_or_blank
-{
+function line_is_comment_or_blank() {
   local COMMENT_SYMBOL
   COMMENT_SYMBOL=${2:-#}
   grep -qE "^\s*$|^\s*${COMMENT_SYMBOL}" <<< "${1:-}"
@@ -31,8 +30,7 @@ function line_is_comment_or_blank
 #
 # $1 :: string to be escaped
 # $2 :: character that must be escaped
-function escape
-{
+function escape() {
   [[ ${2} =~ .*\\.* ]] && {
     log 'err' \
       "Escape charactor is not allowd to be or contain a backslash"\
@@ -66,8 +64,7 @@ function escape
 # #### Arguments
 #
 # $1 :: string to be escaped
-function escape_backslash
-{
+function escape_backslash() {
   # shellcheck disable=SC1003
   printf '%s' "${1//'\'/'\\'}"
 }
@@ -75,7 +72,7 @@ function escape_backslash
 # ### Exit Without Error
 #
 # Just a wrapper around `exit 0`.
-function exit_success { exit 0 ; }
+function exit_success() { exit 0 ; }
 
 # ### Exit With Error
 #
@@ -86,8 +83,7 @@ function exit_success { exit 0 ; }
 #
 # $1 :: exit code (optional, default=1)
 # $2 :: message (optional, default='')
-function exit_failure
-{
+function exit_failure() {
   if [[ ! ${1:-1} =~ ^[0-9]+$ ]]
   then
     log 'err' "'exit_failure' was called with non-number exit code"
@@ -113,7 +109,7 @@ function exit_failure
 # used at the very end of a function is it relies on Bash
 # settings the return code of the last command as the exit
 # code of the function.
-function return_success { return 0 ; }
+function return_success() { return 0 ; }
 
 # ### Exit With Error
 #
@@ -125,8 +121,7 @@ function return_success { return 0 ; }
 # #### Arguments
 #
 # $1 :: message (optional, default='')
-function return_failure
-{
+function return_failure() {
   if [[ ! ${1:-1} =~ ^[0-9]+$ ]]
   then
     log 'err' "'return_failure' was called with non-number exit code"
@@ -154,8 +149,7 @@ function return_failure
 # #### Arguments
 #
 # $1 :: exit code (optional, default=1)
-function exit_failure_and_show_callstack
-{
+function exit_failure_and_show_callstack() {
   __libbash_show_call_stack
   exit_failure "${1:-1}"
 }
@@ -168,8 +162,7 @@ function exit_failure_and_show_callstack
 # Arguments
 #
 # $1 :: the variable in question
-function var_is_set_and_not_empty
-{
+function var_is_set_and_not_empty() {
   [[ -n ${1+set} ]] && [[ -n ${1} ]]
 }
 
@@ -182,8 +175,7 @@ function var_is_set_and_not_empty
 #
 # $1 :: question
 # $2 :: variable name to store the result in
-function ask_question
-{
+function ask_question() {
   var_is_set_and_not_empty "${1}" || {
     log 'err' 'No question provided'
     return 1
@@ -212,8 +204,7 @@ function ask_question
 #
 # $1 :: question
 # $2 :: default (optional, default=no)
-function ask_yes_no_question
-{
+function ask_yes_no_question() {
   var_is_set_and_not_empty "${1}" || {
     log 'err' 'No question provided'
     return 1
@@ -229,7 +220,7 @@ function ask_yes_no_question
   else
     DEFAULT_STRING=' [y/N]'
   fi
-  
+
   ask_question "${1}${DEFAULT_STRING}" ANSWER
 
   if [[ ${DEFAULT} =~ ${YES_REGEXP} ]] && [[ -z ${ANSWER} ]]
@@ -252,8 +243,7 @@ function ask_yes_no_question
 # #### Arguments
 #
 # $1 :: executable to check
-function is_in_path
-{
+function is_in_path() {
   var_is_set_and_not_empty "${1}" || {
     log 'err' 'No name for an executable provided'
     return 1
@@ -271,7 +261,6 @@ function is_in_path
 # #### Arguments
 #
 # $1 :: executable to check
-function is_not_in_path
-{
+function is_not_in_path() {
   ! is_in_path "${1:?}"
 }

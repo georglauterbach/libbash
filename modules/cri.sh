@@ -9,8 +9,7 @@
 # Checks whether `docker` or `podman` is in `${PATH}` and
 # sets the `CRI` variable accordingly. Docker is chosen
 # first if both Docker and Podman are installed.
-function setup_container_runtime
-{
+function setup_container_runtime() {
   command -v 'docker' &>/dev/null && export CRI='docker' && return 0
   command -v 'podman' &>/dev/null && export CRI='podman' && return 0
 

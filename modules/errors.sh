@@ -18,12 +18,11 @@ trap '__log_unexpected_error "${FUNCNAME[0]:-}" "${BASH_COMMAND:-}" "${LINENO:-}
 # call stack if `__libbash_show_call_stack` deems it useful.
 #
 # #### Special
-# 
+#
 # Underscored functions are not unset at the end of the sourcing
 # process, but they should only be used by `libbash` modules, not
 # by applications / other libraries using `libbash`.
-function __log_unexpected_error
-{
+function __log_unexpected_error() {
   local MESSAGE='unexpected error occured { '
   MESSAGE+="script: ${SCRIPT:-${0}}"
   MESSAGE+=" | function = ${1:-none (global)}"

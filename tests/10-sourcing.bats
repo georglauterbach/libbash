@@ -3,8 +3,7 @@ load 'bats_assert/load'
 
 BATS_TEST_FILE='10-sourcing         ::'
 
-function setup_file
-{
+function setup_file {
   cd "${ROOT_DIRECTORY}" || exit 1
   LOG_LEVEL='inf'
 }
@@ -126,7 +125,6 @@ function setup_file
 
 }
 
-function teardown_file
-{
+function teardown_file {
   :
 }

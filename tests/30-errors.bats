@@ -3,8 +3,7 @@ load 'bats_assert/load'
 
 BATS_TEST_FILE='30-errors           ::'
 
-function setup_file
-{
+function setup_file {
   cd "${ROOT_DIRECTORY}" || exit 1
   export LOG_LEVEL='tra'
 }
@@ -19,7 +18,6 @@ function setup_file
   assert_success
 }
 
-function teardown_file
-{
+function teardown_file {
   :
 }

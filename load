@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# version       0.2.1
+# version       0.3.1
 # executed by   scripts that use `libbash`
 # task          perform library initialization
 
@@ -14,12 +14,11 @@
 # in a function but at global scope.
 #
 # #### Special
-# 
+#
 # Underscored functions are not unset at the end of the sourcing
 # process, but they should only be used by `libbash` modules, not
 # by applications / other libraries using `libbash`.
-function __libbash_show_call_stack
-{
+function __libbash_show_call_stack() {
   local STACK_DEPTH CUTOFF=2
 
   [[ ${#FUNCNAME[@]} -le ${CUTOFF} ]] && return 0
@@ -40,12 +39,11 @@ function __libbash_show_call_stack
 # Indicates an error has happend in `libbash`.
 #
 # #### Special
-# 
+#
 # Underscored functions are not unset at the end of the sourcing
 # process, but they should only be used by `libbash` modules, not
 # by applications / other libraries using `libbash`.
-function __libbash_show_error
-{
+function __libbash_show_error() {
   printf "\e[0m[  \e[91mERROR\e[0m  ] %30s | \e[91m%s\e[0m\n" \
     "${SCRIPT:-${0}}" "${*}" >&2
 }
@@ -56,22 +54,24 @@ function __libbash_show_error
 # 1 afterwards.
 #
 # #### Special
-# 
+#
 # Underscored functions are not unset at the end of the sourcing
 # process, but they should only be used by `libbash` modules, not
 # by applications / other libraries using `libbash`.
-function __libbash_show_error_and_exit
-{
+function __libbash_show_error_and_exit() {
   __libbash_show_error "${*}"
   __libbash_show_call_stack
-  exit 1
+
+  if [[ ${-} != *i* ]] || ${LIBBASH_EXIT_IN_INTERACTIVE_MODE}
+  then
+    exit 1
+  fi
 }
 
 # ### Perform Basic `libbash` Initialization
 #
 # Mostly sets corrects environment variables.
-function basic_setup
-{
+function basic_setup() {
   # ! export all variables here first, even if not
   # ! all modules are sourced to satisfy shellcheck
   # ! in applications that use `libbash`
@@ -89,8 +89,7 @@ function basic_setup
 #
 # Checks if the given modules is present (exits unsuccessfully)
 # otherwise. Then loads the module by sourcing it.
-function load_module
-{
+function load_module() {
   [[ -z ${1+set} ]] && __libbash_show_error_and_exit "no module provided"
 
   local MODULE_PATH
@@ -115,8 +114,7 @@ function load_module
 #
 # Iterates through arguments and calls `load_module` to
 # load the corresponding module.
-function source_files
-{
+function source_files() {
   local MODULE
   for MODULE in "${@}"
   do
@@ -129,8 +127,7 @@ function source_files
 # ### Provide Debug Information
 #
 # Shows some debug information that `libbash` has collected.
-function debug_libbash
-{
+function debug_libbash() {
   log 'deb' "Showing 'libbash' debug information"
 
   if [[ $(( ${#BASH_SOURCE[@]} - 1 )) -gt 1 ]]
@@ -150,17 +147,16 @@ function debug_libbash
 #
 # If the `log` module was not sourced, provide a fallback
 # `log` implementation, but only for `err` messages.
-function setup_default_notify_error
-{
+function setup_default_notify_error() {
   function log
   {
     if [[ ${1:-} != 'err' ]]
     then
-      __libbash_show_error_and_exit                         \
+      __libbash_show_error_and_exit                      \
         "log module was not loaded but 'log' was called" \
-        "with log level not 'err'"                          \
+        "with log level not 'err'"                       \
         "(arguments were: ${*})"
-      __libbash_show_call_stack
+      return 1
     fi
 
     shift 1
@@ -172,9 +168,8 @@ function setup_default_notify_error
 # ### The Start of `libbash`
 #
 # This function calls the initialization routines for `libbash`
-# in proper order. 
-function libbash_main
-{
+# in proper order.
+function libbash_main() {
   ${LIBBASH_IS_LOADED:-false} && unset log
 
   basic_setup
@@ -193,3 +188,4 @@ libbash_main "${@}"
 unset basic_setup source_files setup_default_notify_error libbash_main
 SCRIPT='prompt or unknown script'
 export LIBBASH_IS_LOADED=true
+export LIBBASH_EXIT_IN_INTERACTIVE_MODE=${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-false}
