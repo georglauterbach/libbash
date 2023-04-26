@@ -4,7 +4,7 @@ SHELL = /bin/bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
-export ROOT_DIRECTORY := $(shell realpath -eL .)
+export ROOT_DIRECTORY := $(CURDIR)
 
 .PHONY: test tests lint
 

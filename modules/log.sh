@@ -1,8 +1,15 @@
 #! /bin/bash
 
-# version       0.5.1
+# version       0.6.0
 # sourced by    ../load
 # task          provides logging functionality
+
+__LIBBASH__LOG_COLOR_RESET='\e[0m'
+__LIBBASH__LOG_COLOR_TRA='\e[92m'
+__LIBBASH__LOG_COLOR_DEB='\e[36m'
+__LIBBASH__LOG_COLOR_INF='\e[34m'
+__LIBBASH__LOG_COLOR_WAR='\e[93m'
+__LIBBASH__LOG_COLOR_ERR='\e[91m'
 
 # ### The Logging Functions
 #
@@ -19,34 +26,19 @@
 # $1 :: log level
 # $2 :: message (strictly speaking optional, no default / empty string)
 function log() {
-  function __log_trace
-  {
-    printf "\e[0m[  \e[94mTRACE\e[0m  ] %30s | \e[94m%s\e[0m\n" \
-      "${SCRIPT:-${0}}" "${*}"
-  }
+  function __log_generic() {
+    local LOG_LEVEL_ABBREVIATION=${1:?Log level abbreviation must be provided to __log_generic}
+    local LOG_LEVEL=${2:?Log level message format must be provided to __log_generic}
+    local LOG_LEVEL=${LOG_LEVEL^^}
+    shift 2
 
-  function __log_debug
-  {
-    printf "\e[0m[  \e[94mDEBUG\e[0m  ] %30s | \e[94m%s\e[0m\n" \
-      "${SCRIPT:-${0}}" "${*}"
-  }
+    local COLOR="__LIBBASH__LOG_COLOR_${LOG_LEVEL_ABBREVIATION^^}"
+    local LOG_STRING="${__LIBBASH__LOG_COLOR_RESET}[  ${!COLOR}${LOG_LEVEL}"
+    LOG_STRING+="${__LIBBASH__LOG_COLOR_RESET}  ${__LIBBASH__LOG_COLOR_RESET}]"
+    LOG_STRING+=" %30s | ${!COLOR}%s${__LIBBASH__LOG_COLOR_RESET}\n"
 
-  function __log_info
-  {
-    printf "\e[0m[   \e[34mINF\e[0m   ] %30s | \e[34m%s\e[0m\n" \
-      "${SCRIPT:-${0}}" "${*}"
-  }
-
-  function __log_warning
-  {
-    printf "\e[0m[ \e[93mWARNING\e[0m ] %30s | \e[93m%s\e[0m\n" \
-      "${SCRIPT:-${0}}" "${*}"
-  }
-
-  function __log_error
-  {
-    printf "\e[0m[  \e[91mERROR\e[0m  ] %30s | \e[91m%s\e[0m\n" \
-      "${SCRIPT:-${0}}" "${*}" >&2
+    # shellcheck disable=SC2059
+    printf "${LOG_STRING}" "${SCRIPT:-${0}}" "${*}"
   }
 
   # Log Level
@@ -81,26 +73,26 @@ function log() {
   case "${MESSAGE_LOG_LEVEL}" in
     ( 'tra' | 'trace' )
       [[ ${LOG_LEVEL_AS_INTEGER} -lt 4 ]] && return 0
-      __log_trace "${*}"
+      __log_generic 'tra' 'TRACE' "${*}"
       ;;
 
     ( 'deb' | 'debug' )
       [[ ${LOG_LEVEL_AS_INTEGER} -lt 3 ]] && return 0
-      __log_debug "${*}"
+      __log_generic 'deb' 'DEBUG' "${*}"
       ;;
 
     ( 'inf' | 'info' )
       [[ "${LOG_LEVEL_AS_INTEGER}" -lt 2 ]] && return 0
-      __log_info "${*}"
+      __log_generic 'inf' 'INFO ' "${*}"
       ;;
 
     ( 'war' | 'warning' )
       [[ "${LOG_LEVEL_AS_INTEGER}" -lt 1 ]] && return 0
-      __log_warning "${*}"
+      __log_generic 'war' 'WARN ' "${*}"
       ;;
 
     ( 'err' | 'error' )
-      __log_error "${*}"
+      __log_generic 'err' 'ERROR' "${*}"
       ;;
 
     ( * )
