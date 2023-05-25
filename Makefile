@@ -6,7 +6,7 @@ MAKEFLAGS += --no-builtin-rules
 
 export ROOT_DIRECTORY := $(CURDIR)
 
-.PHONY: test tests lint
+.PHONY: tests
 
 tests:
 	@ ./tests/bats_core/bin/bats --timing tests/*.bats

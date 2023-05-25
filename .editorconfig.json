@@ -6,7 +6,7 @@
   "NoColor": false,
   "Exclude": [
     "bats_",
-    "^.git/.*",
+    "^.git/",
     "^.gitmodules$",
     "^LICENSE$"
   ],
