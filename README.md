@@ -5,8 +5,8 @@
 [//]: # (editorconfig-checker-disable)
 
 <!-- markdownlint-disable-next-line ine-length  -->
-[ci::bats::status]: https://img.shields.io/github/actions/workflow/status/georglauterbach/libbash/bats.yml?branch=main&color=blue&label=BASH%20UNIT%20TESTS&logo=github&logoColor=white&style=for-the-badge
-[ci::bats::action]: https://github.com/georglauterbach/libbash/actions/workflows/bats.yml
+[ci::bats::status]: https://img.shields.io/github/actions/workflow/status/georglauterbach/libbash/test-bats.yml?branch=main&color=blue&label=BASH%20UNIT%20TESTS&logo=github&logoColor=white&style=for-the-badge
+[ci::bats::action]: https://github.com/georglauterbach/libbash/actions/workflows/test-bats.yml
 
 <!-- markdownlint-disable-next-line ine-length  -->
 [ci::lint::status]: https://img.shields.io/github/actions/workflow/status/georglauterbach/libbash/linting.yml?branch=main&color=blue&label=LINTING%20TESTS&logo=github&logoColor=white&style=for-the-badge

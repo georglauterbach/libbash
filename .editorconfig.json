@@ -5,7 +5,8 @@
   "SpacesAftertabs": true,
   "NoColor": false,
   "Exclude": [
-    "\\.bats_.*",
+    "bats_",
+    "^.git/.*",
     "^.gitmodules$",
     "^LICENSE$"
   ],
@@ -17,6 +18,6 @@
     "InsertFinalNewline": false,
     "TrimTrailingWhitespace": false,
     "IndentSize": false,
-    "MaxLineLength": false
+    "MaxLineLength": true
   }
 }
