@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# version       0.3.1
+# version       0.3.2
 # executed by   scripts that use `libbash`
 # task          perform library initialization
 
@@ -18,7 +18,7 @@
 # Underscored functions are not unset at the end of the sourcing
 # process, but they should only be used by `libbash` modules, not
 # by applications / other libraries using `libbash`.
-function __libbash_show_call_stack() {
+function __libbash__show_call_stack() {
   local STACK_DEPTH CUTOFF=2
 
   [[ ${#FUNCNAME[@]} -le ${CUTOFF} ]] && return 0
@@ -58,9 +58,9 @@ function __libbash_show_error() {
 # Underscored functions are not unset at the end of the sourcing
 # process, but they should only be used by `libbash` modules, not
 # by applications / other libraries using `libbash`.
-function __libbash_show_error_and_exit() {
+function __libbash__show_error_and_exit() {
   __libbash_show_error "${*}"
-  __libbash_show_call_stack
+  __libbash__show_call_stack
 
   if [[ ${-} != *i* ]] || ${LIBBASH_EXIT_IN_INTERACTIVE_MODE}
   then
@@ -89,8 +89,8 @@ function basic_setup() {
 #
 # Checks if the given modules is present (exits unsuccessfully)
 # otherwise. Then loads the module by sourcing it.
-function load_module() {
-  [[ -z ${1+set} ]] && __libbash_show_error_and_exit "no module provided"
+function libbash__load_module() {
+  [[ -z ${1+set} ]] && __libbash__show_error_and_exit 'no module provided'
 
   local MODULE_PATH
   MODULE_PATH="${LIBBASH_DIRECTORY}/modules/${1}.sh"
@@ -99,35 +99,35 @@ function load_module() {
   then
     if [[ ${LIBBASH_LOADED_MODULES[*]} =~ ${1} ]]
     then
-      __libbash_show_error_and_exit "module '${1}' loaded more than once"
+      __libbash__show_error_and_exit "module '${1}' loaded more than once"
     fi
 
     # shellcheck source=/dev/null
     source "${MODULE_PATH}"
     LIBBASH_LOADED_MODULES+=("${1}")
   else
-    __libbash_show_error_and_exit "module '${1:-}' not found"
+    __libbash__show_error_and_exit "module '${1:-}' not found"
   fi
 }
 
 # ### Go Through Arguments
 #
-# Iterates through arguments and calls `load_module` to
+# Iterates through arguments and calls `libbash__load_module` to
 # load the corresponding module.
-function source_files() {
+function libbash__source_files() {
   local MODULE
   for MODULE in "${@}"
   do
-    load_module "${MODULE}"
+    libbash__load_module "${MODULE}"
   done
 
-  unset load_module
+  unset libbash__load_module
 }
 
 # ### Provide Debug Information
 #
 # Shows some debug information that `libbash` has collected.
-function debug_libbash() {
+function libbash_debug() {
   log 'deb' "Showing 'libbash' debug information"
 
   if [[ $(( ${#BASH_SOURCE[@]} - 1 )) -gt 1 ]]
@@ -147,12 +147,11 @@ function debug_libbash() {
 #
 # If the `log` module was not sourced, provide a fallback
 # `log` implementation, but only for `err` messages.
-function setup_default_notify_error() {
-  function log
-  {
+function libbash_setup_default_notify_error() {
+  function log() {
     if [[ ${1:-} != 'err' ]]
     then
-      __libbash_show_error_and_exit                      \
+      __libbash__show_error_and_exit                      \
         "log module was not loaded but 'log' was called" \
         "with log level not 'err'"                       \
         "(arguments were: ${*})"
@@ -169,23 +168,23 @@ function setup_default_notify_error() {
 #
 # This function calls the initialization routines for `libbash`
 # in proper order.
-function libbash_main() {
+function libbash__main() {
   ${LIBBASH_IS_LOADED:-false} && unset log
 
   basic_setup
-  source_files "${@}"
+  libbash__source_files "${@}"
 
   if [[ $(type -t log || printf 'none') != 'function' ]]
   then
-    setup_default_notify_error
+    libbash_setup_default_notify_error
     return 0
   fi
 
   log 'tra' "Finished 'libbash' initialization"
 }
 
-libbash_main "${@}"
-unset basic_setup source_files setup_default_notify_error libbash_main
+libbash__main "${@}"
+unset basic_setup libbash__source_files libbash_setup_default_notify_error libbash__main
 SCRIPT='prompt or unknown script'
 export LIBBASH_IS_LOADED=true
 export LIBBASH_EXIT_IN_INTERACTIVE_MODE=${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-false}

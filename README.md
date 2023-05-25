@@ -54,8 +54,8 @@ SCRIPT='some script'
 
 The former example assumes a constant caller / invocation place (the directory from which
 `some_script.sh` is called is constant, here `your_repository/`). To source `libbash`
-independently of the invocation location, you may use this more elaborate call to
-`source`:
+independently of the invocation location, for example in `some_dir/some_other_script.sh`,
+you may use this more elaborate call to `source`:
 
 ``` BASH
 #! /bin/bash
@@ -64,9 +64,10 @@ source "$(realpath "$(dirname "$(realpath -eL "${0}")")/../libbash/load" 'errors
 SCRIPT='some other script'
 ```
 
-**Note** that `libbash` does not care about the caller location - it is written in a way
-that sets it free from this constraint. The example above was just for educational
-purposes.
+When using `libbash` on an interactive prompt, you may use `LIBBASH_EXIT_IN_INTERACTIVE_MODE`
+to specify whether you want to prompt to quit when the `errors` module is loaded and
+an unhandled error is thrown. The default is `false`, so your interactive prompt will
+not close be default.
 
 ## Modules
 
