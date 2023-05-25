@@ -8,9 +8,5 @@ export ROOT_DIRECTORY := $(CURDIR)
 
 .PHONY: test tests lint
 
-tests: test
-test:
+tests:
 	@ ./tests/bats_core/bin/bats --timing tests/*.bats
-
-lint:
-	@ bash ./tests/lint.sh

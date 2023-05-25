@@ -43,7 +43,7 @@ function __libbash__show_call_stack() {
 # Underscored functions are not unset at the end of the sourcing
 # process, but they should only be used by `libbash` modules, not
 # by applications / other libraries using `libbash`.
-function __libbash_show_error() {
+function __libbash__show_error() {
   printf "\e[0m[  \e[91mERROR\e[0m  ] %30s | \e[91m%s\e[0m\n" \
     "${SCRIPT:-${0}}" "${*}" >&2
 }
@@ -59,7 +59,7 @@ function __libbash_show_error() {
 # process, but they should only be used by `libbash` modules, not
 # by applications / other libraries using `libbash`.
 function __libbash__show_error_and_exit() {
-  __libbash_show_error "${*}"
+  __libbash__show_error "${*}"
   __libbash__show_call_stack
 
   if [[ ${-} != *i* ]] || ${LIBBASH_EXIT_IN_INTERACTIVE_MODE}
@@ -127,7 +127,7 @@ function libbash__source_files() {
 # ### Provide Debug Information
 #
 # Shows some debug information that `libbash` has collected.
-function libbash_debug() {
+function libbash__debug() {
   log 'deb' "Showing 'libbash' debug information"
 
   if [[ $(( ${#BASH_SOURCE[@]} - 1 )) -gt 1 ]]
@@ -159,7 +159,7 @@ function libbash_setup_default_notify_error() {
     fi
 
     shift 1
-    __libbash_show_error "${*}"
+    __libbash__show_error "${*}"
   }
   export -f log
 }

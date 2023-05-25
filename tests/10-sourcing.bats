@@ -52,9 +52,9 @@ function setup_file {
   )
 }
 
-@test "${BATS_TEST_FILE} sourcing with parameters succeeds from '.github/linters' directory" {
+@test "${BATS_TEST_FILE} sourcing with parameters succeeds from '.github/workflows' directory" {
   (
-    cd "${ROOT_DIRECTORY}/.github/linters/"
+    cd "${ROOT_DIRECTORY}/.github/workflows/"
     run source ../../load 'log' 'cri'
     assert_success
   )
@@ -77,30 +77,30 @@ function setup_file {
   source load
   assert_success
 
-  __libbash_show_call_stack
+  __libbash__show_call_stack
   assert_success
 
-  function test__libbash_show_call_stack_1
+  function test__libbash__show_call_stack_1
   {
-    __libbash_show_call_stack
+    __libbash__show_call_stack
   }
 
-  function test__libbash_show_call_stack_2
+  function test__libbash__show_call_stack_2
   {
-    test__libbash_show_call_stack_1
+    test__libbash__show_call_stack_1
   }
 
-  run test__libbash_show_call_stack_2
+  run test__libbash__show_call_stack_2
   assert_success
   assert_output --partial 'call stack (most recent call first):'
-  assert_output --partial 'test__libbash_show_call_stack'
+  assert_output --partial 'test__libbash__show_call_stack'
 
-  run __libbash_show_error 'namd'
+  run __libbash__show_error 'namd'
   assert_success
   assert_output --regexp '\[  .*ERROR.*  \].*'
   assert_output --partial 'namd'
 
-  run __libbash_show_error_and_exit 'namd'
+  run __libbash__show_error_and_exit 'namd'
   assert_failure
   assert_output --regexp '\[  .*ERROR.*  \].*'
   assert_output --partial 'namd'
@@ -119,7 +119,7 @@ function setup_file {
 
   source load 'log' 'utils'
   LOG_LEVEL='tra'
-  run debug_libbash
+  run libbash__debug
   assert_success
   assert_output --partial 'Loaded modules: log utils'
 

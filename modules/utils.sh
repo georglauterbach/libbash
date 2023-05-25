@@ -87,14 +87,14 @@ function exit_failure() {
   if [[ ! ${1:-1} =~ ^[0-9]+$ ]]
   then
     log 'err' "'exit_failure' was called with non-number exit code"
-    __libbash_show_call_stack
+    __libbash__show_call_stack
     exit 1
   fi
 
   if [[ ${1:-1} -eq 0 ]] || [[ ${1:-1} -ge 128 ]]
   then
     log 'err' "'exit_failure' was called with exit code 0 or >127"
-    __libbash_show_call_stack
+    __libbash__show_call_stack
     exit 1
   fi
 
@@ -125,14 +125,14 @@ function return_failure() {
   if [[ ! ${1:-1} =~ ^[0-9]+$ ]]
   then
     log 'err' "'return_failure' was called with non-number exit code"
-    __libbash_show_call_stack
+    __libbash__show_call_stack
     exit 1
   fi
 
   if [[ ${1:-1} -eq 0 ]] || [[ ${1:-1} -ge 128 ]]
   then
     log 'err' "'return_failure' was called with exit code 0 or >127"
-    __libbash_show_call_stack
+    __libbash__show_call_stack
     exit 1
   fi
 
@@ -150,7 +150,7 @@ function return_failure() {
 #
 # $1 :: exit code (optional, default=1)
 function exit_failure_and_show_callstack() {
-  __libbash_show_call_stack
+  __libbash__show_call_stack
   exit_failure "${1:-1}"
 }
 

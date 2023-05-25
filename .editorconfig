@@ -15,20 +15,14 @@ insert_final_newline = true
 charset              = utf-8
 indent_style         = space
 indent_size          = 2
-tab_width            = 8
-max_line_length      = 110
+tab_width            = 4
 insert_final_newline = true
-
-# -----------------------------------------------
-# ----  Rust  -----------------------------------
-# -----------------------------------------------
 
 [Makefile]
 indent_style         = tab
 
-# -----------------------------------------------
-# ----  Shell (Bash)  ---------------------------
-# -----------------------------------------------
+[*.{yml,yaml,json,jsonc}]
+indent_style         = space
 
 [*.{sh,bats}]
 shell_variant        = bash
