@@ -1,37 +1,56 @@
----
 name: Linting
 
-on: # yamllint disable-line rule:truthy
-  workflow_dispatch:
+on:
+  pull_request:
   push:
-    branches: ['**']
+    branches: [ main ]
 
-defaults:
-  run:
-    shell: bash
+permissions:
+  contents: read
+
+env:
+  IMAGE_TAG_EC: '2.7.0'
+  IMAGE_TAG_SHELLCHECK: 'v0.9.0'
 
 jobs:
-  lint:
-    name: Run GitHub's Super-Linter
-    runs-on: ubuntu-20.04
+  EditorConfig:
+    runs-on: ubuntu-22.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2.4.0
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Lint code base
-        uses: github/super-linter@v4.8.7
-        env:
-          LOG_LEVEL: NOTICE
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SUPPRESS_POSSUM: true
-          VALIDATE_ALL_CODEBASE: true
+      - name: Run the Linter
+        run: |
+          docker run --rm --tty --volume "${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE}:ro" --workdir '${GITHUB_WORKSPACE}' \
+            docker.io/mstruebing/editorconfig-checker:${IMAGE_TAG_EC} \
+            ec -config "${GITHUB_WORKSPACE}/.editorconfig"
 
-          ERROR_ON_MISSING_EXEC_BIT: true
-          VALIDATE_BASH: true
-          VALIDATE_BASH_EXEC: true
-          VALIDATE_EDITORCONFIG: true
-          VALIDATE_GITHUB_ACTIONS: true
-          VALIDATE_MARKDOWN: true
-          VALIDATE_YAML: true
+  ShellCheck:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Run the Linter
+        run: |
+          set -e -u -o pipefail
+
+          readarray -d '' FILES < <(find "${GITHUB_WORKSPACE}/modules/" \
+            -type f -regextype egrep -iregex '.*\.sh' -print0)
+          FILES+=("${GITHUB_WORKSPACE}/load")
+
+          docker run --rm --tty --volume "${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE}:ro" --workdir "${GITHUB_WORKSPACE}" \
+            docker.io/koalaman/shellcheck-alpine:${IMAGE_TAG_SHELLCHECK} \
+            shellcheck --source-path=${GITHUB_WORKSPACE} "${FILES[@]}"
+
+          unset FILES
+          readarray -d '' FILES < <(find "${GITHUB_WORKSPACE}/tests/" \
+            -maxdepth 1 -type f -regextype egrep -iregex '.*\.bats' -print0)
+
+          docker run --rm --tty --volume "${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE}:ro" --workdir "${GITHUB_WORKSPACE}" \
+            docker.io/koalaman/shellcheck-alpine:${IMAGE_TAG_SHELLCHECK} \
+            shellcheck --source-path=${GITHUB_WORKSPACE} --exclude=SC2034 "${FILES[@]}"

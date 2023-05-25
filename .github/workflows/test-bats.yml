@@ -1,5 +1,5 @@
 ---
-name: Unit Tests
+name: Tests
 
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
@@ -15,7 +15,7 @@ defaults:
     shell: bash
 
 jobs:
-  run-unit-tests:
+  BATS:
     name: Run BATS
     runs-on: ubuntu-20.04
     steps:
