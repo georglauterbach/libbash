@@ -24,10 +24,11 @@ jobs:
       - name: Run the Linter
         run: |
           docker run --rm --tty --volume "${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE}:ro" --workdir "${GITHUB_WORKSPACE}" \
-            "docker.io/mstruebing/editorconfig-checker:${IMAGE_TAG_EC}"
+            "docker.io/mstruebing/editorconfig-checker:${IMAGE_TAG_EC}" \
+            ec -config "${GITHUB_WORKSPACE}/.editorconfig.json"
 
   ShellCheck:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
