@@ -1,7 +1,7 @@
 ---
-name: Tests
+name: Testing
 
-on: # yamllint disable-line rule:truthy
+on:
   workflow_dispatch:
   push:
     branches: ['**']
@@ -10,20 +10,15 @@ on: # yamllint disable-line rule:truthy
       - tests/**
       - load
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   BATS:
     name: Run BATS
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
         with:
           submodules: recursive
+
       - name: Run test suite
-        run: bash -c 'make test'
-        env:
-          CI: true
+        run: bash -c 'make tests'
