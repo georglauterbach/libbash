@@ -82,25 +82,27 @@ function exit_success() { exit 0 ; }
 # #### Arguments
 #
 # $1 :: exit code (optional, default=1)
-# $2 :: message (optional, default='')
+# $2 :: message (optional, default='' (no output is printed))
 function exit_failure() {
-  if [[ ! ${1:-1} =~ ^[0-9]+$ ]]
+  local CODE=${1:-1}
+  shift 1
+
+  if [[ ! ${CODE} =~ ^[0-9]+$ ]]
   then
     log 'err' "'exit_failure' was called with non-number exit code"
     __libbash__show_call_stack
     exit 1
   fi
 
-  if [[ ${1:-1} -eq 0 ]] || [[ ${1:-1} -ge 128 ]]
+  if [[ ${CODE} -eq 0 ]] || [[ ${CODE} -ge 127 ]]
   then
     log 'err' "'exit_failure' was called with exit code 0 or >127"
     __libbash__show_call_stack
     exit 1
   fi
 
-  var_is_set_and_not_empty "${*}" && log 'err' "${*}"
-
-  exit "${1:-1}"
+  var_is_set_and_not_empty "${1}" && log 'err' "${1}"
+  exit "${CODE}"
 }
 
 # ### Exit Without Error
@@ -148,10 +150,11 @@ function return_failure() {
 #
 # #### Arguments
 #
-# $1 :: exit code (optional, default=1)
-function exit_failure_and_show_callstack() {
+# Same as `exit_failure`.
+function exit_failure_show_callstack() {
+  var_is_set_and_not_empty "${2:-}" && log 'err' "${2}"
   __libbash__show_call_stack
-  exit_failure "${1:-1}"
+  exit_failure "${1:-}"
 }
 
 # ### Tell Whether a Variable is Set and Not Empty

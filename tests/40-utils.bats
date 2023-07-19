@@ -187,15 +187,20 @@ function setup_file {
   assert_failure 1
   assert_output --partial "'exit_failure' was called with non-number exit code"
 
-  function test_exit_failure_and_show_callstack
+  run exit_failure 2 'oh my god!'
+  assert_failure 2
+  assert_output --partial 'oh my god!'
+
+  function test_exit_failure_show_callstack
   {
-    exit_failure_and_show_callstack
+    exit_failure_show_callstack 4 'noooooo'
   }
 
-  run test_exit_failure_and_show_callstack
-  assert_failure 1
+  run test_exit_failure_show_callstack
+  assert_failure 4
   assert_output --partial 'call stack (most recent call first):'
-  assert_output --partial 'exit_failure_and_show_callstack'
+  assert_output --partial 'exit_failure_show_callstack'
+  assert_output --partial 'noooooo'
 }
 
 @test "${BATS_TEST_FILE} return wrappers work correctly" {
