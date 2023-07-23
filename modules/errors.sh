@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# version       0.3.0
+# version       0.3.1
 # sourced by    ../load
 # task          provides error handlers
 
@@ -23,13 +23,8 @@ trap '__log_unexpected_error "${FUNCNAME[0]:-}" "${BASH_COMMAND:-}" "${LINENO:-}
 # process, but they should only be used by `libbash` modules, not
 # by applications / other libraries using `libbash`.
 function __log_unexpected_error() {
-  local MESSAGE='unexpected error occured { '
-  MESSAGE+="script: ${SCRIPT:-${0}}"
-  MESSAGE+=" | function = ${1:-none (global)}"
-  MESSAGE+=" | command = ${2:-?}"
-  MESSAGE+=" | line = ${3:-?}"
-  MESSAGE+=" | exit code = ${4:-?}"
-  MESSAGE+=" }"
+  local MESSAGE="unexpected error occured: script = ${SCRIPT:-${0}} | "
+  MESSAGE+="function = ${1:-none} | command = ${2:-?} | line = ${3:-?} | exit code = ${4:-?}"
 
   log 'err' "${MESSAGE}"
   __libbash__show_call_stack

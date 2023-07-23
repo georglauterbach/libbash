@@ -18,6 +18,12 @@ function setup_file {
   assert_success
 }
 
+@test "${BATS_TEST_FILE} 'errors' lol" {
+  run bash -c "( source load 'errors' 'log' 'utils' ; false ; )"
+  assert_failure
+  assert_output --partial 'unexpected error occured:'
+}
+
 function teardown_file {
   :
 }
