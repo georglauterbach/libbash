@@ -33,8 +33,8 @@ function log() {
     shift 2
 
     local COLOR="__LIBBASH__LOG_COLOR_${LOG_LEVEL_ABBREVIATION^^}"
-    local LOG_STRING="${__LIBBASH__LOG_COLOR_RESET}[  ${!COLOR}${LOG_LEVEL}"
-    LOG_STRING+="${__LIBBASH__LOG_COLOR_RESET}  ${__LIBBASH__LOG_COLOR_RESET}]"
+    local LOG_STRING="${__LIBBASH__LOG_COLOR_RESET}[  ${!COLOR}"
+    LOG_STRING+="${LOG_LEVEL}${__LIBBASH__LOG_COLOR_RESET}  ]"
     LOG_STRING+=" %30s | ${!COLOR}%s${__LIBBASH__LOG_COLOR_RESET}\n"
 
     # shellcheck disable=SC2059
