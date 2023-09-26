@@ -1,12 +1,16 @@
+bats_require_minimum_version '1.10.0'
+
 load 'bats_support/load'
 load 'bats_assert/load'
 
 BATS_TEST_FILE='40-utils            ::'
 
-function setup_file {
+function setup_file() {
   cd "${ROOT_DIRECTORY}" || exit 1
   export LOG_LEVEL='tra'
 }
+
+function setup() { source load 'log' 'utils' ; }
 
 @test "${BATS_TEST_FILE} 'utils' is correctly sourced" {
   run bash -c "( source load 'utils' ; )"
@@ -22,8 +26,6 @@ function setup_file {
 }
 
 @test "${BATS_TEST_FILE} 'line_is_comment_or_blank' works correctly" {
-  source load 'utils'
-
   run line_is_comment_or_blank '# nkdadjn'
   assert_success
   run line_is_comment_or_blank '    # nkdadjn'
@@ -81,8 +83,6 @@ function setup_file {
 }
 
 @test "${BATS_TEST_FILE} 'escape' works correctly" {
-  source load 'utils'
-
   set -E
   shopt -s inherit_errexit
 
@@ -115,8 +115,6 @@ function setup_file {
 }
 
 @test "${BATS_TEST_FILE} 'escape_backslash' works correctly" {
-  source load 'utils'
-
   # shellcheck disable=SC1003
   run escape_backslash '\'
   # shellcheck disable=SC1003
@@ -168,8 +166,6 @@ function setup_file {
 }
 
 @test "${BATS_TEST_FILE} exit wrappers work correctly" {
-  source load 'log' 'utils'
-
   run exit_success
   assert_success
 
@@ -204,8 +200,6 @@ function setup_file {
 }
 
 @test "${BATS_TEST_FILE} return wrappers work correctly" {
-  source load 'log' 'utils'
-
   run return_success
   assert_success
 
@@ -229,8 +223,6 @@ function setup_file {
 }
 
 @test "${BATS_TEST_FILE} 'var_is_set_and_not_empty' works correctly" {
-  source load 'log' 'utils'
-
   run var_is_set_and_not_empty
   assert_failure
 
@@ -242,8 +234,6 @@ function setup_file {
 }
 
 @test "${BATS_TEST_FILE} 'ask_question' works correctly" {
-  source load 'log' 'utils'
-
   TEST_STRING='no one knows'
 
   run ask_question
@@ -262,8 +252,6 @@ function setup_file {
 }
 
 @test "${BATS_TEST_FILE} 'ask_yes_no_question' works correctly" {
-  source load 'log' 'utils'
-
   TEST_STRING='no one knows'
 
   run ask_yes_no_question
@@ -316,8 +304,6 @@ function setup_file {
 
 
 @test "${BATS_TEST_FILE} executble in PATH checks work correctly" {
-  source load 'log' 'utils'
-
   run is_in_path nadwadkwdnakdnwndakwdnakdnwdnakwdnakjwdnakwjda
   assert_failure
 
@@ -329,8 +315,4 @@ function setup_file {
 
   run is_not_in_path ls
   assert_failure
-}
-
-function teardown_file {
-  :
 }

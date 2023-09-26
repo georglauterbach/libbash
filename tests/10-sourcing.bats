@@ -1,15 +1,17 @@
+bats_require_minimum_version '1.10.0'
+
 load 'bats_support/load'
 load 'bats_assert/load'
 
 BATS_TEST_FILE='10-sourcing         ::'
 
-function setup_file {
+function setup_file() {
   cd "${ROOT_DIRECTORY}" || exit 1
   LOG_LEVEL='inf'
 }
 
 @test "${BATS_TEST_FILE} sourcing succeeds from repository root" {
-  source load
+  run bash -c 'source load'
   assert_success
 }
 
@@ -17,7 +19,7 @@ function setup_file {
   (
     cd "${ROOT_DIRECTORY}/tests/"
     # shellcheck source=load
-    source ../load
+    run bash -c 'source ../load'
     assert_success
   )
 }
@@ -26,13 +28,13 @@ function setup_file {
   (
     cd "${ROOT_DIRECTORY}/modules/" || exit 1
     # shellcheck source=load
-    source ../load
+    run bash -c ' source ../load'
     assert_success
   )
 }
 
 @test "${BATS_TEST_FILE} sourcing with parameters succeeds from repository root" {
-  source load 'log' 'cri'
+  run bash -c 'source load "log" "cri"'
   assert_success
 }
 
@@ -72,12 +74,9 @@ function setup_file {
 }
 
 @test "${BATS_TEST_FILE} internal helper functions work correctly" {
-  bats_require_minimum_version 1.7.0
-
   source load
-  assert_success
 
-  libbash__show_call_stack
+  run libbash__show_call_stack
   assert_success
 
   function testshow_call_stack_1 {
@@ -121,8 +120,4 @@ function setup_file {
   assert_success
   assert_output --partial 'Loaded modules: log utils'
 
-}
-
-function teardown_file {
-  :
 }
