@@ -11,6 +11,12 @@ LIBBASH__LOG_COLOR_INF='\e[34m'
 LIBBASH__LOG_COLOR_WAR='\e[93m'
 LIBBASH__LOG_COLOR_ERR='\e[91m'
 
+if [[ -z ${__LIBBASH_IS_LOADED_LOG+set} ]]
+then
+  export __LIBBASH_IS_LOADED_LOG=true
+  readonly __LIBBASH_IS_LOADED_LOG
+fi
+
 # ### The Logging Functions
 #
 # `log` is used for logging. It uses five different log levels

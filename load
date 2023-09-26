@@ -4,7 +4,7 @@
 # executed by   scripts that use `libbash`
 # task          perform library initialization
 
-if ! ${__LIBBASH_IS_LOADED:-false}
+if [[ -z ${__LIBBASH_IS_LOADED+set} ]]
 then
   # ### Show an Error
   #

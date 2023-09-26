@@ -33,7 +33,7 @@ function line_is_comment_or_blank() {
 function escape() {
   [[ ${2} =~ .*\\.* ]] && {
     log 'err' \
-      "Escape character is not allowd to be or contain a backslash"\
+      "Escape character is not allowed to be or contain a backslash"\
       "(use 'escape_backslash')"
     return 1
   }

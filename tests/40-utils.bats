@@ -102,7 +102,7 @@ function setup_file {
   # shellcheck disable=SC1003
   run escape 'dka' '\\'
   assert_failure
-  assert_output --partial 'Escape charactor is not allowd to be or contain a backslash'
+  assert_output --partial 'Escape character is not allowed to be or contain a backslash'
   assert_output --partial "(use 'escape_backslash')"
 
   run escape

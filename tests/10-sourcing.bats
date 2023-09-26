@@ -63,7 +63,7 @@ function setup_file {
 
 @test "${BATS_TEST_FILE} sourcing an unknown module results in an error" {
   run source load 'somethingOdd'
-  assert_failure 1
+  assert_failure 2
 }
 
 @test "${BATS_TEST_FILE} sourcing a module twice results in an error" {
