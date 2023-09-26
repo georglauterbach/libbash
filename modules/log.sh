@@ -1,15 +1,15 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
-# version       0.6.0
+# version       0.7.0
 # sourced by    ../load
 # task          provides logging functionality
 
-__LIBBASH__LOG_COLOR_RESET='\e[0m'
-__LIBBASH__LOG_COLOR_TRA='\e[92m'
-__LIBBASH__LOG_COLOR_DEB='\e[36m'
-__LIBBASH__LOG_COLOR_INF='\e[34m'
-__LIBBASH__LOG_COLOR_WAR='\e[93m'
-__LIBBASH__LOG_COLOR_ERR='\e[91m'
+LIBBASH__LOG_COLOR_RESET='\e[0m'
+LIBBASH__LOG_COLOR_TRA='\e[92m'
+LIBBASH__LOG_COLOR_DEB='\e[36m'
+LIBBASH__LOG_COLOR_INF='\e[34m'
+LIBBASH__LOG_COLOR_WAR='\e[93m'
+LIBBASH__LOG_COLOR_ERR='\e[91m'
 
 # ### The Logging Functions
 #
@@ -19,7 +19,7 @@ __LIBBASH__LOG_COLOR_ERR='\e[91m'
 #
 # and behaves as you would expect from a log function: you provide
 # the log level as the first argument and the message in the con-
-# secutive ones.
+# secutive ones. The default log level is 'inf'.
 #
 # #### Arguments
 #
@@ -29,13 +29,12 @@ function log() {
   function __log_generic() {
     local LOG_LEVEL_ABBREVIATION=${1:?Log level abbreviation must be provided to __log_generic}
     local LOG_LEVEL=${2:?Log level message format must be provided to __log_generic}
-    local LOG_LEVEL=${LOG_LEVEL^^}
     shift 2
 
-    local COLOR="__LIBBASH__LOG_COLOR_${LOG_LEVEL_ABBREVIATION^^}"
-    local LOG_STRING="${__LIBBASH__LOG_COLOR_RESET}[  ${!COLOR}"
-    LOG_STRING+="${LOG_LEVEL}${__LIBBASH__LOG_COLOR_RESET}  ]"
-    LOG_STRING+=" %30s | ${!COLOR}%s${__LIBBASH__LOG_COLOR_RESET}\n"
+    local COLOR="LIBBASH__LOG_COLOR_${LOG_LEVEL_ABBREVIATION^^}"
+    local LOG_STRING="${LIBBASH__LOG_COLOR_RESET}[  ${!COLOR}"
+    LOG_STRING+="${LOG_LEVEL}${LIBBASH__LOG_COLOR_RESET}  ]"
+    LOG_STRING+=" %30s | ${!COLOR}%s${LIBBASH__LOG_COLOR_RESET}\n"
 
     # shellcheck disable=SC2059
     printf "${LOG_STRING}" "${SCRIPT:-${0}}" "${*}"
@@ -54,7 +53,7 @@ function log() {
   #   err   => error   - log critical errors and aborts
   #
   # where a higher level includes the level below. The
-  # default log level is 'warning' (2).
+  # default log level is 'inf' (2).
   local LOG_LEVEL_AS_INTEGER=2 MESSAGE_LOG_LEVEL="${1:-}"
   shift 1
 
@@ -65,8 +64,8 @@ function log() {
     ( 'deb' | 'debug' ) LOG_LEVEL_AS_INTEGER=3 ;;
     ( 'tra' | 'trace' ) LOG_LEVEL_AS_INTEGER=4 ;;
     ( * )
-      printf "Log level '%s' unknown\n" "${LOG_LEVEL}" >&2
-      exit 1
+      libbash__exit_with_error_and_callstack "Log level '${LOG_LEVEL}' unknown"
+      return 1
       ;;
   esac
 
@@ -103,3 +102,4 @@ function log() {
 
   return 0
 }
+export -f log
