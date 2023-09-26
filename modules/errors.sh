@@ -1,11 +1,11 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # version       0.3.1
 # sourced by    ../load
 # task          provides error handlers
 
 # `set -u` is not performed here due to `BP_PIPESTATUS` etc.
-set -eEo pipefail
+set -eE -o pipefail
 shopt -s inherit_errexit
 
 trap '__log_unexpected_error "${FUNCNAME[0]:-}" "${BASH_COMMAND:-}" "${LINENO:-}" "${?:-}"' ERR
@@ -14,8 +14,8 @@ trap '__log_unexpected_error "${FUNCNAME[0]:-}" "${BASH_COMMAND:-}" "${LINENO:-}
 #
 # This function is called when an unhandled `ERR` signal is thrown.
 # It prints information about the error (where it originated, etc.)
-# and also calls `__libbash__show_call_stack` to possibly print a
-# call stack if `__libbash__show_call_stack` deems it useful.
+# and also calls `libbash__show_call_stack` to possibly print a
+# call stack if `libbash__show_call_stack` deems it useful.
 #
 # #### Special
 #
@@ -26,7 +26,9 @@ function __log_unexpected_error() {
   local MESSAGE="unexpected error occured: script = ${SCRIPT:-${0}} | "
   MESSAGE+="function = ${1:-none} | command = ${2:-?} | line = ${3:-?} | exit code = ${4:-?}"
 
-  log 'err' "${MESSAGE}"
-  __libbash__show_call_stack
+  __libbash__show_error "${MESSAGE}"
+  libbash__show_call_stack --internal
   return 0
 }
+export -f __log_unexpected_error
+readonly -f __log_unexpected_error
