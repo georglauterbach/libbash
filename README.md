@@ -60,7 +60,7 @@ you may use this more elaborate call to `source`:
 ``` BASH
 #! /bin/bash
 
-source "$(realpath "$(dirname "$(realpath -eL "${0}")")/../libbash/load" 'errors' 'log'
+source "$(realpath "$(dirname "${BASH_SOURCE[0]}")/../libbash/load" 'errors' 'log'
 SCRIPT='some other script'
 ```
 
