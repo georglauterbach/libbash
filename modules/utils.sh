@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # version       0.1.0
 # sourced by    ../load
@@ -33,7 +33,7 @@ function line_is_comment_or_blank() {
 function escape() {
   [[ ${2} =~ .*\\.* ]] && {
     log 'err' \
-      "Escape charactor is not allowd to be or contain a backslash"\
+      "Escape character is not allowd to be or contain a backslash"\
       "(use 'escape_backslash')"
     return 1
   }
@@ -90,14 +90,14 @@ function exit_failure() {
   if [[ ! ${CODE} =~ ^[0-9]+$ ]]
   then
     log 'err' "'exit_failure' was called with non-number exit code"
-    __libbash__show_call_stack
+    libbash__show_call_stack
     exit 1
   fi
 
   if [[ ${CODE} -eq 0 ]] || [[ ${CODE} -ge 127 ]]
   then
     log 'err' "'exit_failure' was called with exit code 0 or >127"
-    __libbash__show_call_stack
+    libbash__show_call_stack
     exit 1
   fi
 
@@ -127,14 +127,14 @@ function return_failure() {
   if [[ ! ${1:-1} =~ ^[0-9]+$ ]]
   then
     log 'err' "'return_failure' was called with non-number exit code"
-    __libbash__show_call_stack
+    libbash__show_call_stack
     exit 1
   fi
 
   if [[ ${1:-1} -eq 0 ]] || [[ ${1:-1} -ge 128 ]]
   then
     log 'err' "'return_failure' was called with exit code 0 or >127"
-    __libbash__show_call_stack
+    libbash__show_call_stack
     exit 1
   fi
 
@@ -153,7 +153,7 @@ function return_failure() {
 # Same as `exit_failure`.
 function exit_failure_show_callstack() {
   var_is_set_and_not_empty "${2:-}" && log 'err' "${2}"
-  __libbash__show_call_stack
+  libbash__show_call_stack
   exit_failure "${1:-}"
 }
 
