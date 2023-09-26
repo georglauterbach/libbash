@@ -4,12 +4,12 @@
 # sourced by    ../load
 # task          provides logging functionality
 
-LIBBASH__LOG_COLOR_RESET='\e[0m'
-LIBBASH__LOG_COLOR_TRA='\e[92m'
-LIBBASH__LOG_COLOR_DEB='\e[36m'
-LIBBASH__LOG_COLOR_INF='\e[34m'
-LIBBASH__LOG_COLOR_WAR='\e[93m'
-LIBBASH__LOG_COLOR_ERR='\e[91m'
+export LIBBASH__LOG_COLOR_RESET='\e[0m'
+export LIBBASH__LOG_COLOR_TRA='\e[92m'
+export LIBBASH__LOG_COLOR_DEB='\e[36m'
+export LIBBASH__LOG_COLOR_INF='\e[34m'
+export LIBBASH__LOG_COLOR_WAR='\e[93m'
+export LIBBASH__LOG_COLOR_ERR='\e[91m'
 
 if [[ -z ${__LIBBASH_IS_LOADED_LOG+set} ]]
 then
