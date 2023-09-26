@@ -77,30 +77,28 @@ function setup_file {
   source load
   assert_success
 
-  __libbash__show_call_stack
+  libbash__show_call_stack
   assert_success
 
-  function test__libbash__show_call_stack_1
-  {
-    __libbash__show_call_stack
+  function testshow_call_stack_1 {
+    libbash__show_call_stack
   }
 
-  function test__libbash__show_call_stack_2
-  {
-    test__libbash__show_call_stack_1
+  function testshow_call_stack_2 {
+    testshow_call_stack_1
   }
 
-  run test__libbash__show_call_stack_2
+  run testshow_call_stack_2
   assert_success
   assert_output --partial 'call stack (most recent call first):'
-  assert_output --partial 'test__libbash__show_call_stack'
+  assert_output --partial 'testshow_call_stack'
 
   run __libbash__show_error 'namd'
   assert_success
   assert_output --regexp '\[  .*ERROR.*  \].*'
   assert_output --partial 'namd'
 
-  run __libbash__show_error_and_exit 'namd'
+  run libbash__exit_with_error_and_callstack 'namd'
   assert_failure
   assert_output --regexp '\[  .*ERROR.*  \].*'
   assert_output --partial 'namd'
