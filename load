@@ -1,190 +1,203 @@
 #! /bin/bash
 
-# version       0.3.2
+# version       0.3.3
 # executed by   scripts that use `libbash`
 # task          perform library initialization
 
-# ### Provides Call Stack Information
-#
-# This function prints the call stack to identify where an error
-# originated.
-#
-# This function will only print a call stack if the stack is
-# deeper than 2, because otherwise the error did not originate
-# in a function but at global scope.
-#
-# #### Special
-#
-# Underscored functions are not unset at the end of the sourcing
-# process, but they should only be used by `libbash` modules, not
-# by applications / other libraries using `libbash`.
-function __libbash__show_call_stack() {
-  local STACK_DEPTH CUTOFF=2
+if ! ${__LIBBASH_IS_LOADED:-false}
+then
+  # ### Show an Error
+  #
+  # Indicates an error has happend in `libbash`. Used to display
+  # errors even when the log module is not (or has not yet been)
+  # loaded.
+  #
+  # #### Special
+  #
+  # Underscored functions are not unset at the end of the sourcing
+  # process, but they should only be used by `libbash` modules, not
+  # by applications / other libraries using `libbash`.
+  function __libbash__show_error() {
+    printf "\e[0m[  \e[91mERROR\e[0m  ] %30s | \e[91m%s\e[0m\n" \
+      "${SCRIPT:-${0}}" "${*}" >&2
+  }
+  export -f __libbash__show_error
+  readonly -f __libbash__show_error
 
-  [[ ${#FUNCNAME[@]} -le ${CUTOFF} ]] && return 0
-
-  STACK_DEPTH=$(( ${#FUNCNAME[@]} - CUTOFF ))
-
-  printf '\ncall stack (most recent call first):\n' >&2
-  for FUNCTION in "${FUNCNAME[@]:${CUTOFF}:${STACK_DEPTH}}"
-  do
-    printf "  %s\n" "${FUNCTION}" >&2
-  done
-
-  printf '\n' >&2
-}
-
-# ### Show an Error
-#
-# Indicates an error has happend in `libbash`.
-#
-# #### Special
-#
-# Underscored functions are not unset at the end of the sourcing
-# process, but they should only be used by `libbash` modules, not
-# by applications / other libraries using `libbash`.
-function __libbash__show_error() {
-  printf "\e[0m[  \e[91mERROR\e[0m  ] %30s | \e[91m%s\e[0m\n" \
-    "${SCRIPT:-${0}}" "${*}" >&2
-}
-
-# ### Show an Error and Exit
-#
-# Indicates an error has happend in `libbash`. Exits with exit code
-# 1 afterwards.
-#
-# #### Special
-#
-# Underscored functions are not unset at the end of the sourcing
-# process, but they should only be used by `libbash` modules, not
-# by applications / other libraries using `libbash`.
-function __libbash__show_error_and_exit() {
-  __libbash__show_error "${*}"
-  __libbash__show_call_stack
-
-  if [[ ${-} != *i* ]] || ${LIBBASH_EXIT_IN_INTERACTIVE_MODE}
-  then
-    exit 1
-  fi
-}
-
-# ### Perform Basic `libbash` Initialization
-#
-# Mostly sets corrects environment variables.
-function basic_setup() {
-  # ! export all variables here first, even if not
-  # ! all modules are sourced to satisfy shellcheck
-  # ! in applications that use `libbash`
-  export CRI LOG_LEVEL LIBBASH_DIRECTORY SCRIPT
-
-  unset LIBBASH_LOADED_MODULES
-  export LIBBASH_LOADED_MODULES
-
-  LOG_LEVEL=${LOG_LEVEL:-inf}
-  LIBBASH_DIRECTORY="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
-  SCRIPT='libbash init'
-}
-
-# ### Load a `libbash` Module
-#
-# Checks if the given modules is present (exits unsuccessfully)
-# otherwise. Then loads the module by sourcing it.
-function libbash__load_module() {
-  [[ -z ${1+set} ]] && __libbash__show_error_and_exit 'no module provided'
-
-  local MODULE_PATH
-  MODULE_PATH="${LIBBASH_DIRECTORY}/modules/${1}.sh"
-
-  if [[ -e "${MODULE_PATH}" ]]
-  then
-    if [[ ${LIBBASH_LOADED_MODULES[*]} =~ ${1} ]]
+  # ### Exit With Conditions
+  #
+  # This function will exit when not running interactively or when
+  # 'LIBBASH_EXIT_IN_INTERACTIVE_MODE' is set to 'true'.
+  #
+  # #### Special
+  #
+  # Underscored functions are not unset at the end of the sourcing
+  # process, but they should only be used by `libbash` modules, not
+  # by applications / other libraries using `libbash`.
+  function __libbash__exit_checked() {
+    if [[ ${-} != *i* ]] \
+    || ${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-false} \
+    || [[ ${*} == *--force* ]]
     then
-      __libbash__show_error_and_exit "module '${1}' loaded more than once"
+      exit "${1:-1}"
+    else
+      return "${1:-1}"
     fi
+  }
+  export -f __libbash__exit_checked
+  readonly -f __libbash__exit_checked
 
-    # shellcheck source=/dev/null
-    source "${MODULE_PATH}"
-    LIBBASH_LOADED_MODULES+=("${1}")
-  else
-    __libbash__show_error_and_exit "module '${1:-}' not found"
-  fi
-}
+  # ### Provides Call Stack Information
+  #
+  # This function prints the call stack to identify where an error
+  # originated.
+  #
+  # This function will only print a call stack if the stack is
+  # deeper than 2, because otherwise the error did not originate
+  # in a function but at global scope.
+  function libbash__show_call_stack() {
+    local STACK_DEPTH CUTOFF=1
+    [[ ${*} == *--internal* ]] && CUTOFF=2
+    [[ ${#FUNCNAME[@]} -gt ${CUTOFF} ]] || return 0
 
-# ### Go Through Arguments
-#
-# Iterates through arguments and calls `libbash__load_module` to
-# load the corresponding module.
-function libbash__source_files() {
-  local MODULE
-  for MODULE in "${@}"
-  do
-    libbash__load_module "${MODULE}"
-  done
+    STACK_DEPTH=$(( ${#FUNCNAME[@]} - CUTOFF ))
 
-  unset libbash__load_module
-}
+    printf '\ncall stack (most recent call first):\n' >&2
+    for FUNCTION in "${FUNCNAME[@]:${CUTOFF}:${STACK_DEPTH}}"
+    do
+      printf "  %s\n" "${FUNCTION}" >&2
+    done
 
-# ### Provide Debug Information
-#
-# Shows some debug information that `libbash` has collected.
-function libbash__debug() {
-  log 'deb' "Showing 'libbash' debug information"
+    printf '\n' >&2
+  }
+  export -f libbash__show_call_stack
+  readonly -f libbash__show_call_stack
 
-  if [[ $(( ${#BASH_SOURCE[@]} - 1 )) -gt 1 ]]
-  then
-    log 'deb' 'Call / source stack:'
-  fi
+  # ### Show an Error and Exit
+  #
+  # Display
+  function libbash__exit_with_error_and_callstack() {
+    __libbash__show_error "${2}"
+    libbash__show_call_stack --internal
+    __libbash__exit_checked "${1}"
+  }
+  export -f libbash__exit_with_error_and_callstack
+  readonly -f libbash__exit_with_error_and_callstack
 
-  for (( INDEX=${#BASH_SOURCE[@]} - 1 ; INDEX>1 ; INDEX-- ))
-  do
-    printf "%45s%s\n" '' "${BASH_SOURCE[INDEX]}"
-  done
-
-  log 'deb' "Loaded modules: ${LIBBASH_LOADED_MODULES[*]}"
-}
-
-# ### Fallback `log`
-#
-# If the `log` module was not sourced, provide a fallback
-# `log` implementation, but only for `err` messages.
-function libbash_setup_default_notify_error() {
-  function log() {
-    if [[ ${1:-} != 'err' ]]
+  # ### Provide Debug Information
+  #
+  # Shows some debug information that `libbash` has collected.
+  function libbash__debug() {
+    if ! ${__LIBBASH_IS_LOADED_LOG:-false}
     then
-      __libbash__show_error_and_exit                      \
-        "log module was not loaded but 'log' was called" \
-        "with log level not 'err'"                       \
-        "(arguments were: ${*})"
+      libbash__exit_with_error_and_callstack "Debug functionality requires the log module to be loaded and log level set to 'deb' or 'tra'"
       return 1
     fi
 
-    shift 1
-    __libbash__show_error "${*}"
+    log 'deb' "Showing 'libbash' debug information"
+    log 'deb' "  -> Loaded modules: ${LIBBASH_LOADED_MODULES[*]}"
   }
-  export -f log
-}
+  export -f libbash__debug
+  readonly -f libbash__debug
+
+  export LIBBASH_EXIT_IN_INTERACTIVE_MODE=${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-false}
+  export __LIBBASH_IS_LOADED=true
+  readonly __LIBBASH_IS_LOADED
+fi # if ! ${__LIBBASH_IS_LOADED:-false}
 
 # ### The Start of `libbash`
 #
 # This function calls the initialization routines for `libbash`
 # in proper order.
-function libbash__main() {
-  ${LIBBASH_IS_LOADED:-false} && unset log
+function __libbash__main() {
+  # ### Load a `libbash` Module
+  #
+  # Checks if the given modules is present (exits unsuccessfully)
+  # otherwise. Then loads the module by sourcing it.
+  function libbash__load_module() {
+    [[ -z ${1+set} ]] && libbash__exit_with_error_and_callstack 'no module provided'
 
-  basic_setup
-  libbash__source_files "${@}"
+    local MODULE_PATH
+    MODULE_PATH="${LIBBASH_DIRECTORY}/modules/${1}.sh"
 
+    if [[ -e "${MODULE_PATH}" ]]
+    then
+      if [[ ${LIBBASH_LOADED_MODULES[*]} =~ ${1} ]]
+      then
+        libbash__exit_with_error_and_callstack "module '${1}' loaded more than once"
+      fi
+
+      # shellcheck source=/dev/null
+      source "${MODULE_PATH}"
+      LIBBASH_LOADED_MODULES+=("${1}")
+    else
+      libbash__exit_with_error_and_callstack "module '${1:-}' not found"
+    fi
+  }
+
+  # ### Go Through Arguments
+  #
+  # Iterates through arguments and calls `libbash__load_module` to
+  # load the corresponding module.
+  function libbash__source_files() {
+    local MODULE
+    for MODULE in "${@}"
+    do
+      libbash__load_module "${MODULE}"
+    done
+
+    unset libbash__load_module
+  }
+
+  # ### Fallback `log`
+  #
+  # If the `log` module was not sourced, provide a fallback
+  # `log` implementation, but only for `err` messages.
+  function libbash__setup_default_notify_error() {
+    function log() {
+      if [[ ${1:-} != 'err' ]]
+      then
+        libbash__exit_with_error_and_callstack             \
+          "log module was not loaded but 'log' was called" \
+          "with log level not 'err'"                       \
+          "(arguments were: ${*})"
+        return 1
+      fi
+
+      shift 1
+      __libbash__show_error "${*}"
+    }; export -f log
+  }
+
+  # ! export all variables here first, even if not
+  # ! all modules are sourced to satisfy shellcheck
+  # ! in applications that use `libbash`
+  unset LIBBASH_LOADED_MODULES
+  export CRI LOG_LEVEL LIBBASH_DIRECTORY SCRIPT LIBBASH_LOADED_MODULES
+
+  LOG_LEVEL=${LOG_LEVEL:-inf}
+  LIBBASH_DIRECTORY="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
+  SCRIPT='libbash init'
+
+  if [[ ${*} == *--online* ]]
+  then
+    log 'err' 'The online feature is not implemented yet'
+    return 1
+  else
+    libbash__source_files "${@}"
+  fi
+
+  # this has to be set up last
   if [[ $(type -t log || printf 'none') != 'function' ]]
   then
-    libbash_setup_default_notify_error
+    libbash__setup_default_notify_error
     return 0
   fi
 
   log 'tra' "Finished 'libbash' initialization"
 }
 
-libbash__main "${@}"
-unset basic_setup libbash__source_files libbash_setup_default_notify_error libbash__main
+__libbash__main "${@}"
+unset __libbash__main
+
 SCRIPT='prompt or unknown script'
-export LIBBASH_IS_LOADED=true
-export LIBBASH_EXIT_IN_INTERACTIVE_MODE=${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-false}
