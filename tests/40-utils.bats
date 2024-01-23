@@ -35,6 +35,7 @@ function setup() { source load 'log' 'utils' ; }
   assert_output --partial 'String to split is required'
 
   local PREFIX="export LOG_LEVEL=err ; source load 'log' 'utils' ; split_into_array FOO"
+  # shellcheck disable=SCSC2016
   local SUFFIX='; echo "${FOO[*]}"'
 
   run bash -c "${PREFIX} 'a:b:c:d' ${SUFFIX}"
