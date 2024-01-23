@@ -3,13 +3,13 @@ bats_require_minimum_version '1.10.0'
 load 'bats_support/load'
 load 'bats_assert/load'
 
-BATS_TEST_FILE='90-generic          ::'
+BATS_TEST_NAME_PREFIX='90-generic          :: '
 
 function setup_file() {
   cd "${ROOT_DIRECTORY}" || exit 1
 }
 
-@test "${BATS_TEST_FILE} 'cri.sh' makes the correct decision" {
+@test "'cri.sh' makes the correct decision" {
   source load 'log' 'cri'
 
   local DOCKER_IS_IN_PATH PODMAN_IS_IN_PATH

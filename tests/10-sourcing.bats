@@ -3,19 +3,19 @@ bats_require_minimum_version '1.10.0'
 load 'bats_support/load'
 load 'bats_assert/load'
 
-BATS_TEST_FILE='10-sourcing         ::'
+BATS_TEST_NAME_PREFIX='10-sourcing         :: '
 
 function setup_file() {
   cd "${ROOT_DIRECTORY}" || exit 1
   LOG_LEVEL='inf'
 }
 
-@test "${BATS_TEST_FILE} sourcing succeeds from repository root" {
+@test "sourcing succeeds from repository root" {
   run bash -c 'source load'
   assert_success
 }
 
-@test "${BATS_TEST_FILE} sourcing succeeds from 'tests/' directory" {
+@test "sourcing succeeds from 'tests/' directory" {
   (
     cd "${ROOT_DIRECTORY}/tests/"
     # shellcheck source=load
@@ -24,7 +24,7 @@ function setup_file() {
   )
 }
 
-@test "${BATS_TEST_FILE} sourcing succeeds from 'modules/' directory" {
+@test "sourcing succeeds from 'modules/' directory" {
   (
     cd "${ROOT_DIRECTORY}/modules/" || exit 1
     # shellcheck source=load
@@ -33,12 +33,12 @@ function setup_file() {
   )
 }
 
-@test "${BATS_TEST_FILE} sourcing with parameters succeeds from repository root" {
+@test "sourcing with parameters succeeds from repository root" {
   run bash -c 'source load "log" "cri"'
   assert_success
 }
 
-@test "${BATS_TEST_FILE} sourcing with parameters succeeds from 'tests/' directory" {
+@test "sourcing with parameters succeeds from 'tests/' directory" {
   (
     cd "${ROOT_DIRECTORY}/tests/" || exit 1
     run source ../load 'log' 'cri'
@@ -46,7 +46,7 @@ function setup_file() {
   )
 }
 
-@test "${BATS_TEST_FILE} sourcing with parameters succeeds from 'modules/' directory" {
+@test "sourcing with parameters succeeds from 'modules/' directory" {
   (
     cd "${ROOT_DIRECTORY}/modules/"
     run source ../load 'log' 'cri'
@@ -54,7 +54,7 @@ function setup_file() {
   )
 }
 
-@test "${BATS_TEST_FILE} sourcing with parameters succeeds from '.github/workflows' directory" {
+@test "sourcing with parameters succeeds from '.github/workflows' directory" {
   (
     cd "${ROOT_DIRECTORY}/.github/workflows/"
     run source ../../load 'log' 'cri'
@@ -63,24 +63,24 @@ function setup_file() {
 }
 
 
-@test "${BATS_TEST_FILE} sourcing an unknown module results in an error" {
+@test "sourcing an unknown module results in an error" {
   run source load 'somethingOdd'
   assert_failure 2
 }
 
-@test "${BATS_TEST_FILE} sourcing a module twice results in an error" {
+@test "sourcing a module twice results in an error" {
   run source load 'log' 'log'
   assert_failure
 }
 
-@test "${BATS_TEST_FILE} internal helper functions work correctly" {
+@test "internal helper functions work correctly" {
   source load
 
-  run libbash__show_call_stack
+  run __libbash__show_call_stack
   assert_success
 
   function testshow_call_stack_1 {
-    libbash__show_call_stack
+    __libbash__show_call_stack
   }
 
   function testshow_call_stack_2 {
@@ -97,7 +97,7 @@ function setup_file() {
   assert_output --regexp '\[  .*ERROR.*  \].*'
   assert_output --partial 'namd'
 
-  run libbash__exit_with_error_and_callstack 'namd'
+  run __libbash__exit_with_error_and_callstack 'namd'
   assert_failure
   assert_output --regexp '\[  .*ERROR.*  \].*'
   assert_output --partial 'namd'

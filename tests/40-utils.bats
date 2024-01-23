@@ -3,7 +3,7 @@ bats_require_minimum_version '1.10.0'
 load 'bats_support/load'
 load 'bats_assert/load'
 
-BATS_TEST_FILE='40-utils            ::'
+BATS_TEST_NAME_PREFIX='40-utils            :: '
 
 function setup_file() {
   cd "${ROOT_DIRECTORY}" || exit 1
@@ -12,12 +12,12 @@ function setup_file() {
 
 function setup() { source load 'log' 'utils' ; }
 
-@test "${BATS_TEST_FILE} 'utils' is correctly sourced" {
+@test "'utils' is correctly sourced" {
   run bash -c "( source load 'utils' ; )"
   assert_success
 }
 
-@test "${BATS_TEST_FILE} 'utils' is correctly sourced with other modules" {
+@test "'utils' is correctly sourced with other modules" {
   run bash -c "( source load 'errors' 'log' 'utils' ; )"
   assert_success
 
@@ -82,7 +82,7 @@ function setup() { source load 'log' 'utils' ; }
   assert_failure
 }
 
-@test "${BATS_TEST_FILE} 'escape' works correctly" {
+@test "'escape' works correctly" {
   set -E
   shopt -s inherit_errexit
 
@@ -114,7 +114,7 @@ function setup() { source load 'log' 'utils' ; }
   assert_output --partial 'No escape character(s) provided'
 }
 
-@test "${BATS_TEST_FILE} 'escape_backslash' works correctly" {
+@test "'escape_backslash' works correctly" {
   # shellcheck disable=SC1003
   run escape_backslash '\'
   # shellcheck disable=SC1003
@@ -165,7 +165,7 @@ function setup() { source load 'log' 'utils' ; }
   assert_output 'a\\\\\\aa'
 }
 
-@test "${BATS_TEST_FILE} exit wrappers work correctly" {
+@test "exit wrappers work correctly" {
   run exit_success
   assert_success
 
@@ -199,7 +199,7 @@ function setup() { source load 'log' 'utils' ; }
   assert_output --partial 'noooooo'
 }
 
-@test "${BATS_TEST_FILE} return wrappers work correctly" {
+@test "return wrappers work correctly" {
   run return_success
   assert_success
 
@@ -222,7 +222,7 @@ function setup() { source load 'log' 'utils' ; }
   assert_output --partial 'Hey :D'
 }
 
-@test "${BATS_TEST_FILE} 'var_is_set_and_not_empty' works correctly" {
+@test "'var_is_set_and_not_empty' works correctly" {
   run var_is_set_and_not_empty
   assert_failure
 
@@ -233,7 +233,7 @@ function setup() { source load 'log' 'utils' ; }
   assert_success
 }
 
-@test "${BATS_TEST_FILE} 'ask_question' works correctly" {
+@test "'ask_question' works correctly" {
   TEST_STRING='no one knows'
 
   run ask_question
@@ -251,7 +251,7 @@ function setup() { source load 'log' 'utils' ; }
   [[ -z ${TEST_VARIABLE} ]]
 }
 
-@test "${BATS_TEST_FILE} 'ask_yes_no_question' works correctly" {
+@test "'ask_yes_no_question' works correctly" {
   TEST_STRING='no one knows'
 
   run ask_yes_no_question
@@ -303,7 +303,7 @@ function setup() { source load 'log' 'utils' ; }
 }
 
 
-@test "${BATS_TEST_FILE} executble in PATH checks work correctly" {
+@test "executble in PATH checks work correctly" {
   run is_in_path nadwadkwdnakdnwndakwdnakdnwdnakwdnakjwdnakwjda
   assert_failure
 
