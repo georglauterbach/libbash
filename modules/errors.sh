@@ -14,8 +14,8 @@ trap '__log_unexpected_error "${FUNCNAME[0]:-}" "${BASH_COMMAND:-}" "${LINENO:-}
 #
 # This function is called when an unhandled `ERR` signal is thrown.
 # It prints information about the error (where it originated, etc.)
-# and also calls `libbash__show_call_stack` to possibly print a
-# call stack if `libbash__show_call_stack` deems it useful.
+# and also calls `__libbash__show_call_stack` to possibly print a
+# call stack if `__libbash__show_call_stack` deems it useful.
 #
 # #### Special
 #
@@ -27,7 +27,7 @@ function __log_unexpected_error() {
   MESSAGE+="function = ${1:-none} | command = ${2:-?} | line = ${3:-?} | exit code = ${4:-?}"
 
   __libbash__show_error "${MESSAGE}"
-  libbash__show_call_stack --internal
+  __libbash__show_call_stack --internal
   return 0
 }
 export -f __log_unexpected_error

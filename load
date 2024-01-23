@@ -1,10 +1,10 @@
 #! /bin/bash
 
-# version       0.3.3
+# version       0.4.0
 # executed by   scripts that use `libbash`
 # task          perform library initialization
 
-if [[ -z ${__LIBBASH_IS_LOADED+set} ]]
+if [[ ! -v __LIBBASH_IS_LOADED ]]
 then
   # ### Show an Error
   #
@@ -55,7 +55,7 @@ then
   # This function will only print a call stack if the stack is
   # deeper than 2, because otherwise the error did not originate
   # in a function but at global scope.
-  function libbash__show_call_stack() {
+  function __libbash__show_call_stack() {
     local STACK_DEPTH CUTOFF=1
     [[ ${*} == *--internal* ]] && CUTOFF=2
     [[ ${#FUNCNAME[@]} -gt ${CUTOFF} ]] || return 0
@@ -70,27 +70,27 @@ then
 
     printf '\n' >&2
   }
-  export -f libbash__show_call_stack
-  readonly -f libbash__show_call_stack
+  export -f __libbash__show_call_stack
+  readonly -f __libbash__show_call_stack
 
   # ### Show an Error and Exit
   #
   # Display
-  function libbash__exit_with_error_and_callstack() {
+  function __libbash__exit_with_error_and_callstack() {
     __libbash__show_error "${2}"
-    libbash__show_call_stack --internal
+    __libbash__show_call_stack --internal
     __libbash__exit_checked "${1}"
   }
-  export -f libbash__exit_with_error_and_callstack
-  readonly -f libbash__exit_with_error_and_callstack
+  export -f __libbash__exit_with_error_and_callstack
+  readonly -f __libbash__exit_with_error_and_callstack
 
   # ### Provide Debug Information
   #
   # Shows some debug information that `libbash` has collected.
   function libbash__debug() {
-    if ! ${__LIBBASH_IS_LOADED_LOG:-false}
+    if [[ ! -v __LIBBASH_IS_LOADED_LOG ]]
     then
-      libbash__exit_with_error_and_callstack "Debug functionality requires the log module to be loaded and log level set to 'deb' or 'tra'"
+      __libbash__exit_with_error_and_callstack "Debug functionality requires the log module to be loaded and log level set to 'deb' or 'tra'"
       return 1
     fi
 
@@ -98,7 +98,6 @@ then
     log 'deb' "  -> Loaded modules: ${LIBBASH_LOADED_MODULES[*]}"
   }
   export -f libbash__debug
-  readonly -f libbash__debug
 
   export LIBBASH_EXIT_IN_INTERACTIVE_MODE=${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-false}
   export __LIBBASH_IS_LOADED=true
@@ -115,7 +114,7 @@ function __libbash__main() {
   # Checks if the given modules is present (exits unsuccessfully)
   # otherwise. Then loads the module by sourcing it.
   function libbash__load_module() {
-    [[ -z ${1+set} ]] && libbash__exit_with_error_and_callstack 'no module provided'
+    [[ -z ${1+set} ]] && __libbash__exit_with_error_and_callstack 'no module provided'
 
     local MODULE_PATH
     MODULE_PATH="${LIBBASH_DIRECTORY}/modules/${1}.sh"
@@ -124,14 +123,14 @@ function __libbash__main() {
     then
       if [[ ${LIBBASH_LOADED_MODULES[*]} =~ ${1} ]]
       then
-        libbash__exit_with_error_and_callstack "module '${1}' loaded more than once"
+        __libbash__exit_with_error_and_callstack "module '${1}' loaded more than once"
       fi
 
       # shellcheck source=/dev/null
       source "${MODULE_PATH}"
       LIBBASH_LOADED_MODULES+=("${1}")
     else
-      libbash__exit_with_error_and_callstack "module '${1:-}' not found"
+      __libbash__exit_with_error_and_callstack "module '${1:-}' not found"
     fi
   }
 
@@ -157,7 +156,7 @@ function __libbash__main() {
     function log() {
       if [[ ${1:-} != 'err' ]]
       then
-        libbash__exit_with_error_and_callstack             \
+        __libbash__exit_with_error_and_callstack             \
           "log module was not loaded but 'log' was called" \
           "with log level not 'err'"                       \
           "(arguments were: ${*})"

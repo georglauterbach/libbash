@@ -11,7 +11,7 @@ export LIBBASH__LOG_COLOR_INF='\e[34m'
 export LIBBASH__LOG_COLOR_WAR='\e[93m'
 export LIBBASH__LOG_COLOR_ERR='\e[91m'
 
-if [[ -z ${__LIBBASH_IS_LOADED_LOG+set} ]]
+if [[ ! -v __LIBBASH_IS_LOADED_LOG ]]
 then
   export __LIBBASH_IS_LOADED_LOG=true
   readonly __LIBBASH_IS_LOADED_LOG
@@ -70,7 +70,7 @@ function log() {
     ( 'deb' | 'debug' ) LOG_LEVEL_AS_INTEGER=3 ;;
     ( 'tra' | 'trace' ) LOG_LEVEL_AS_INTEGER=4 ;;
     ( * )
-      libbash__exit_with_error_and_callstack "Log level '${LOG_LEVEL}' unknown"
+      __libbash__exit_with_error_and_callstack "Log level '${LOG_LEVEL}' unknown"
       return 1
       ;;
   esac
