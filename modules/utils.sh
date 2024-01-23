@@ -1,8 +1,43 @@
 #! /usr/bin/env bash
 
-# version       0.1.0
+# version       0.1.1
 # sourced by    ../load
 # task          provides error handlers
+
+# ### Split a String with a Delimiter Into an Array
+#
+# This tasks is required a lot but cumbersome (and not easy to remember)
+# and not easy to perform correctly.
+#
+# #### Arguments
+#
+# $1 :: array name (this array is created)
+# $2 :: string to split
+# $3 :: delimiter (optional, default=:)
+#
+# #### Attention
+#
+# Backslash (`\`) does not work as a delimiter because the escaping logic
+# is simple and just removes baskslashes.
+#
+# #### References
+#
+# StackOverflow: https://stackoverflow.com/a/45201229
+function split_into_array() {
+  local ARRAY_NAME=${1:?Array name is required}
+  local STRING_TO_SPLIT=${2:?String to split is required}
+  local DELIMITER=${3:-:}
+  local UNESCAPED_DELIMITER=${DELIMITER//\\/}
+
+  STRING_TO_SPLIT=${STRING_TO_SPLIT#"${UNESCAPED_DELIMITER}"} # remove prefix
+  STRING_TO_SPLIT=${STRING_TO_SPLIT%"${UNESCAPED_DELIMITER}"} # remove suffix
+
+  readarray \
+    -t -d '' \
+    "${ARRAY_NAME}" \
+    < <(awk "{ gsub(/${DELIMITER}/,\"\0\"); print; }" <<< "${STRING_TO_SPLIT}${UNESCAPED_DELIMITER}")
+  unset "${ARRAY_NAME}[-1]"
+}
 
 # ### Check If a Line Is a Comment or Blank
 #
