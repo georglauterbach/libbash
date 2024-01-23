@@ -25,7 +25,68 @@ function setup() { source load 'log' 'utils' ; }
   assert_success
 }
 
-@test "${BATS_TEST_FILE} 'line_is_comment_or_blank' works correctly" {
+@test "'split_into_array' works correctly" {
+  run split_into_array
+  assert_failure
+  assert_output --partial 'Array name is required'
+
+  run split_into_array FOO
+  assert_failure
+  assert_output --partial 'String to split is required'
+
+  local PREFIX="export LOG_LEVEL=err ; source load 'log' 'utils' ; split_into_array FOO"
+  local SUFFIX='; echo "${FOO[*]}"'
+
+  run bash -c "${PREFIX} 'a:b:c:d' ${SUFFIX}"
+  assert_success
+  assert_output 'a b c d'
+
+  run bash -c "${PREFIX} 'a:b:c:d' 'x' ${SUFFIX}"
+  assert_success
+  assert_output 'a:b:c:d'
+
+  run bash -c "${PREFIX} 'a:b:c:d' 'a' ${SUFFIX}"
+  assert_success
+  assert_output ':b:c:d'
+
+  run bash -c "${PREFIX} 'a:b:c:d' 'b' ${SUFFIX}"
+  assert_success
+  assert_output 'a: :c:d'
+
+  run bash -c "${PREFIX} 'a:b:c:d' 'd' ${SUFFIX}"
+  assert_success
+  assert_output 'a:b:c:'
+
+  run bash -c "${PREFIX} '/usr/local/bin' '\/' ${SUFFIX}"
+  assert_success
+  assert_output 'usr local bin'
+
+  run bash -c "${PREFIX} 'a: b: c: d' ': ' ${SUFFIX}"
+  assert_success
+  assert_output 'a b c d'
+
+  run bash -c "${PREFIX} ' :a :b :c :d' ' :' ${SUFFIX}"
+  assert_success
+  assert_output 'a b c d'
+
+  run bash -c "${PREFIX} ':a :b :c :d' ' :' ${SUFFIX}"
+  assert_success
+  assert_output ':a b c d'
+
+  run bash -c "${PREFIX} '[a[b[c[d' '\[' ${SUFFIX}"
+  assert_success
+  assert_output 'a b c d'
+
+  run bash -c "${PREFIX} 'a b c d' ' ' ${SUFFIX}"
+  assert_success
+  assert_output 'a b c d'
+
+  run bash -c "${PREFIX} 'a lol b lol c lol d' ' lol ' ${SUFFIX}"
+  assert_success
+  assert_output 'a b c d'
+}
+
+@test "'line_is_comment_or_blank' works correctly" {
   run line_is_comment_or_blank '# nkdadjn'
   assert_success
   run line_is_comment_or_blank '    # nkdadjn'
