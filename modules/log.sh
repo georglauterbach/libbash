@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# version       0.7.0
+# version       0.8.0
 # sourced by    ../load
 # task          provides logging functionality
 
@@ -38,12 +38,10 @@ function log() {
     shift 2
 
     local COLOR="LIBBASH__LOG_COLOR_${LOG_LEVEL_ABBREVIATION^^}"
-    local LOG_STRING="${LIBBASH__LOG_COLOR_RESET}[  ${!COLOR}"
-    LOG_STRING+="${LOG_LEVEL}${LIBBASH__LOG_COLOR_RESET}  ]"
-    LOG_STRING+=" %30s | ${!COLOR}%s${LIBBASH__LOG_COLOR_RESET}\n"
 
     # shellcheck disable=SC2059
-    printf "${LOG_STRING}" "${SCRIPT:-${0}}" "${*}"
+    printf "${!COLOR}%s${LIBBASH__LOG_COLOR_RESET}  %s  ${!COLOR}%s${LIBBASH__LOG_COLOR_RESET}  %s" \
+      "${LOG_LEVEL}" "$(date --iso-8601='seconds')" "${SCRIPT:-${0}}" "${*}"
   }
 
   # Log Level

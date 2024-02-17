@@ -25,76 +25,76 @@ function setup() { source load log ; }
 @test "checking log output for trace messages" {
   run log 'tra' "${TEST_STRING}"
   assert_success
-  assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '[  .*TRACE.*  ].*'
+  assert_line --partial "${TEST_STRING}"
+  assert_line --regexp 'TRACE.*'
 }
 
 @test "checking log output for debug messages" {
   run log 'deb' "${TEST_STRING}"
   assert_success
-  assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '[  .*DEBUG.*  ].*'
+  assert_line --partial "${TEST_STRING}"
+  assert_line --regexp 'DEBUG.*'
 }
 
 @test "checking log output for info messages" {
   run log 'inf' "${TEST_STRING}"
   assert_success
-  assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '[  .*INFO .*  ].*'
+  assert_line --partial "${TEST_STRING}"
+  assert_line --regexp 'INFO.*'
 }
 
 @test "checking log output for warning messages" {
   run log 'war' "${TEST_STRING}"
   assert_success
-  assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '[  .*WARN.*  ].*'
+  assert_line --partial "${TEST_STRING}"
+  assert_line --regexp 'WARN.*'
 }
 
 @test "checking log output for error messages" {
   run log 'err' "${TEST_STRING}"
   assert_success
-  assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '[  .*ERROR.*  ].*'
+  assert_line --partial "${TEST_STRING}"
+  assert_line --regexp 'ERROR.*'
 }
 
 @test "checking trace messages on log level 'tra'" {
   export LOG_LEVEL='tra'
   run log 'tra' "${TEST_STRING}"
   assert_success
-  assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '[  .*TRACE.*  ].*'
+  assert_line --partial "${TEST_STRING}"
+  assert_line --regexp 'TRACE.*'
 }
 
 @test "checking debug messages on log level 'deb'" {
   export LOG_LEVEL='deb'
   run log 'deb' "${TEST_STRING}"
   assert_success
-  assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '[  .*DEBUG.*  ].*'
+  assert_line --partial "${TEST_STRING}"
+  assert_line --regexp 'DEBUG.*'
 }
 
 @test "checking info messages on log level 'inf'" {
   export LOG_LEVEL='inf'
   run log 'inf' "${TEST_STRING}"
   assert_success
-  assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '[   .*INF.*   ].*'
+  assert_line --partial "${TEST_STRING}"
+  assert_line --regexp 'INFO.*'
 }
 
 @test "checking warning messages on log level 'war'" {
   export LOG_LEVEL='war'
   run log 'war' "${TEST_STRING}"
   assert_success
-  assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '[ .*WARNING.* ].*'
+  assert_line --partial "${TEST_STRING}"
+  assert_line --regexp 'WARN.*'
 }
 
 @test "checking error messages on log level 'error'" {
   export LOG_LEVEL='err'
   run log 'err' "${TEST_STRING}"
   assert_success
-  assert_output --partial "${TEST_STRING}"
-  assert_output --regexp '[  .*ERROR.*  ].*'
+  assert_line --partial "${TEST_STRING}"
+  assert_line --regexp 'ERROR.*'
 }
 
 @test "checking trace messages on log level 'deb'" {
@@ -102,7 +102,7 @@ function setup() { source load log ; }
   run log 'tra' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
-  refute_output --regexp '[  .*TRACE.*  ].*'
+  refute_output --regexp 'TRACE.*'
 }
 
 
@@ -111,7 +111,7 @@ function setup() { source load log ; }
   run log 'deb' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
-  refute_output --regexp '[  .*DEBUG.*  ].*'
+  refute_output --regexp 'DEBUG.*'
 }
 
 
@@ -120,7 +120,7 @@ function setup() { source load log ; }
   run log 'inf' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
-  refute_output --regexp '[   .*INF.*   ].*'
+  refute_output --regexp 'INFO.*'
 }
 
 
@@ -129,5 +129,5 @@ function setup() { source load log ; }
   run log 'war' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
-  refute_output --regexp '[ .*WARNING.* ].*'
+  refute_output --regexp 'WARN.*'
 }
