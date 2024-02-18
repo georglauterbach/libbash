@@ -61,19 +61,22 @@ function log() {
   local LOG_LEVEL_AS_INTEGER=2 MESSAGE_LOG_LEVEL="${1:-}"
   shift 1
 
-  case "${LOG_LEVEL:-inf}" in
+  case "${LOG_LEVEL:-inf}"
+  in
     ( 'err' | 'error' ) LOG_LEVEL_AS_INTEGER=0 ;;
     ( 'war' | 'warn'  ) LOG_LEVEL_AS_INTEGER=1 ;;
     ( 'inf' | 'info'  ) LOG_LEVEL_AS_INTEGER=2 ;;
     ( 'deb' | 'debug' ) LOG_LEVEL_AS_INTEGER=3 ;;
     ( 'tra' | 'trace' ) LOG_LEVEL_AS_INTEGER=4 ;;
     ( * )
-      __libbash__exit_with_error_and_callstack "Log level '${LOG_LEVEL}' unknown"
-      return 1
+      local OLD_LOG_LEVEL=${LOG_LEVEL}
+      LOG_LEVEL='info'
+      log 'error' "Log level '${OLD_LOG_LEVEL}' unknown - resetting to default log level ('${LOG_LEVEL}')"
       ;;
   esac
 
-  case "${MESSAGE_LOG_LEVEL}" in
+  case "${MESSAGE_LOG_LEVEL}"
+  in
     ( 'tra' | 'trace' )
       [[ ${LOG_LEVEL_AS_INTEGER} -lt 4 ]] && return 0
       __log_generic 'tra' 'TRACE' "${*}"
@@ -99,7 +102,7 @@ function log() {
       ;;
 
     ( * )
-      printf "Provided log level '%s' unknown" "${MESSAGE_LOG_LEVEL}" >&2
+      printf "Provided log level ('%s') unknown" "${MESSAGE_LOG_LEVEL}" >&2
       return 0
       ;;
   esac
