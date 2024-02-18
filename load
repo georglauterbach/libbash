@@ -197,7 +197,7 @@ function __libbash__main() {
   unset LIBBASH_LOADED_MODULES
   export CRI LOG_LEVEL LIBBASH_DIRECTORY SCRIPT LIBBASH_LOADED_MODULES
 
-  LOG_LEVEL=${LOG_LEVEL:-inf}
+  LOG_LEVEL=${LOG_LEVEL:-info}
   LIBBASH_DIRECTORY="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
   SCRIPT='libbash init'
 

@@ -25,7 +25,7 @@ fi
 #
 # and behaves as you would expect from a log function: you provide
 # the log level as the first argument and the message in the con-
-# secutive ones. The default log level is 'inf'.
+# secutive ones. The default log level is 'info'.
 #
 # #### Arguments
 #
@@ -57,7 +57,7 @@ function log() {
   #   error   - log critical errors and aborts
   #
   # where a higher level includes the level below. The
-  # default log level is 'inf' (2).
+  # default log level is 'info' (2).
   local LOG_LEVEL_AS_INTEGER=2 MESSAGE_LOG_LEVEL="${1:-}"
   shift 1
 

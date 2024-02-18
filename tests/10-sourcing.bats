@@ -7,7 +7,7 @@ BATS_TEST_NAME_PREFIX='10-sourcing         :: '
 
 function setup_file() {
   cd "${ROOT_DIRECTORY}" || exit 1
-  LOG_LEVEL='inf'
+  LOG_LEVEL='info'
 }
 
 @test "sourcing succeeds from repository root" {
