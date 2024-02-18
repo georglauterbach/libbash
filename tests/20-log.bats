@@ -105,7 +105,6 @@ function setup() { source load log ; }
   refute_output --regexp 'TRACE.*'
 }
 
-
 @test "checking debug messages on log level 'inf'" {
   export LOG_LEVEL='inf'
   run log 'deb' "${TEST_STRING}"
@@ -113,7 +112,6 @@ function setup() { source load log ; }
   refute_output --partial "${TEST_STRING}"
   refute_output --regexp 'DEBUG.*'
 }
-
 
 @test "checking info messages on log level 'war'" {
   export LOG_LEVEL='war'
@@ -123,11 +121,24 @@ function setup() { source load log ; }
   refute_output --regexp 'INFO.*'
 }
 
-
 @test "checking warning messages on log level 'err'" {
   export LOG_LEVEL='err'
   run log 'war' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
   refute_output --regexp 'WARN.*'
+}
+
+@test "checking wrong 'LOG_LEVEL' prints a warning and resets the log level" {
+  export LOG_LEVEL='invalid'
+  run log 'war' "${TEST_STRING}"
+  assert_success
+  assert_line --partial "Log level 'invalid' unknown - resetting to default log level ('info')"
+}
+
+@test "checking wrong supplied log level arguments prints a warning" {
+  export LOG_LEVEL='tra'
+  run log 'invalid' "${TEST_STRING}"
+  assert_success
+  assert_line --partial "Provided log level ('invalid') unknown"
 }
