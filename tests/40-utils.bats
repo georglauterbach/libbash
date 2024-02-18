@@ -364,7 +364,6 @@ function setup() { source load 'log' 'utils' ; }
   assert_failure
 }
 
-
 @test "executble in PATH checks work correctly" {
   run is_in_path nadwadkwdnakdnwndakwdnakdnwdnakwdnakjwdnakwjda
   assert_failure

@@ -62,10 +62,14 @@ function setup_file() {
   )
 }
 
+@test "sourcing a module more than once results in an error" {
+  run source load 'log' 'log'
+  assert_failure 3
+}
 
 @test "sourcing an unknown module results in an error" {
   run source load 'somethingOdd'
-  assert_failure 2
+  assert_failure 4
 }
 
 @test "sourcing a module twice results in an error" {
