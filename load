@@ -35,13 +35,26 @@ then
   # process, but they should only be used by `libbash` modules, not
   # by applications / other libraries using `libbash`.
   function __libbash__exit_checked() {
+    local CODE=${1:-1}
     if [[ ${-} != *i* ]] \
     || ${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-false} \
     || [[ ${*} == *--force* ]]
     then
-      exit "${1:-1}"
+      if [[ ${CODE} =~ ^[0-9]$ ]]
+      then
+        exit "${CODE}"
+      else
+        log 'err' "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
+        exit 1
+      fi
     else
-      return "${1:-1}"
+      if [[ ${CODE} =~ ^[0-9]$ ]]
+      then
+        return "${CODE}"
+      else
+        log 'err' "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
+        return 1
+      fi
     fi
   }
   export -f __libbash__exit_checked
