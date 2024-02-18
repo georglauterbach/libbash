@@ -92,7 +92,7 @@ then
   function __libbash__exit_with_error_and_callstack() {
     __libbash__show_error "${1:-Error message not supplied (this is a bug in libbash)}"
     __libbash__show_call_stack --internal
-    __libbash__exit_checked "${2:-}"
+    __libbash__exit_checked "${2:-1}"
   }
   export -f __libbash__exit_with_error_and_callstack
   readonly -f __libbash__exit_with_error_and_callstack
@@ -127,7 +127,7 @@ function __libbash__main() {
   # Checks if the given modules is present (exits unsuccessfully)
   # otherwise. Then loads the module by sourcing it.
   function libbash__load_module() {
-    [[ -z ${1+set} ]] && __libbash__exit_with_error_and_callstack 'no module provided'
+    [[ -z ${1+set} ]] && __libbash__exit_with_error_and_callstack 'no module provided' 2
 
     local MODULE_PATH
     MODULE_PATH="${LIBBASH_DIRECTORY}/modules/${1}.sh"
@@ -136,14 +136,14 @@ function __libbash__main() {
     then
       if [[ ${LIBBASH_LOADED_MODULES[*]} =~ ${1} ]]
       then
-        __libbash__exit_with_error_and_callstack "module '${1}' loaded more than once"
+        __libbash__exit_with_error_and_callstack "module '${1}' loaded more than once" 3
       fi
 
       # shellcheck source=/dev/null
       source "${MODULE_PATH}"
       LIBBASH_LOADED_MODULES+=("${1}")
     else
-      __libbash__exit_with_error_and_callstack "module '${1:-}' not found"
+      __libbash__exit_with_error_and_callstack "module '${1:-}' not found" 4
     fi
   }
 
