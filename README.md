@@ -72,9 +72,7 @@ not close by default.
 You may also use `libbash` without cloning the repository. To do so, run:
 
 ```bash
-source <(curl -qsSfL https://raw.githubusercontent.com/georglauterbach/libbash/main/load)
-source <(curl -qsSfL https://raw.githubusercontent.com/georglauterbach/libbash/main/modules/log.sh)
-...
+source <(curl -qsSfL https://raw.githubusercontent.com/georglauterbach/libbash/main/load) --online 'log'
 ```
 
 ## Modules

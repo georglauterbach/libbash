@@ -150,15 +150,25 @@ function __libbash__main() {
   # ### Go Through Arguments
   #
   # Iterates through arguments and calls `libbash__load_module` to
-  # load the corresponding module.
+  # load the corresponding module. If the `--online` flag was supplied,
+  # this function `source`s the files from the GitHub repository via
+  # `curl`.
   function libbash__source_files() {
     local MODULE
-    for MODULE in "${@}"
-    do
-      libbash__load_module "${MODULE}"
-    done
-
-    unset libbash__load_module
+    if [[ ${1:-} == --online ]]
+    then
+      shift 1
+      for MODULE in "${@}"
+      do
+        # shellcheck source=/dev/null
+        source <(curl -qsSfL "https://raw.githubusercontent.com/georglauterbach/libbash/main/modules/${MODULE}.sh")
+      done
+    else
+      for MODULE in "${@}"
+      do
+        libbash__load_module "${MODULE}"
+      done
+    fi
   }
 
   # ### Fallback `log`
@@ -191,13 +201,7 @@ function __libbash__main() {
   LIBBASH_DIRECTORY="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
   SCRIPT='libbash init'
 
-  if [[ ${*} == *--online* ]]
-  then
-    log 'err' 'The online feature is not implemented yet'
-    return 1
-  else
-    libbash__source_files "${@}"
-  fi
+  libbash__source_files "${@}"
 
   # this has to be set up last
   if [[ $(type -t log || printf 'none') != 'function' ]]
