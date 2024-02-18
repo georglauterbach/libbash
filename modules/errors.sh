@@ -10,9 +10,9 @@ shopt -s inherit_errexit
 
 trap '__log_unexpected_error "${FUNCNAME[0]:-}" "${BASH_COMMAND:-}" "${LINENO:-}" "${?:-}"' ERR
 
-# ### Log the `ERR` Event
+# ### Log the Error Event
 #
-# This function is called when an unhandled `ERR` signal is thrown.
+# This function is called when an unhandled error signal is thrown.
 # It prints information about the error (where it originated, etc.)
 # and also calls `__libbash__show_call_stack` to possibly print a
 # call stack if `__libbash__show_call_stack` deems it useful.

@@ -76,11 +76,6 @@ When you use `libbash`, you don't have to use all the code that `libbash` contai
 
 To load a module, just specify its name after the `source` command, as shown in the examples above in [the usage section](#usage). All modules are located in the `modules` directory, and their name is just the file name without `.sh` at the end. When you open the file, you will see all the functions the module provides. These functions have Rust-like documentation comments above their definitions to give you a concise overview of what the function does.
 
-1. `tra` or `trace`
-2. `deb` or `debug`
-3. `inf` or `info`
-4. `war` or `warn`
-5. `err` or `error`
 ### [`cri`](./modules/cri.sh)
 
 This module provides the `setup_container_runtime` function to detect the container runtime. It will set the `CRI` variable to `docker` or `podman` or return with exit status 1 if no container runtime could be identified.

@@ -11,17 +11,17 @@ export LIBBASH__LOG_COLOR_INF='\e[34m'
 export LIBBASH__LOG_COLOR_WAR='\e[93m'
 export LIBBASH__LOG_COLOR_ERR='\e[91m'
 
-if [[ ! -v __LIBBASH_IS_LOADED_LOG ]]
+if [[ ! -v __LIBBASH__IS_LOADED_LOG ]]
 then
-  export __LIBBASH_IS_LOADED_LOG=true
-  readonly __LIBBASH_IS_LOADED_LOG
+  export __LIBBASH__IS_LOADED_LOG=1
+  readonly __LIBBASH__IS_LOADED_LOG
 fi
 
 # ### The Logging Functions
 #
 # `log` is used for logging. It uses five different log levels
 #
-# `err` | `war` | `inf` | `deb` | `tra`
+# `error` | `warn` | `info` | `debug` | `trace`
 #
 # and behaves as you would expect from a log function: you provide
 # the log level as the first argument and the message in the con-
@@ -48,13 +48,13 @@ function log() {
   #
   # Can be one of
   #
-  #   value => meaning - what to log
+  #   meaning - what to log
   #   -------------------------------------------------
-  #   tra   => trace   - log trace information
-  #   deb   => debug   - log debug information
-  #   inf   => info    - log informational output
-  #   war   => warning - log warnings
-  #   err   => error   - log critical errors and aborts
+  #   trace   - log trace information
+  #   debug   - log debug information
+  #   info    - log informational output
+  #   warn    - log warnings
+  #   error   - log critical errors and aborts
   #
   # where a higher level includes the level below. The
   # default log level is 'inf' (2).
@@ -63,11 +63,11 @@ function log() {
 
   case "${LOG_LEVEL:-inf}"
   in
-    ( 'err' | 'error' ) LOG_LEVEL_AS_INTEGER=0 ;;
-    ( 'war' | 'warn'  ) LOG_LEVEL_AS_INTEGER=1 ;;
-    ( 'inf' | 'info'  ) LOG_LEVEL_AS_INTEGER=2 ;;
-    ( 'deb' | 'debug' ) LOG_LEVEL_AS_INTEGER=3 ;;
-    ( 'tra' | 'trace' ) LOG_LEVEL_AS_INTEGER=4 ;;
+    ( 'error' ) LOG_LEVEL_AS_INTEGER=0 ;;
+    ( 'warn'  ) LOG_LEVEL_AS_INTEGER=1 ;;
+    ( 'info'  ) LOG_LEVEL_AS_INTEGER=2 ;;
+    ( 'debug' ) LOG_LEVEL_AS_INTEGER=3 ;;
+    ( 'trace' ) LOG_LEVEL_AS_INTEGER=4 ;;
     ( * )
       local OLD_LOG_LEVEL=${LOG_LEVEL}
       LOG_LEVEL='info'
@@ -77,28 +77,28 @@ function log() {
 
   case "${MESSAGE_LOG_LEVEL}"
   in
-    ( 'tra' | 'trace' )
+    ( 'trace' )
       [[ ${LOG_LEVEL_AS_INTEGER} -lt 4 ]] && return 0
-      __log_generic 'tra' 'TRACE' "${*}"
+      __log_generic 'trace' 'TRACE' "${*}"
       ;;
 
-    ( 'deb' | 'debug' )
+    ( 'debug' )
       [[ ${LOG_LEVEL_AS_INTEGER} -lt 3 ]] && return 0
-      __log_generic 'deb' 'DEBUG' "${*}"
+      __log_generic 'debug' 'DEBUG' "${*}"
       ;;
 
-    ( 'inf' | 'info' )
+    ( 'info' )
       [[ "${LOG_LEVEL_AS_INTEGER}" -lt 2 ]] && return 0
-      __log_generic 'inf' 'INFO ' "${*}"
+      __log_generic 'info' 'INFO ' "${*}"
       ;;
 
-    ( 'war' | 'warning' )
+    ( 'warn' )
       [[ "${LOG_LEVEL_AS_INTEGER}" -lt 1 ]] && return 0
-      __log_generic 'war' 'WARN ' "${*}"
+      __log_generic 'warn' 'WARN ' "${*}"
       ;;
 
-    ( 'err' | 'error' )
-      __log_generic 'err' 'ERROR' "${*}"
+    ( 'error' )
+      __log_generic 'error' 'ERROR' "${*}"
       ;;
 
     ( * )

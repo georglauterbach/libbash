@@ -7,7 +7,7 @@ BATS_TEST_NAME_PREFIX='20-log              :: '
 
 function setup_file() {
   cd "${ROOT_DIRECTORY}" || exit 1
-  export LOG_LEVEL='tra'
+  export LOG_LEVEL='trace'
   export TEST_STRING='jfk FJHAE aea728 djKJ  k/('
 }
 
@@ -23,107 +23,107 @@ function setup() { source load log ; }
 }
 
 @test "checking log output for trace messages" {
-  run log 'tra' "${TEST_STRING}"
+  run log 'trace' "${TEST_STRING}"
   assert_success
   assert_line --partial "${TEST_STRING}"
   assert_line --regexp 'TRACE.*'
 }
 
 @test "checking log output for debug messages" {
-  run log 'deb' "${TEST_STRING}"
+  run log 'debug' "${TEST_STRING}"
   assert_success
   assert_line --partial "${TEST_STRING}"
   assert_line --regexp 'DEBUG.*'
 }
 
 @test "checking log output for info messages" {
-  run log 'inf' "${TEST_STRING}"
+  run log 'info' "${TEST_STRING}"
   assert_success
   assert_line --partial "${TEST_STRING}"
   assert_line --regexp 'INFO.*'
 }
 
 @test "checking log output for warning messages" {
-  run log 'war' "${TEST_STRING}"
+  run log 'warn' "${TEST_STRING}"
   assert_success
   assert_line --partial "${TEST_STRING}"
   assert_line --regexp 'WARN.*'
 }
 
 @test "checking log output for error messages" {
-  run log 'err' "${TEST_STRING}"
+  run log 'error' "${TEST_STRING}"
   assert_success
   assert_line --partial "${TEST_STRING}"
   assert_line --regexp 'ERROR.*'
 }
 
-@test "checking trace messages on log level 'tra'" {
-  export LOG_LEVEL='tra'
-  run log 'tra' "${TEST_STRING}"
+@test "checking trace messages on log level 'trace'" {
+  export LOG_LEVEL='trace'
+  run log 'trace' "${TEST_STRING}"
   assert_success
   assert_line --partial "${TEST_STRING}"
   assert_line --regexp 'TRACE.*'
 }
 
-@test "checking debug messages on log level 'deb'" {
-  export LOG_LEVEL='deb'
-  run log 'deb' "${TEST_STRING}"
+@test "checking debug messages on log level 'debug'" {
+  export LOG_LEVEL='debug'
+  run log 'debug' "${TEST_STRING}"
   assert_success
   assert_line --partial "${TEST_STRING}"
   assert_line --regexp 'DEBUG.*'
 }
 
-@test "checking info messages on log level 'inf'" {
-  export LOG_LEVEL='inf'
-  run log 'inf' "${TEST_STRING}"
+@test "checking info messages on log level 'info'" {
+  export LOG_LEVEL='info'
+  run log 'info' "${TEST_STRING}"
   assert_success
   assert_line --partial "${TEST_STRING}"
   assert_line --regexp 'INFO.*'
 }
 
-@test "checking warning messages on log level 'war'" {
-  export LOG_LEVEL='war'
-  run log 'war' "${TEST_STRING}"
+@test "checking warning messages on log level 'warn'" {
+  export LOG_LEVEL='warn'
+  run log 'warn' "${TEST_STRING}"
   assert_success
   assert_line --partial "${TEST_STRING}"
   assert_line --regexp 'WARN.*'
 }
 
 @test "checking error messages on log level 'error'" {
-  export LOG_LEVEL='err'
-  run log 'err' "${TEST_STRING}"
+  export LOG_LEVEL='error'
+  run log 'error' "${TEST_STRING}"
   assert_success
   assert_line --partial "${TEST_STRING}"
   assert_line --regexp 'ERROR.*'
 }
 
-@test "checking trace messages on log level 'deb'" {
-  export LOG_LEVEL='deb'
-  run log 'tra' "${TEST_STRING}"
+@test "checking trace messages on log level 'debug'" {
+  export LOG_LEVEL='debug'
+  run log 'trace' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
   refute_output --regexp 'TRACE.*'
 }
 
-@test "checking debug messages on log level 'inf'" {
-  export LOG_LEVEL='inf'
-  run log 'deb' "${TEST_STRING}"
+@test "checking debug messages on log level 'info'" {
+  export LOG_LEVEL='info'
+  run log 'debug' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
   refute_output --regexp 'DEBUG.*'
 }
 
-@test "checking info messages on log level 'war'" {
-  export LOG_LEVEL='war'
-  run log 'inf' "${TEST_STRING}"
+@test "checking info messages on log level 'warn'" {
+  export LOG_LEVEL='warn'
+  run log 'info' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
   refute_output --regexp 'INFO.*'
 }
 
-@test "checking warning messages on log level 'err'" {
-  export LOG_LEVEL='err'
-  run log 'war' "${TEST_STRING}"
+@test "checking warning messages on log level 'error'" {
+  export LOG_LEVEL='error'
+  run log 'warn' "${TEST_STRING}"
   assert_success
   refute_output --partial "${TEST_STRING}"
   refute_output --regexp 'WARN.*'
@@ -131,13 +131,13 @@ function setup() { source load log ; }
 
 @test "checking wrong 'LOG_LEVEL' prints a warning and resets the log level" {
   export LOG_LEVEL='invalid'
-  run log 'war' "${TEST_STRING}"
+  run log 'warn' "${TEST_STRING}"
   assert_success
   assert_line --partial "Log level 'invalid' unknown - resetting to default log level ('info')"
 }
 
 @test "checking wrong supplied log level arguments prints a warning" {
-  export LOG_LEVEL='tra'
+  export LOG_LEVEL='trace'
   run log 'invalid' "${TEST_STRING}"
   assert_success
   assert_line --partial "Provided log level ('invalid') unknown"

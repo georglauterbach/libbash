@@ -4,7 +4,7 @@
 # executed by   scripts that use `libbash`
 # task          perform library initialization
 
-if [[ ! -v __LIBBASH_IS_LOADED ]]
+if [[ ! -v __LIBBASH__IS_LOADED ]]
 then
   # ### Show an Error
   #
@@ -27,7 +27,7 @@ then
   # ### Exit With Conditions
   #
   # This function will exit when not running interactively or when
-  # 'LIBBASH_EXIT_IN_INTERACTIVE_MODE' is set to 'true'.
+  # 'LIBBASH_EXIT_IN_INTERACTIVE_MODE' is set to '1'.
   #
   # #### Special
   #
@@ -37,14 +37,14 @@ then
   function __libbash__exit_checked() {
     local CODE=${1:-1}
     if [[ ${-} != *i* ]] \
-    || ${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-false} \
+    || [[ ${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-0} -eq 1 ]] \
     || [[ ${*} == *--force* ]]
     then
       if [[ ${CODE} =~ ^[0-9]$ ]]
       then
         exit "${CODE}"
       else
-        log 'err' "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
+        log 'error' "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
         exit 1
       fi
     else
@@ -52,7 +52,7 @@ then
       then
         return "${CODE}"
       else
-        log 'err' "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
+        log 'error' "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
         return 1
       fi
     fi
@@ -101,21 +101,21 @@ then
   #
   # Shows some debug information that `libbash` has collected.
   function libbash__debug() {
-    if [[ ! -v __LIBBASH_IS_LOADED_LOG ]]
+    if [[ ! -v __LIBBASH__IS_LOADED_LOG ]]
     then
-      __libbash__exit_with_error_and_callstack "Debug functionality requires the log module to be loaded and log level set to 'deb' or 'tra'"
+      __libbash__exit_with_error_and_callstack "Debug functionality requires the log module to be loaded and log level set to 'debug' or 'trace'"
       return 1
     fi
 
-    log 'deb' "Showing 'libbash' debug information"
-    log 'deb' "  -> Loaded modules: ${LIBBASH_LOADED_MODULES[*]}"
+    log 'debug' "Showing 'libbash' debug information"
+    log 'debug' "  -> Loaded modules: ${LIBBASH_LOADED_MODULES[*]}"
   }
   export -f libbash__debug
 
-  export LIBBASH_EXIT_IN_INTERACTIVE_MODE=${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-false}
-  export __LIBBASH_IS_LOADED=true
-  readonly __LIBBASH_IS_LOADED
-fi # if ! ${__LIBBASH_IS_LOADED:-false}
+  export LIBBASH_EXIT_IN_INTERACTIVE_MODE=${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-0}
+  export __LIBBASH__IS_LOADED=1
+  readonly __LIBBASH__IS_LOADED
+fi # if ! ${__LIBBASH__IS_LOADED:-false}
 
 # ### The Start of `libbash`
 #
@@ -174,14 +174,14 @@ function __libbash__main() {
   # ### Fallback `log`
   #
   # If the `log` module was not sourced, provide a fallback
-  # `log` implementation, but only for `err` messages.
+  # `log` implementation, but only for error messages.
   function libbash__setup_default_notify_error() {
     function log() {
-      if [[ ${1:-} != 'err' ]]
+      if [[ ${1:-} != 'error' ]]
       then
-        __libbash__exit_with_error_and_callstack             \
+        __libbash__exit_with_error_and_callstack           \
           "log module was not loaded but 'log' was called" \
-          "with log level not 'err'"                       \
+          "with log level not 'error'"                     \
           "(arguments were: ${*})"
         return 1
       fi
@@ -210,7 +210,7 @@ function __libbash__main() {
     return 0
   fi
 
-  log 'tra' "Finished 'libbash' initialization"
+  log 'trace' "Finished 'libbash' initialization"
 }
 
 __libbash__main "${@}"

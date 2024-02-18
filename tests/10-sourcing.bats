@@ -117,7 +117,7 @@ function setup_file() {
   assert_failure
 
   source load 'log' 'utils'
-  LOG_LEVEL='tra'
+  LOG_LEVEL='trace'
   run libbash__debug
   assert_success
   assert_output --partial 'Loaded modules: log utils'

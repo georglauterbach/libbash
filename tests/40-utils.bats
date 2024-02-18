@@ -7,7 +7,7 @@ BATS_TEST_NAME_PREFIX='40-utils            :: '
 
 function setup_file() {
   cd "${ROOT_DIRECTORY}" || exit 1
-  export LOG_LEVEL='tra'
+  export LOG_LEVEL='trace'
 }
 
 function setup() { source load 'log' 'utils' ; }
@@ -34,7 +34,7 @@ function setup() { source load 'log' 'utils' ; }
   assert_failure
   assert_output --partial 'String to split is required'
 
-  local PREFIX="export LOG_LEVEL=err ; source load 'log' 'utils' ; split_into_array FOO"
+  local PREFIX="export LOG_LEVEL=error ; source load 'log' 'utils' ; split_into_array FOO"
   # shellcheck disable=SC2016
   local SUFFIX='; echo "${FOO[*]}"'
 

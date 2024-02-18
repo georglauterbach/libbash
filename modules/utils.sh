@@ -67,24 +67,24 @@ function line_is_comment_or_blank() {
 # $2 :: character that must be escaped
 function escape() {
   [[ ${2} =~ .*\\.* ]] && {
-    log 'err' \
+    log 'error' \
       "Escape character is not allowed to be or contain a backslash"\
       "(use 'escape_backslash')"
     return 1
   }
 
   var_is_set_and_not_empty "${1}" || {
-    log 'err' 'No string to be escaped provided'
+    log 'error' 'No string to be escaped provided'
     return 1
   }
 
   var_is_set_and_not_empty "${2}" || {
-    log 'err' 'No escape character(s) provided'
+    log 'error' 'No escape character(s) provided'
     return 1
   }
 
   [[ ${#2} -ge 2 ]] && {
-    log 'err' 'More than two parameters provided'
+    log 'error' 'More than two parameters provided'
     return 1
   }
 
@@ -124,19 +124,19 @@ function exit_failure() {
 
   if [[ ! ${CODE} =~ ^[0-9]+$ ]]
   then
-    log 'err' "'exit_failure' was called with non-number exit code"
+    log 'error' "'exit_failure' was called with non-number exit code"
     __libbash__show_call_stack
     exit 1
   fi
 
   if [[ ${CODE} -eq 0 ]] || [[ ${CODE} -ge 127 ]]
   then
-    log 'err' "'exit_failure' was called with exit code 0 or >127"
+    log 'error' "'exit_failure' was called with exit code 0 or >127"
     __libbash__show_call_stack
     exit 1
   fi
 
-  var_is_set_and_not_empty "${1}" && log 'err' "${1}"
+  var_is_set_and_not_empty "${1}" && log 'error' "${1}"
   exit "${CODE}"
 }
 
@@ -161,19 +161,19 @@ function return_success() { return 0 ; }
 function return_failure() {
   if [[ ! ${1:-1} =~ ^[0-9]+$ ]]
   then
-    log 'err' "'return_failure' was called with non-number exit code"
+    log 'error' "'return_failure' was called with non-number exit code"
     __libbash__show_call_stack
     exit 1
   fi
 
   if [[ ${1:-1} -eq 0 ]] || [[ ${1:-1} -ge 128 ]]
   then
-    log 'err' "'return_failure' was called with exit code 0 or >127"
+    log 'error' "'return_failure' was called with exit code 0 or >127"
     __libbash__show_call_stack
     exit 1
   fi
 
-  var_is_set_and_not_empty "${*}" && log 'err' "${*}"
+  var_is_set_and_not_empty "${*}" && log 'error' "${*}"
   return "${1:-1}"
 }
 
@@ -187,7 +187,7 @@ function return_failure() {
 #
 # Same as `exit_failure`.
 function exit_failure_show_callstack() {
-  var_is_set_and_not_empty "${2:-}" && log 'err' "${2}"
+  var_is_set_and_not_empty "${2:-}" && log 'error' "${2}"
   __libbash__show_call_stack
   exit_failure "${1:-}"
 }
@@ -215,12 +215,12 @@ function var_is_set_and_not_empty() {
 # $2 :: variable name to store the result in
 function ask_question() {
   var_is_set_and_not_empty "${1}" || {
-    log 'err' 'No question provided'
+    log 'error' 'No question provided'
     return 1
   }
 
   var_is_set_and_not_empty "${2}" || {
-    log 'err' 'No variable to store result in provided'
+    log 'error' 'No variable to store result in provided'
     return 1
   }
 
@@ -244,7 +244,7 @@ function ask_question() {
 # $2 :: default (optional, default=no)
 function ask_yes_no_question() {
   var_is_set_and_not_empty "${1}" || {
-    log 'err' 'No question provided'
+    log 'error' 'No question provided'
     return 1
   }
 
@@ -283,7 +283,7 @@ function ask_yes_no_question() {
 # $1 :: executable to check
 function is_in_path() {
   var_is_set_and_not_empty "${1}" || {
-    log 'err' 'No name for an executable provided'
+    log 'error' 'No name for an executable provided'
     return 1
   }
 
