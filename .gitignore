@@ -4,7 +4,7 @@
 # -----------------------------------------------
 
 # Create gitignore files automatically for with
-# https://www.toptal.com/developers/gitignore 
+# https://www.toptal.com/developers/gitignore
 
 # -----------------------------------------------
 # ----  IDEs  -----------------------------------
@@ -12,3 +12,11 @@
 
 .idea/
 .vscode/
+
+# -----------------------------------------------
+# ----  git  ------------------------------------
+# -----------------------------------------------
+
+tests/bats_assert/
+tests/bats_core/
+tests/bats_support/
