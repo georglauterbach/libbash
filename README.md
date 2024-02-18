@@ -17,18 +17,16 @@
 ## About
 
 `libbash` provides pure Bash functions like a library. These functions are **not**
-POSIX compatible, i.e. they do not work with `sh`, only with `bash`. `libbash` focuses
-on very high **code quality** and **safe** functions without common Bash side-effects.
+POSIX compatible, i.e., they do not work with `sh`, only with `bash`. `libbash` focuses
+on very high **code quality** and **safe** functions without common Bash side effects.
 Bash is difficult because it is extremely liberal. This project provides robust
-functions, checked by [_shellcheck_](https://github.com/koalaman/shellcheck) and by
+functions, checked by [_ShellCheck_](https://github.com/koalaman/shellcheck) and by
 [_BATS_](https://github.com/bats-core/bats-core). This project is written in and supports
 Bash v5 (or higher).
 
-`libbash` is not supposed to be used in conjunction with `.bashrc` or as
-[_dotfiles_](https://wiki.archlinux.org/title/Dotfiles). Rather, it should satisfy
-reoccurring needs in projects that use Bash, and provide frequently used functions.
-
 ## Usage
+
+### Locally
 
 During this usage demonstration, consider the following directory and file structure:
 
@@ -67,7 +65,17 @@ SCRIPT='some other script'
 When using `libbash` on an interactive prompt, you may use `LIBBASH_EXIT_IN_INTERACTIVE_MODE`
 to specify whether you want to prompt to quit when the `errors` module is loaded and
 an unhandled error is thrown. The default is `false`, so your interactive prompt will
-not close be default.
+not close by default.
+
+### Remotely
+
+You may also use `libbash` without cloning the repository. To do so, run:
+
+```bash
+source <(curl -qsSfL https://raw.githubusercontent.com/georglauterbach/libbash/main/load)
+source <(curl -qsSfL https://raw.githubusercontent.com/georglauterbach/libbash/main/modules/log.sh)
+...
+```
 
 ## Modules
 
@@ -75,12 +83,12 @@ When you use `libbash`, you don't have to use all the code that `libbash` contai
 `libbash` provides different modules. When you source the `load` script, you can
 provide the modules you would like to use as arguments.
 
-To load a module, just specify its name after the `source` command as shown in the
-examples above in [usage section](#usage). All modules are located in the `modules`
+To load a module, just specify its name after the `source` command, as shown in the
+examples above in [the usage section](#usage). All modules are located in the `modules`
 directory, and their name is just the file name without `.sh` at the end. When you
 open the file, you will see all the functions the module provides. These functions
-have Rust-like documentation comments above their definitions in order to give you
-a concise overview over what the function does.
+have Rust-like documentation comments above their definitions to give you
+a concise overview of what the function does.
 
 `libbash` provides the following modules.
 
@@ -94,12 +102,12 @@ status 1 if no container runtime could be identified.
 
 This module provides a very strict set of error primitives (`set -e`, etc.) to show and
 handle errors. The use of this module is recommended, but the set of rules imposed by this
-module is very strict. One might want to circumvent some of the strictness by manually
+module is very strict. One might want to circumvent some strictness by manually
 reverting some settings, for example with `set +e`.
 
 ### `log`
 
-This module provides the `log` function. `log` is invoked by specifying the log level
+This module provides the `log` function. `log` is invoked by first specifying the log level:
 
 1. `tra` or `trace`
 2. `deb` or `debug`
@@ -107,13 +115,16 @@ This module provides the `log` function. `log` is invoked by specifying the log 
 4. `war` or `warn`
 5. `err` or `error`
 
-and then the message (i.e. `log 'inf' 'Some info message'`). You can supply many
+This is followed by the actual message (i.e., `log 'info' 'Some info message'`). You can supply many
 arguments to `log`, but the first argument must be the log level. This function
-is guaranteed to not fail. If called with a string that is not representative if the
-log level, `war` is assumed. The default `LOG_LEVEL` is `inf`.
+is guaranteed to not fail.
 
 The log level itself can be changed anytime by setting `LOG_LEVEL` to one of the
 levels described above. Naturally, messages below the log level are not shown.
+The default `LOG_LEVEL` is `info`.
+
+If `log` is called with a string that is not representative of the
+log level, `LOG_LEVEL` is reset to `info`.
 
 ### `utils`
 
