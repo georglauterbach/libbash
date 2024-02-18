@@ -98,13 +98,11 @@ function setup_file() {
 
   run __libbash__show_error 'namd'
   assert_success
-  assert_output --regexp '\[  .*ERROR.*  \].*'
-  assert_output --partial 'namd'
+  assert_line --regexp 'ERROR.*namd'
 
   run __libbash__exit_with_error_and_callstack 'namd'
   assert_failure
-  assert_output --regexp '\[  .*ERROR.*  \].*'
-  assert_output --partial 'namd'
+  assert_output --regexp 'ERROR.*namd'
 
   run -127 load_module
   assert_failure
