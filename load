@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# version       0.5.0
+# version       0.6.0
 # executed by   scripts that use `libbash`
 # task          perform library initialization
 
@@ -90,9 +90,9 @@ then
   #
   # Display
   function __libbash__exit_with_error_and_callstack() {
-    __libbash__show_error "${2}"
+    __libbash__show_error "${1:-Error message not supplied (this is a bug in libbash)}"
     __libbash__show_call_stack --internal
-    __libbash__exit_checked "${1}"
+    __libbash__exit_checked "${2:-}"
   }
   export -f __libbash__exit_with_error_and_callstack
   readonly -f __libbash__exit_with_error_and_callstack
