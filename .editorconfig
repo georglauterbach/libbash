@@ -18,11 +18,8 @@ indent_size          = 2
 tab_width            = 4
 insert_final_newline = true
 
-[Makefile]
+[Justfile]
 indent_style         = tab
-
-[*.{yml,yaml,json,jsonc}]
-indent_style         = space
 
 [*.{sh,bats}]
 shell_variant        = bash

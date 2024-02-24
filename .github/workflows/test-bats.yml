@@ -21,4 +21,4 @@ jobs:
           submodules: recursive
 
       - name: Run test suite
-        run: bash -c 'make tests'
+        run: bash tests/bats_core/bin/bats --jobs 2 --no-parallelize-within-files --timing tests/*.bats
