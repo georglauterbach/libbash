@@ -8,8 +8,6 @@ set dotenv-load       := false
 
 export ROOT_DIRECTORY := justfile_directory()
 
-
-
 # show this help
 @_default:
 	just --list

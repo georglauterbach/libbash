@@ -6,7 +6,6 @@ load 'bats_assert/load'
 BATS_TEST_NAME_PREFIX='30-errors           :: '
 
 function setup_file() {
-  cd "${ROOT_DIRECTORY}" || exit 1
   export LOG_LEVEL='trace'
 }
 

@@ -6,8 +6,7 @@ load 'bats_assert/load'
 BATS_TEST_NAME_PREFIX='10-sourcing         :: '
 
 function setup_file() {
-  cd "${ROOT_DIRECTORY}" || exit 1
-  LOG_LEVEL='info'
+  export LOG_LEVEL='info'
 }
 
 @test "sourcing succeeds from repository root" {
@@ -17,7 +16,7 @@ function setup_file() {
 
 @test "sourcing succeeds from 'tests/' directory" {
   (
-    cd "${ROOT_DIRECTORY}/tests/"
+    cd "tests/"
     # shellcheck source=load
     run bash -c 'source ../load'
     assert_success
@@ -26,7 +25,7 @@ function setup_file() {
 
 @test "sourcing succeeds from 'modules/' directory" {
   (
-    cd "${ROOT_DIRECTORY}/modules/" || exit 1
+    cd "modules/" || exit 1
     # shellcheck source=load
     run bash -c ' source ../load'
     assert_success
@@ -40,7 +39,7 @@ function setup_file() {
 
 @test "sourcing with parameters succeeds from 'tests/' directory" {
   (
-    cd "${ROOT_DIRECTORY}/tests/" || exit 1
+    cd "tests/" || exit 1
     run source ../load 'log' 'cri'
     assert_success
   )
@@ -48,7 +47,7 @@ function setup_file() {
 
 @test "sourcing with parameters succeeds from 'modules/' directory" {
   (
-    cd "${ROOT_DIRECTORY}/modules/"
+    cd "modules/"
     run source ../load 'log' 'cri'
     assert_success
   )
@@ -56,7 +55,7 @@ function setup_file() {
 
 @test "sourcing with parameters succeeds from '.github/workflows' directory" {
   (
-    cd "${ROOT_DIRECTORY}/.github/workflows/"
+    cd ".github/workflows/"
     run source ../../load 'log' 'cri'
     assert_success
   )

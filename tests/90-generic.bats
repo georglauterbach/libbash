@@ -5,10 +5,6 @@ load 'bats_assert/load'
 
 BATS_TEST_NAME_PREFIX='90-generic          :: '
 
-function setup_file() {
-  cd "${ROOT_DIRECTORY}" || exit 1
-}
-
 @test "'cri.sh' makes the correct decision" {
   source load 'log' 'cri'
 
