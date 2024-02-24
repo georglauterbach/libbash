@@ -73,12 +73,12 @@ function escape() {
     return 1
   }
 
-  var_is_set_and_not_empty "${1}" || {
+  parameter_is_not_empty "${1}" || {
     log 'error' 'No string to be escaped provided'
     return 1
   }
 
-  var_is_set_and_not_empty "${2}" || {
+  parameter_is_not_empty "${2}" || {
     log 'error' 'No escape character(s) provided'
     return 1
   }
@@ -136,7 +136,7 @@ function exit_failure() {
     exit 1
   fi
 
-  var_is_set_and_not_empty "${1}" && log 'error' "${1}"
+  parameter_is_not_empty "${1}" && log 'error' "${1}"
   exit "${CODE}"
 }
 
@@ -173,7 +173,7 @@ function return_failure() {
     exit 1
   fi
 
-  var_is_set_and_not_empty "${*}" && log 'error' "${*}"
+  parameter_is_not_empty "${*}" && log 'error' "${*}"
   return "${1:-1}"
 }
 
@@ -187,21 +187,53 @@ function return_failure() {
 #
 # Same as `exit_failure`.
 function exit_failure_show_callstack() {
-  var_is_set_and_not_empty "${2:-}" && log 'error' "${2}"
+  parameter_is_not_empty "${2:-}" && log 'error' "${2}"
   __libbash__show_call_stack
   exit_failure "${1:-}"
 }
 
-# ### Tell Whether a Variable is Set and Not Empty
+# ### Check if Variable is Set
+#
+# This function checks if an environment variable is set.
+#
+# #### Arguments
+#
+# $1 :: the variable's name
+function var_is_set() {
+  [[ -v ${1:-__UNSET__} ]]
+}
+
+# ### Check if Variable is Set and Not Empty
+#
+# This function checks if an environment variable is set
+# and not empty.
+#
+# #### Arguments
+#
+# $1 :: the variable's name
+function var_is_set_and_not_empty() {
+  var_is_set "${1}" && [[ -n ${!1:-} ]]
+}
+
+# ### Tell Whether a Parameter to a Function is Set and Not Empty
 #
 # This function returns true if the variable given in $1
 # is not null and not empty.
 #
-# Arguments
+# #### Arguments
 #
-# $1 :: the variable in question
-function var_is_set_and_not_empty() {
-  [[ -n ${1+set} ]] && [[ -n ${1} ]]
+# $1 :: the parameter you want to check
+#
+# #### Example
+#
+# ```bash
+# function my_echo() {
+#   parameter_is_not_empty "${1}"
+#   echo "${1}"
+# }
+# ```
+function parameter_is_not_empty() {
+  [[ -n ${1:-} ]]
 }
 
 # ### Ask a Question
@@ -214,12 +246,12 @@ function var_is_set_and_not_empty() {
 # $1 :: question
 # $2 :: variable name to store the result in
 function ask_question() {
-  var_is_set_and_not_empty "${1}" || {
+  parameter_is_not_empty "${1}" || {
     log 'error' 'No question provided'
     return 1
   }
 
-  var_is_set_and_not_empty "${2}" || {
+  parameter_is_not_empty "${2}" || {
     log 'error' 'No variable to store result in provided'
     return 1
   }
@@ -243,7 +275,7 @@ function ask_question() {
 # $1 :: question
 # $2 :: default (optional, default=no)
 function ask_yes_no_question() {
-  var_is_set_and_not_empty "${1}" || {
+  parameter_is_not_empty "${1}" || {
     log 'error' 'No question provided'
     return 1
   }
@@ -282,7 +314,7 @@ function ask_yes_no_question() {
 #
 # $1 :: executable to check
 function is_in_path() {
-  var_is_set_and_not_empty "${1}" || {
+  parameter_is_not_empty "${1}" || {
     log 'error' 'No name for an executable provided'
     return 1
   }

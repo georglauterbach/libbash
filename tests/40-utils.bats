@@ -284,14 +284,48 @@ function setup() { source load 'log' 'utils' ; }
   assert_output --partial 'Hey :D'
 }
 
+@test "'var_is_set' works correctly" {
+  run var_is_set
+  assert_failure
+
+  unset __DEFINITELY_UNSET__
+  run var_is_set __DEFINITELY_UNSET__
+  assert_failure
+
+  export __DEFINITELY_SET__=
+  run var_is_set __DEFINITELY_SET__
+  assert_success
+
+  export __DEFINITELY_SET__='somevalue'
+  run var_is_set __DEFINITELY_SET__
+  assert_success
+}
+
 @test "'var_is_set_and_not_empty' works correctly" {
   run var_is_set_and_not_empty
   assert_failure
 
-  run var_is_set_and_not_empty ''
+  unset __DEFINITELY_UNSET__
+  run var_is_set_and_not_empty __DEFINITELY_UNSET__
   assert_failure
 
-  run var_is_set_and_not_empty 'a'
+  export __DEFINITELY_SET__=
+  run var_is_set_and_not_empty __DEFINITELY_SET__
+  assert_failure
+
+  export __DEFINITELY_SET__='somevalue'
+  run var_is_set __DEFINITELY_SET__
+  assert_success
+}
+
+@test "'parameter_is_not_empty' works correctly" {
+  run parameter_is_not_empty
+  assert_failure
+
+  run parameter_is_not_empty ''
+  assert_failure
+
+  run parameter_is_not_empty 'a'
   assert_success
 }
 
