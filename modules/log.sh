@@ -38,8 +38,8 @@ function log() {
     shift 1
 
     # shellcheck disable=SC2059
-    printf "${!COLOR}%s${LIBBASH__LOG_COLOR_RESET}  %s  ${!COLOR}%s${LIBBASH__LOG_COLOR_RESET}  %s\n" \
-      "${LOG_LEVEL^^}" "$(date --iso-8601='seconds')" "${SCRIPT:-${0}}" "${*}"
+    printf "%s  ${!COLOR}%-5s${LIBBASH__LOG_COLOR_RESET}  %s  ${!COLOR}--${LIBBASH__LOG_COLOR_RESET}  %s\n" \
+      "$(date --iso-8601='seconds')" "${LOG_LEVEL^^}" "${SCRIPT:-${0}}" "${*}"
   }
 
   # Log Level
