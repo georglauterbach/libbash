@@ -112,7 +112,3 @@ This project is licensed under the GNU General Public License v3.0 (GPLv3) or hi
 [`errors`]: #errors
 [`log`]: #log
 [`utils`]: #utils
-
-## Git Statistics
-
-![Git Statistics](https://repobeats.axiom.co/api/embed/cfb4b69a6f9db3e39193d91e580fc64ee39c2e2a.svg "Repobeats analytics image")
