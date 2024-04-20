@@ -5,7 +5,7 @@
 # task          provides error handlers
 
 # `set -u` is not performed here due to `BP_PIPESTATUS` etc.
-set -eE -o pipefail
+set -E -o pipefail
 shopt -s inherit_errexit
 
 trap 'log_unexpected_error "${FUNCNAME[0]:-}" "${BASH_COMMAND:-}" "${LINENO:-}" "${?:-}"' ERR
