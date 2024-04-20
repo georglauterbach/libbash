@@ -12,15 +12,13 @@ BATS_TEST_NAME_PREFIX='90-generic          :: '
   DOCKER_IS_IN_PATH="$(command -v docker || :)"
   PODMAN_IS_IN_PATH="$(command -v podman || :)"
 
-  if [[ -n ${DOCKER_IS_IN_PATH} ]]
-  then
+  if [[ -n ${DOCKER_IS_IN_PATH} ]]; then
     run setup_container_runtime
     assert_success
     setup_container_runtime
     [[ ${CRI} == 'docker' ]]
     assert_success
-  elif [[ -n ${PODMAN_IS_IN_PATH} ]]
-  then
+  elif [[ -n ${PODMAN_IS_IN_PATH} ]]; then
     run setup_container_runtime
     assert_success
     setup_container_runtime

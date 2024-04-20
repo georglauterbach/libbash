@@ -122,15 +122,13 @@ function exit_failure() {
   local CODE=${1:-1}
   shift 1
 
-  if [[ ! ${CODE} =~ ^[0-9]+$ ]]
-  then
+  if [[ ! ${CODE} =~ ^[0-9]+$ ]]; then
     log 'error' "'exit_failure' was called with non-number exit code"
     __libbash__show_call_stack
     exit 1
   fi
 
-  if [[ ${CODE} -eq 0 ]] || [[ ${CODE} -ge 127 ]]
-  then
+  if [[ ${CODE} -eq 0 ]] || [[ ${CODE} -ge 127 ]]; then
     log 'error' "'exit_failure' was called with exit code 0 or >127"
     __libbash__show_call_stack
     exit 1
@@ -159,15 +157,13 @@ function return_success() { return 0 ; }
 #
 # $1 :: message (optional, default='')
 function return_failure() {
-  if [[ ! ${1:-1} =~ ^[0-9]+$ ]]
-  then
+  if [[ ! ${1:-1} =~ ^[0-9]+$ ]]; then
     log 'error' "'return_failure' was called with non-number exit code"
     __libbash__show_call_stack
     exit 1
   fi
 
-  if [[ ${1:-1} -eq 0 ]] || [[ ${1:-1} -ge 128 ]]
-  then
+  if [[ ${1:-1} -eq 0 ]] || [[ ${1:-1} -ge 128 ]]; then
     log 'error' "'return_failure' was called with exit code 0 or >127"
     __libbash__show_call_stack
     exit 1
@@ -284,8 +280,7 @@ function ask_yes_no_question() {
   local DEFAULT=${2:-no} YES_REGEXP='^(y|yes)$'
   DEFAULT=${DEFAULT,,}
 
-  if [[ ${DEFAULT} =~ ${YES_REGEXP} ]]
-  then
+  if [[ ${DEFAULT} =~ ${YES_REGEXP} ]]; then
     DEFAULT_STRING=' [Y/n]'
   else
     DEFAULT_STRING=' [y/N]'
@@ -293,11 +288,9 @@ function ask_yes_no_question() {
 
   ask_question "${1}${DEFAULT_STRING}" ANSWER
 
-  if [[ ${DEFAULT} =~ ${YES_REGEXP} ]] && [[ -z ${ANSWER} ]]
-  then
+  if [[ ${DEFAULT} =~ ${YES_REGEXP} ]] && [[ -z ${ANSWER} ]]; then
     return 0
-  elif [[ ${DEFAULT} =~ ^(n|N|no|No)$ ]] && [[ -z ${ANSWER} ]]
-  then
+  elif [[ ${DEFAULT} =~ ^(n|N|no|No)$ ]] && [[ -z ${ANSWER} ]]; then
     return 1
   fi
 

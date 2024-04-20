@@ -4,8 +4,7 @@
 # executed by   scripts that use `libbash`
 # task          perform library initialization
 
-if [[ ! -v __LIBBASH__IS_LOADED ]]
-then
+if [[ ! -v __LIBBASH__IS_LOADED ]]; then
   # ### Show an Error
   #
   # Indicates an error has happend in `libbash`. Used to display
@@ -38,18 +37,15 @@ then
     local CODE=${1:-1}
     if [[ ${-} != *i* ]] \
     || [[ ${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-0} -eq 1 ]] \
-    || [[ ${*} == *--force* ]]
-    then
-      if [[ ${CODE} =~ ^[0-9]$ ]]
-      then
+    || [[ ${*} == *--force* ]]; then
+      if [[ ${CODE} =~ ^[0-9]$ ]]; then
         exit "${CODE}"
       else
         log 'error' "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
         exit 1
       fi
     else
-      if [[ ${CODE} =~ ^[0-9]$ ]]
-      then
+      if [[ ${CODE} =~ ^[0-9]$ ]]; then
         return "${CODE}"
       else
         log 'error' "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
@@ -101,8 +97,7 @@ then
   #
   # Shows some debug information that `libbash` has collected.
   function libbash__debug() {
-    if [[ ! -v __LIBBASH__IS_LOADED_LOG ]]
-    then
+    if [[ ! -v __LIBBASH__IS_LOADED_LOG ]]; then
       __libbash__exit_with_error_and_callstack "Debug functionality requires the log module to be loaded and log level set to 'debug' or 'trace'"
       return 1
     fi
@@ -204,9 +199,8 @@ function __libbash__main() {
   libbash__source_files "${@}"
 
   # this has to be set up last
-  if [[ $(type -t log || printf 'none') != 'function' ]]
-  then
-    libbash__setup_default_notify_error
+  if [[ ${LIBBASH_LOADED_MODULES[*]} != *log* ]]; then
+    setup_default_notify_error
     return 0
   fi
 
