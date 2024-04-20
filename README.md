@@ -55,6 +55,16 @@ You may also use `libbash` without cloning the repository. To do so, run:
 source <(curl -qsSfL https://raw.githubusercontent.com/georglauterbach/libbash/main/load) --online 'log'
 ```
 
+---
+
+You may optionally specify a version to acquire modules from a specific release. The version follows the [Semantic Versioning](https://semver.org/lang/de/) pattern:
+
+```bash
+source <(curl -qsSfL https://raw.githubusercontent.com/georglauterbach/libbash/main/load) --online --version '6.1.0' 'log'
+```
+
+The [Releases](https://github.com/georglauterbach/libbash/releases) page, you can see which versions you can use. Make sure the module exists for your version.
+
 ### Environment Variables
 
 #### `__LIBBASH__*`
