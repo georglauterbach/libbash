@@ -145,9 +145,7 @@ function __libbash__main() {
   # the files from the GitHub repository via `curl`.
   function __libbash__source_files() {
     local MODULE TMP_DIR
-
     TMP_DIR=$(mktemp --directory)
-    trap 'rm -rf "${TMP_DIR}"' ERR
 
     for MODULE in "${MODULES[@]}"; do
       if [[ ${LIBBASH_LOADED_MODULES[*]} =~ ${MODULE} ]]; then
@@ -158,6 +156,7 @@ function __libbash__main() {
         if ! curl --silent --show-error --fail --location -o "${TMP_DIR}/${MODULE}" \
           "https://raw.githubusercontent.com/georglauterbach/libbash/${LIBBASH_VERSION}/modules/${MODULE}.sh"; then
           __libbash__show_error "Curl did not succeed. Wrong version? Does the module exist?"
+          rm -rf "${TMP_DIR}"
           return 5
         fi
 
