@@ -230,7 +230,7 @@ function __libbash__post_init() {
   unset __libbash__parse_arguments
   unset __libbash__source_files
   unset __libbash__setup_default_notify_error
-  # unset __libbash__post_init
+  unset __libbash__post_init
 }
 
 if __libbash__main "${@}"; then
