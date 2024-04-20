@@ -117,7 +117,7 @@ fi # if ! ${__LIBBASH__IS_LOADED:-false}
 # This function calls the initialization routines for `libbash`
 # in proper order.
 function __libbash__main() {
-  function parse_arguments() {
+  function __libbash__parse_arguments() {
     while [[ ${#} -gt 0 ]]; do
       case "${1:-}" in
         ( '--version' )
@@ -143,7 +143,7 @@ function __libbash__main() {
   # Iterates through arguments to load the corresponding module.
   # If the `--online` flag was supplied, this function `source`s
   # the files from the GitHub repository via `curl`.
-  function source_files() {
+  function __libbash__source_files() {
     local MODULE TMP_DIR
 
     TMP_DIR=$(mktemp --directory)
@@ -185,8 +185,8 @@ function __libbash__main() {
   #
   # If the `log` module was not sourced, provide a fallback
   # `log` implementation, but only for error messages.
-  function setup_default_notify_error() {
     LIBBASH_LOG_ONLY_ERROR_FALLBACK=1
+  function __libbash__setup_default_notify_error() {
     function log() {
       if [[ ${1:-} != 'error' ]]; then
         __libbash__exit_with_error_and_callstack \
@@ -215,21 +215,32 @@ function __libbash__main() {
 
   local LIBBASH_ONLINE=0 MODULES=()
 
-  parse_arguments "${@}" || return ${?}
-  source_files || return ${?}
+  __libbash__parse_arguments "${@}" || return ${?}
+  __libbash__source_files || return ${?}
 
   # this has to be set up last
   if [[ ${LIBBASH_LOADED_MODULES[*]} != *log* ]]; then
-    setup_default_notify_error
+    __libbash__setup_default_notify_error
     return 0
   fi
 
   log 'trace' "Finished 'libbash' initialization"
 }
 
-if __libbash__main "${@}"; then
+# Independently of whether we finished initialization successfully or not,
+# we want to clean up. This function performs exactly this functionality.
+function __libbash__post_init() {
   unset __libbash__main
+  unset __libbash__parse_arguments
+  unset __libbash__source_files
+  unset __libbash__setup_default_notify_error
+  # unset __libbash__post_init
+}
+
+if __libbash__main "${@}"; then
+  __libbash__post_init
   SCRIPT='prompt or not inside a function'
 else
+  __libbash__post_init
   ( exit ${?} ; )
 fi

@@ -20,7 +20,11 @@ function setup_file() {
 }
 
 @test "'errors' provoking fault triggers error" {
-  run bash -c "( source load 'errors' 'log' 'utils' ; false ; )"
+  run bash -c "( LOG_LEVEL=error ; source load 'errors' ; set +e ; log 'warn' 'Test' ; true ; )"
+  assert_failure
+  assert_output --partial "log module was not loaded but 'log' was called with log level not 'error'"
+
+  run bash -c "( LOG_LEVEL=error ; source load 'errors' 'log' 'utils' ; set +e ; false ; true ; )"
   assert_failure
   assert_output --partial 'unexpected error occured:'
 }

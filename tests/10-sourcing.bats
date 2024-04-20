@@ -103,16 +103,19 @@ function setup_file() {
   assert_failure
   assert_output --regexp 'ERROR.*namd'
 
-  run -127 load_module
+  run -127 __libbash__main
   assert_failure
 
-  run -127 source_files
+  run -127 __libbash__parse_arguments
   assert_failure
 
-  run -127 setup_default_notify_error
+  run -127 __libbash__source_files
   assert_failure
 
-  run -127 libbash_main
+  run -127 __libbash__setup_default_notify_error
+  assert_failure
+
+  run -127 __libbash__post_init
   assert_failure
 
   source load 'log' 'utils'
@@ -120,5 +123,4 @@ function setup_file() {
   run libbash__debug
   assert_success
   assert_output --partial 'Loaded modules: log utils'
-
 }
