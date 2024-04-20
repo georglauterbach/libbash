@@ -216,4 +216,4 @@ function __libbash__main() {
 __libbash__main "${@}"
 unset __libbash__main
 
-SCRIPT='prompt or unknown script'
+SCRIPT='prompt'
