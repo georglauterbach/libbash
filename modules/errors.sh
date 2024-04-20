@@ -17,7 +17,7 @@ trap '__log_unexpected_error "${FUNCNAME[0]:-}" "${BASH_COMMAND:-}" "${LINENO:-}
 # and also calls `__libbash__show_call_stack` to possibly print a
 # call stack if `__libbash__show_call_stack` deems it useful.
 #
-# #### Special
+# #### Attention
 #
 # Underscored functions are not unset at the end of the sourcing
 # process, but they should only be used by `libbash` modules, not

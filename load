@@ -12,7 +12,7 @@ then
   # errors even when the log module is not (or has not yet been)
   # loaded.
   #
-  # #### Special
+  # #### Attention
   #
   # Underscored functions are not unset at the end of the sourcing
   # process, but they should only be used by `libbash` modules, not
@@ -29,7 +29,7 @@ then
   # This function will exit when not running interactively or when
   # 'LIBBASH_EXIT_IN_INTERACTIVE_MODE' is set to '1'.
   #
-  # #### Special
+  # #### Attention
   #
   # Underscored functions are not unset at the end of the sourcing
   # process, but they should only be used by `libbash` modules, not
