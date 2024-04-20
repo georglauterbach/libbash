@@ -185,7 +185,6 @@ function __libbash__main() {
   #
   # If the `log` module was not sourced, provide a fallback
   # `log` implementation, but only for error messages.
-    LIBBASH_LOG_ONLY_ERROR_FALLBACK=1
   function __libbash__setup_default_notify_error() {
     function log() {
       if [[ ${1:-} != 'error' ]]; then
@@ -199,19 +198,18 @@ function __libbash__main() {
     }; export -f log
   }
 
-  # ! export all variables here first, even if not
-  # ! all modules are sourced to satisfy shellcheck
-  # ! in applications that use `libbash`
-  unset LIBBASH_LOADED_MODULES
-  export SCRIPT LOG_LEVEL CRI
-  export LIBBASH_DIRECTORY LIBBASH_VERSION LIBBASH_LOG_ONLY_ERROR_FALLBACK LIBBASH_LOADED_MODULES
-
   SCRIPT='libbash init'
   LOG_LEVEL=${LOG_LEVEL:-info}
 
   LIBBASH_DIRECTORY="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
-  LIBBASH_LOG_ONLY_ERROR_FALLBACK=0
   LIBBASH_VERSION='main'
+  LIBBASH_LOADED_MODULES=()
+
+  # ! export all variables here first, even if not
+  # ! all modules are sourced to satisfy shellcheck
+  # ! in applications that use `libbash`
+  export SCRIPT LOG_LEVEL CRI
+  export LIBBASH_DIRECTORY LIBBASH_VERSION LIBBASH_LOADED_MODULES
 
   local LIBBASH_ONLINE=0 MODULES=()
 

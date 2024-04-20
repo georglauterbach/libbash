@@ -40,8 +40,8 @@ function log_unexpected_error() {
   script:     ${SCRIPT:-${0}}
   function:   ${1:-error did not happen inside a function}
   command:
-    plain:    '${2:-unknown}'
-    expanded: '$(eval echo "${2:-unknown}")'
+    plain:    ${2:-unknown}
+    expanded: $(eval echo "${2:-unknown}")
   line:       ${3:-unknown}
   exit code:  ${4:-unknown}"
 

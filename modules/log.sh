@@ -99,7 +99,7 @@ function log() {
       ;;
 
     ( * )
-      printf "Provided log level ('%s') unknown" "${MESSAGE_LOG_LEVEL}" >&2
+      log 'error' "Provided log level '${MESSAGE_LOG_LEVEL}' unknown"
       return 0
       ;;
   esac
