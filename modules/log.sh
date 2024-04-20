@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# version       0.8.1
+# version       0.8.2
 # sourced by    ../load
 # task          provides logging functionality
 
@@ -92,11 +92,11 @@ function log() {
 
     ( 'warn' )
       [[ "${LOG_LEVEL_AS_INTEGER}" -lt 1 ]] && return 0
-      __log_generic 'warn' "${*}"
+      __log_generic 'warn' "${*}" >&2
       ;;
 
     ( 'error' )
-      __log_generic 'error' "${*}"
+      __log_generic 'error' "${*}" >&2
       ;;
 
     ( * )
