@@ -12,8 +12,15 @@ export LIBBASH__LOG_COLOR_WARN='\e[93m'
 export LIBBASH__LOG_COLOR_ERROR='\e[91m'
 
 if [[ ! -v __LIBBASH__IS_LOADED_LOG ]]; then
-  export __LIBBASH__IS_LOADED_LOG=1
-  readonly __LIBBASH__IS_LOADED_LOG
+  declare -rx __LIBBASH__IS_LOADED_LOG=1
+fi
+
+# the `[@]` at the end is required
+# ref: https://stackoverflow.com/a/26931860
+if [[ ! -v LIBBASH__LOG_LEVEL_MAPPING[@] ]]; then
+  # The `-g` is required here
+  # ref: https://unix.stackexchange.com/a/535721
+  declare -Agrx LIBBASH__LOG_LEVEL_MAPPING=(['error']=0 ['warn']=1 ['info']=2 ['debug']=3 ['trace']=4)
 fi
 
 # ### The Logging Functions
@@ -22,7 +29,7 @@ fi
 # expect from a log function: you provide the log level as the
 # first argument and the message in the consecutive ones. The
 # default log level is 'info'. The global log level is defined
-# in the 
+# in the
 #
 # #### Log Level
 #
@@ -63,25 +70,24 @@ function log() {
   [[ -z ${1+set} ]] && { log 'warn' "Log called without log level" ; __libbash__show_call_stack ; return 0 ; }
   [[ -z ${2+set} ]] && { log 'warn' "Log called without message" ; __libbash__show_call_stack ; return 0 ; }
 
-  declare -A LOG_LEVEL_MAPPING=(["error"]=0 ["warn"]=1 ["info"]=2 ["debug"]=3 ["trace"]=4)
   local MESSAGE_LOG_LEVEL="${1}"
   shift 1
 
-  if [[ -z ${LOG_LEVEL_MAPPING[${LOG_LEVEL:=info}]} ]]; then
+  if [[ -z ${LIBBASH__LOG_LEVEL_MAPPING[${LOG_LEVEL:=info}]} ]]; then
     local OLD_LOG_LEVEL=${LOG_LEVEL}
     export LOG_LEVEL='debug'
     log 'warn' "Log level '${OLD_LOG_LEVEL}' unknown - resetting to log level '${LOG_LEVEL}'"
   fi
 
-  if [[ -z ${LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} ]]; then
+  if [[ -z ${LIBBASH__LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} ]]; then
     log 'warn' "Provided log level '${MESSAGE_LOG_LEVEL}' unknown"
     __libbash__show_call_stack
     return 0
   fi
 
-  [[ ${LOG_LEVEL_MAPPING[${LOG_LEVEL}]} -lt ${LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} ]] && return 0
+  [[ ${LIBBASH__LOG_LEVEL_MAPPING[${LOG_LEVEL}]} -lt ${LIBBASH__LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} ]] && return 0
 
-  if [[ ${LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} -lt 2 ]]; then
+  if [[ ${LIBBASH__LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} -lt 2 ]]; then
     __log_generic "${MESSAGE_LOG_LEVEL}" "${*}" >&2
   else
     __log_generic "${MESSAGE_LOG_LEVEL}" "${*}"
