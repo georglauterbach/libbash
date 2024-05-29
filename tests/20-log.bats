@@ -132,7 +132,7 @@ function setup() { source load log ; }
   export LOG_LEVEL='invalid'
   run log 'warn' "${TEST_STRING}"
   assert_success
-  assert_line --partial "Log level 'invalid' unknown - resetting to default log level ('info')"
+  assert_line --partial "Log level 'invalid' unknown - resetting to log level 'debug'"
 }
 
 @test "checking wrong supplied log level arguments prints a warning" {

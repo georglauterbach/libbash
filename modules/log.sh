@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# version       0.8.2
+# version       1.0.0
 # sourced by    ../load
 # task          provides logging functionality
 
@@ -18,13 +18,32 @@ fi
 
 # ### The Logging Functions
 #
-# `log` is used for logging. It uses five different log levels
+# `log` uses five different log levels and behaves as you would
+# expect from a log function: you provide the log level as the
+# first argument and the message in the consecutive ones. The
+# default log level is 'info'. The global log level is defined
+# in the 
 #
-# `error` | `warn` | `info` | `debug` | `trace`
+# #### Log Level
 #
-# and behaves as you would expect from a log function: you provide
-# the log level as the first argument and the message in the con-
-# secutive ones. The default log level is 'info'.
+# The provided log level, as well as the environment variable
+# `LOG_LEVEL`, Can be one of
+#
+#   meaning - what to log
+#   -------------------------------------------------
+#   trace   - log trace information
+#   debug   - log debug information
+#   info    - log informational output
+#   warn    - log warnings
+#   error   - log critical errors and aborts
+#
+# where a higher level includes the level below. The
+# default log level is 'info' (2).
+#
+# #### Return Codes
+#
+# This function is infallible. Hence, it always returns with
+# return code 0, even when issues appeared.
 #
 # #### Arguments
 #
@@ -32,77 +51,41 @@ fi
 # $2 :: message (strictly speaking optional, no default / empty string)
 function log() {
   function __log_generic() {
-    local LOG_LEVEL=${1:?Log level message format must be provided to __log_generic}
+    local LOG_LEVEL=${1:?This is a bug in libbash: log level message format must be provided to __log_generic}
     local COLOR="LIBBASH__LOG_COLOR_${LOG_LEVEL^^}"
     shift 1
 
     # shellcheck disable=SC2059
-    printf "%s  ${!COLOR}%-5s${LIBBASH__LOG_COLOR_RESET}  %s  ${!COLOR}--${LIBBASH__LOG_COLOR_RESET}  %s\n" \
-      "$(date --iso-8601='seconds')" "${LOG_LEVEL^^}" "${SCRIPT:-${0}}" "${*}"
+    printf "%s ${!COLOR}%-5s${LIBBASH__LOG_COLOR_RESET} %s: %s\n" \
+      "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${LOG_LEVEL^^}" "${SCRIPT:-$(basename "${0}")}" "${*}"
   }
 
-  # Log Level
-  #
-  # Can be one of
-  #
-  #   meaning - what to log
-  #   -------------------------------------------------
-  #   trace   - log trace information
-  #   debug   - log debug information
-  #   info    - log informational output
-  #   warn    - log warnings
-  #   error   - log critical errors and aborts
-  #
-  # where a higher level includes the level below. The
-  # default log level is 'info' (2).
-  local LOG_LEVEL_AS_INTEGER=2 MESSAGE_LOG_LEVEL="${1:-}"
+  [[ -z ${1+set} ]] && { log 'warn' "Log called without log level" ; __libbash__show_call_stack ; return 0 ; }
+  [[ -z ${2+set} ]] && { log 'warn' "Log called without message" ; __libbash__show_call_stack ; return 0 ; }
+
+  declare -A LOG_LEVEL_MAPPING=(["error"]=0 ["warn"]=1 ["info"]=2 ["debug"]=3 ["trace"]=4)
+  local MESSAGE_LOG_LEVEL="${1}"
   shift 1
 
-  case "${LOG_LEVEL:-info}"
-  in
-    ( 'error' ) LOG_LEVEL_AS_INTEGER=0 ;;
-    ( 'warn'  ) LOG_LEVEL_AS_INTEGER=1 ;;
-    ( 'info'  ) LOG_LEVEL_AS_INTEGER=2 ;;
-    ( 'debug' ) LOG_LEVEL_AS_INTEGER=3 ;;
-    ( 'trace' ) LOG_LEVEL_AS_INTEGER=4 ;;
-    ( * )
-      local OLD_LOG_LEVEL=${LOG_LEVEL}
-      LOG_LEVEL='info'
-      log 'error' "Log level '${OLD_LOG_LEVEL}' unknown - resetting to default log level ('${LOG_LEVEL}')"
-      ;;
-  esac
+  if [[ -z ${LOG_LEVEL_MAPPING[${LOG_LEVEL:=info}]} ]]; then
+    local OLD_LOG_LEVEL=${LOG_LEVEL}
+    export LOG_LEVEL='debug'
+    log 'warn' "Log level '${OLD_LOG_LEVEL}' unknown - resetting to log level '${LOG_LEVEL}'"
+  fi
 
-  case "${MESSAGE_LOG_LEVEL}"
-  in
-    ( 'trace' )
-      [[ ${LOG_LEVEL_AS_INTEGER} -lt 4 ]] && return 0
-      __log_generic 'trace' "${*}"
-      ;;
+  if [[ -z ${LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} ]]; then
+    log 'warn' "Provided log level '${MESSAGE_LOG_LEVEL}' unknown"
+    __libbash__show_call_stack
+    return 0
+  fi
 
-    ( 'debug' )
-      [[ ${LOG_LEVEL_AS_INTEGER} -lt 3 ]] && return 0
-      __log_generic 'debug' "${*}"
-      ;;
+  [[ ${LOG_LEVEL_MAPPING[${LOG_LEVEL}]} -lt ${LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} ]] && return 0
 
-    ( 'info' )
-      [[ "${LOG_LEVEL_AS_INTEGER}" -lt 2 ]] && return 0
-      __log_generic 'info' "${*}"
-      ;;
-
-    ( 'warn' )
-      [[ "${LOG_LEVEL_AS_INTEGER}" -lt 1 ]] && return 0
-      __log_generic 'warn' "${*}" >&2
-      ;;
-
-    ( 'error' )
-      __log_generic 'error' "${*}" >&2
-      ;;
-
-    ( * )
-      log 'error' "Provided log level '${MESSAGE_LOG_LEVEL}' unknown"
-      return 0
-      ;;
-  esac
+  if [[ ${LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} -lt 2 ]]; then
+    __log_generic "${MESSAGE_LOG_LEVEL}" "${*}" >&2
+  else
+    __log_generic "${MESSAGE_LOG_LEVEL}" "${*}"
+  fi
 
   return 0
 }
