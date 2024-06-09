@@ -43,7 +43,7 @@ SCRIPT='some script'
 This example assumes the script `some_script.sh` is executed (or sourced) from the directory it lives in (i.e., `your_repository`). To source `libbash` independently of the invocation location, for example in `some_dir/some_other_script.sh`, you may use this more elaborate call to `source`:
 
 ``` BASH
-source "$(realpath "$(dirname "${BASH_SOURCE[0]}")/../libbash/load" 'errors' 'log'
+source "$(realpath "$(dirname "${BASH_SOURCE[0]}")/../libbash/load")" 'errors' 'log'
 SCRIPT='some other script'
 ```
 
