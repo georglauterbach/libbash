@@ -18,10 +18,12 @@ fi
 
 # the `[@]` at the end is required
 # ref: https://stackoverflow.com/a/26931860
-if [[ ! -v LIBBASH__LOG_LEVEL_MAPPING[@] ]]; then
+if [[ ! -v __LIBBASH__LOG_LEVEL_MAPPING[@] ]]; then
   # The `-g` is required here
   # ref: https://unix.stackexchange.com/a/535721
-  declare -Agrx LIBBASH__LOG_LEVEL_MAPPING=(['error']=0 ['warn']=1 ['info']=2 ['debug']=3 ['trace']=4)
+  declare -Ag __LIBBASH__LOG_LEVEL_MAPPING=( ["error"]="0" ["warn"]="1" ["info"]="2" ["debug"]="3" ["trace"]="4" )
+  export __LIBBASH__LOG_LEVEL_MAPPING
+  readonly __LIBBASH__LOG_LEVEL_MAPPING
 fi
 
 # ### The Logging Functions
@@ -74,21 +76,21 @@ function log() {
   local MESSAGE_LOG_LEVEL="${1}"
   shift 1
 
-  if [[ -z ${LIBBASH__LOG_LEVEL_MAPPING[${LOG_LEVEL:=info}]} ]]; then
+  if [[ -z ${__LIBBASH__LOG_LEVEL_MAPPING[${LOG_LEVEL:=info}]} ]]; then
     local OLD_LOG_LEVEL=${LOG_LEVEL}
     export LOG_LEVEL='debug'
     log 'warn' "Log level '${OLD_LOG_LEVEL}' unknown - resetting to log level '${LOG_LEVEL}'"
   fi
 
-  if [[ -z ${LIBBASH__LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} ]]; then
+  if [[ -z ${__LIBBASH__LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} ]]; then
     log 'warn' "Provided log level '${MESSAGE_LOG_LEVEL}' unknown"
     __libbash__show_call_stack
     return 0
   fi
 
-  [[ ${LIBBASH__LOG_LEVEL_MAPPING[${LOG_LEVEL}]} -lt ${LIBBASH__LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} ]] && return 0
+  [[ ${__LIBBASH__LOG_LEVEL_MAPPING[${LOG_LEVEL}]} -lt ${__LIBBASH__LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} ]] && return 0
 
-  if [[ ${LIBBASH__LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} -lt 2 ]]; then
+  if [[ ${__LIBBASH__LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} -lt 2 ]]; then
     __log_generic "${MESSAGE_LOG_LEVEL}" "${*}" >&2
   else
     __log_generic "${MESSAGE_LOG_LEVEL}" "${*}"
