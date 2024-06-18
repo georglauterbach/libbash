@@ -242,6 +242,7 @@ if __libbash__main "${@}"; then
   __libbash__post_init
   SCRIPT='prompt or not inside a function'
 else
+  __LIBBASH__RETURN_CODE_INIT=${?}
   __libbash__post_init
-  ( exit ${?} ; )
+  ( exit "${__LIBBASH__RETURN_CODE_INIT}" ; )
 fi
