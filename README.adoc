@@ -1,9 +1,6 @@
 = libbash
-:toc:
-:source-highlighter: highlightjs
 
 image:https://img.shields.io/github/actions/workflow/status/georglauterbach/libbash/test-bats.yml?branch=main&color=blue&label=BASH%20UNIT%20TESTS&logo=github&logoColor=white&style=for-the-badge[link="https://github.com/georglauterbach/libbash/actions/workflows/test-bats.yml"]
-
 image:https://img.shields.io/github/actions/workflow/status/georglauterbach/libbash/linting.yml?branch=main&color=blue&label=LINTING%20TESTS&logo=github&logoColor=white&style=for-the-badge[link="https://github.com/georglauterbach/libbash/actions/workflows/linting.yml"]
 
 == About
