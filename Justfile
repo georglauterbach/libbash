@@ -13,7 +13,7 @@ export ROOT_DIRECTORY := justfile_directory()
 	just --list
 
 # run all tests
-@all_tests:
+@run_all_tests:
 	bash "{{ROOT_DIRECTORY}}/tests/bats_core/bin/bats" \
 		--jobs 2                                       \
 		--no-parallelize-within-files                  \
@@ -21,5 +21,5 @@ export ROOT_DIRECTORY := justfile_directory()
 		{{ROOT_DIRECTORY}}/tests/*.bats
 
 # run a specific test
-@test name:
+@run_test name:
 	bash "{{ROOT_DIRECTORY}}/tests/bats_core/bin/bats" --timing {{ROOT_DIRECTORY}}/tests/*-{{name}}.bats
