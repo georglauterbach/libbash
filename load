@@ -17,8 +17,8 @@ if [[ ! -v __LIBBASH__IS_LOADED ]]; then
   # process, but they should only be used by `libbash` modules, not
   # by applications / other libraries using `libbash`.
   function __libbash__show_error() {
-    printf "%s  \e[91mERROR\e[0m  %s  \e[91m--\e[0m  %s\n" \
-      "$(date --iso-8601='seconds')" "${SCRIPT:-${0}}" "${*}" >&2
+    printf "%s \e[91mERROR\e[0m %s: %s\n" \
+      "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${SCRIPT:-$(basename "${0}")}" "${*}" >&2
   }
   export -f __libbash__show_error
   readonly -f __libbash__show_error
