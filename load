@@ -102,6 +102,7 @@ if [[ ! -v __LIBBASH__IS_LOADED ]]; then
     fi
 
     log 'debug' "Showing 'libbash' debug information"
+    log 'debug' "  -> version: ${LIBBASH_VERSION}"
     log 'debug' "  -> Loaded modules: ${LIBBASH_LOADED_MODULES[*]}"
   }
   export -f libbash__debug
@@ -119,14 +120,10 @@ function __libbash__main() {
   function __libbash__parse_arguments() {
     while [[ ${#} -gt 0 ]]; do
       case "${1:-}" in
-        ( '--version' )
-          LIBBASH_VERSION="v${2:?Version is required when specifying \'--version\'}"
-          shift 2
-          ;;
-
         ( '--online' )
           LIBBASH_ONLINE=1
-          shift 1
+          LIBBASH_ONLINE_VERSION="v${2:?Version is required when specifying \'--online\'}"
+          shift 2
           ;;
 
         ( * )
@@ -153,7 +150,7 @@ function __libbash__main() {
 
       if [[ ${LIBBASH_ONLINE} -eq 1 ]]; then
         if ! curl --silent --show-error --fail --location -o "${TMP_DIR}/${MODULE}" \
-          "https://raw.githubusercontent.com/georglauterbach/libbash/${LIBBASH_VERSION}/modules/${MODULE}.sh"; then
+          "https://raw.githubusercontent.com/georglauterbach/libbash/${LIBBASH_ONLINE_VERSION}/modules/${MODULE}.sh"; then
           __libbash__show_error "Curl did not succeed. Wrong version? Does the module exist?"
           rm -rf "${TMP_DIR}"
           return 5
@@ -200,7 +197,6 @@ function __libbash__main() {
   LOG_LEVEL=${LOG_LEVEL:-info}
 
   LIBBASH_DIRECTORY="$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")"
-  LIBBASH_VERSION='main'
   LIBBASH_LOADED_MODULES=()
 
   # ! export all variables here first, even if not
@@ -209,10 +205,19 @@ function __libbash__main() {
   export SCRIPT LOG_LEVEL CRI
   export LIBBASH_DIRECTORY LIBBASH_VERSION LIBBASH_LOADED_MODULES
 
-  local LIBBASH_ONLINE=0 MODULES=()
+  local LIBBASH_ONLINE=0 LIBBASH_ONLINE_VERSION='' MODULES=()
 
   __libbash__parse_arguments "${@}" || return ${?}
   __libbash__source_files || return ${?}
+
+  if [[ ${LIBBASH_ONLINE} -eq 0 ]]; then
+    LIBBASH_VERSION='local'
+    if command -v git &>/dev/null; then
+      LIBBASH_VERSION+="@$(cd "${LIBBASH_DIRECTORY}" && git rev-parse --short HEAD)"
+    fi
+  else
+    LIBBASH_VERSION=${LIBBASH_ONLINE_VERSION}
+  fi
 
   # this has to be set up last
   if [[ ${LIBBASH_LOADED_MODULES[*]} != *log* ]]; then
