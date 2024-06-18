@@ -106,6 +106,9 @@ function setup_file() {
   run -127 __libbash__main
   assert_failure
 
+  run -127 __libbash__run_preflight_checks
+  assert_failure
+
   run -127 __libbash__parse_arguments
   assert_failure
 

@@ -117,6 +117,16 @@ fi # if ! ${__LIBBASH__IS_LOADED:-false}
 # This function calls the initialization routines for `libbash`
 # in proper order.
 function __libbash__main() {
+  # We cannot use the log at this point in the setup procedure. Hence,
+  # we need to be very careful what we can call and what has not yet
+  # been set up.
+  function __libbash__run_preflight_checks() {
+    if [[ ${BASH_VERSINFO[0]} -lt 5 ]]; then
+      __libbash__show_error "libbash only supports Bash version >= 5.0"
+      return 1
+    fi
+  }
+
   function __libbash__parse_arguments() {
     while [[ ${#} -gt 0 ]]; do
       case "${1:-}" in
@@ -207,6 +217,7 @@ function __libbash__main() {
 
   local LIBBASH_ONLINE=0 LIBBASH_ONLINE_VERSION='' MODULES=()
 
+  __libbash__run_preflight_checks || return ${?}
   __libbash__parse_arguments "${@}" || return ${?}
   __libbash__source_files || return ${?}
 
@@ -232,6 +243,7 @@ function __libbash__main() {
 # we want to clean up. This function performs exactly this functionality.
 function __libbash__post_init() {
   unset __libbash__main
+  unset __libbash__run_preflight_checks
   unset __libbash__parse_arguments
   unset __libbash__source_files
   unset __libbash__setup_default_notify_error
