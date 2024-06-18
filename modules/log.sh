@@ -12,7 +12,8 @@ export LIBBASH__LOG_COLOR_WARN='\e[93m'
 export LIBBASH__LOG_COLOR_ERROR='\e[91m'
 
 if [[ ! -v __LIBBASH__IS_LOADED_LOG ]]; then
-  declare -rx __LIBBASH__IS_LOADED_LOG=1
+  export __LIBBASH__IS_LOADED_LOG=1
+  readonly __LIBBASH__IS_LOADED_LOG
 fi
 
 # the `[@]` at the end is required
