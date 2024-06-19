@@ -7,7 +7,7 @@ image:https://img.shields.io/github/actions/workflow/status/georglauterbach/libb
 
 `libbash` provides pure Bash functions like a library. `libbash` focuses on very high **code quality** and **safe** functions without common Bash side effects. Bash is difficult because it is extremely liberal. This project provides robust functions, checked by link:https://github.com/koalaman/shellcheck[_ShellCheck_] and by link:https://github.com/bats-core/bats-core[_BATS_].
 
-CAUTION: These functions are **not** POSIX compatible, i.e., they do not work with `sh`, only with `bash`. This project is written in and supports Bash v5.2.
+CAUTION: These functions are **not** POSIX compatible, i.e., they do not work with `sh`, only with `bash`. This project is written in and supports Bash v5.0.
 
 == Usage [[section::usage]]
 
@@ -36,7 +36,7 @@ SCRIPT='some script'
 This example assumes the script `some_script.sh` is executed (or sourced) from the directory it lives in (i.e., `your_repository`). To source `libbash` independently of the invocation location, for example in `some_dir/some_other_script.sh`, you may use this more elaborate call to `source`:
 
 ```bash
-source "$(realpath "$(dirname "${BASH_SOURCE[0]}")/../libbash/load")" 'errors' 'log'
+source "$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")/../libbash/load")" 'errors' 'log'
 SCRIPT='some other script'
 ```
 
@@ -45,16 +45,10 @@ SCRIPT='some other script'
 You may also use `libbash` without cloning the repository. To do so, run:
 
 ```bash
-source <(curl -qsSfL https://raw.githubusercontent.com/georglauterbach/libbash/main/load) --online 'log'
+source <(curl -qsSfL https://raw.githubusercontent.com/georglauterbach/libbash/main/load) --online <VERSION> 'log'
 ```
 
-You may optionally specify a version to acquire modules from a specific release. The version follows the link:https://semver.org/lang/de/[Semantic Versioning] pattern:
-
-```bash
-source <(curl -qsSfL https://raw.githubusercontent.com/georglauterbach/libbash/main/load) --online --version '6.1.0' 'log'
-```
-
-The link:https://github.com/georglauterbach/libbash/releases[Releases] page, you can see which versions you can use. Make sure the module exists for your version.
+You need to specify a version to acquire modules from a specific release. Versions follow the link:https://semver.org/lang/de/[Semantic Versioning] pattern and can be found on the link:https://github.com/georglauterbach/libbash/releases[Releases page on GitHub]. You may also use `main` as a version to indicate you want to use the very latest updates of `libbash`.
 
 === Environment Variables
 
@@ -73,7 +67,7 @@ The default is `0`, i.e., your interactive prompt will not close by default.
 
 == Modules
 
-When you use `libbash`, you don't have to use all the code that `libbash` contains. `libbash` provides different modules. When you source the `load` script, you can provide the modules you would like to use as arguments.
+When you load `libbash`, you don't have to use all the code that `libbash` actually contains. `libbash` provides different modules. When you source the `load` script, you can provide the modules you would like to use as arguments.
 
 To load a module, just specify its name after the `source` command, as shown in the examples above in <<section::usage,the usage section>>. All modules are located in the `modules` directory, and their name is just the file name without `.sh` at the end. When you open the file, you will see all the functions the module provides. These functions have Rust-like documentation comments above their definitions to give you a concise overview of what the function does.
 
