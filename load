@@ -203,6 +203,8 @@ function __libbash__main() {
     }; export -f log
   }
 
+  # if SCRIPT is already set, save it so we can restore it later
+  [[ -v SCRIPT ]] && __LIBBASH_SCRIPT_TMP=${SCRIPT}
   SCRIPT='libbash init'
   LOG_LEVEL=${LOG_LEVEL:-info}
 
@@ -248,13 +250,20 @@ function __libbash__post_init() {
   unset __libbash__source_files
   unset __libbash__setup_default_notify_error
   unset __libbash__post_init
+
+  if [[ -v __LIBBASH_SCRIPT_TMP ]]; then
+    SCRIPT=${__LIBBASH_SCRIPT_TMP}
+    unset __LIBBASH_SCRIPT_TMP
+  else
+    SCRIPT='prompt or not inside a function'
+  fi
 }
 
 if __libbash__main "${@}"; then
   __libbash__post_init
-  SCRIPT='prompt or not inside a function'
 else
   __LIBBASH__RETURN_CODE_INIT=${?}
   __libbash__post_init
+  # ensure the last command has the exit status of __libbash__main
   ( exit "${__LIBBASH__RETURN_CODE_INIT}" ; )
 fi
