@@ -9,7 +9,7 @@ function setup_file() {
   export LOG_LEVEL='trace'
 }
 
-@test "'errors' is correctly sourced" {
+@test "module is correctly sourced" {
   run bash -c 'source load "errors"'
   assert_success
 
@@ -18,17 +18,90 @@ function setup_file() {
   assert_output --regexp 'log_unexpected_error.*ERR'
 }
 
-@test "'errors' is correctly sourced with other modules" {
+@test "module is correctly sourced with other modules" {
   run bash -c 'source load "errors" "log" "utils"'
   assert_success
 }
 
-@test "'errors' provoking fault triggers error" {
+@test "'escape_newlines' works" {
+  export LOG_LEVEL='error'
+  source load 'errors'
+  trap - ERR
+
+  run remove_newlines
+  assert_success
+  assert_output 'unknown'
+
+  run remove_newlines $'a\nb\nc'
+  assert_success
+  assert_output 'a b c'
+
+  run remove_newlines $'These\nare\nlines'
+  assert_success
+  assert_output 'These are lines'
+
+  run remove_newlines $'These\nare\nlines $(and a command)'
+  assert_success
+  assert_output 'These are lines $(and a command)'
+}
+
+@test "'apply_shell_expansion' works" {
+  export LOG_LEVEL='error'
+  source load 'errors'
+  trap - ERR
+
+  run apply_shell_expansion
+  assert_success
+  assert_output 'unknown'
+
+  run apply_shell_expansion 'some String'
+  assert_success
+  assert_output 'some String'
+
+  run apply_shell_expansion '$(eval date)'
+  assert_success
+  assert_output '$(eval date)'
+
+  export __SOME_VAR='This is a message'
+  run apply_shell_expansion 'Message: ${__SOME_VAR}'
+  assert_success
+  assert_output 'Message: This is a message'
+
+  run apply_shell_expansion '$(${__SOME_VAR})'
+  assert_success
+  assert_output '$(This is a message)'
+
+  run apply_shell_expansion '${__SOME_VAR}; $(eval date)'
+  assert_success
+  assert_output 'This is a message; $(eval date)'
+}
+
+@test "provoking a fault triggers an error" {
   run bash -c "( LOG_LEVEL=error ; source load 'errors' ; log 'warn' 'Test' ; )"
   assert_failure
   assert_output --partial "log module was not loaded but 'log' was called with log level not 'error'"
+}
 
+@test "log output on error is correct" {
   run bash -c '( LOG_LEVEL=error ; source load "errors" "log" "utils" ; false ; )'
   assert_failure
   assert_output --partial 'unexpected error occured:'
+  assert_line '  script:     prompt or not inside a function'
+  assert_line '  function:   error did not happen inside a function'
+  assert_line '  command:'
+  assert_line '    plain:    false'
+  assert_line '    expanded: false'
+  assert_line '  line:       1'
+  assert_line '  exit code:  1'
+
+  run -127 bash -c '( LOG_LEVEL=error ; source load "errors" "log" "utils" ; function __x() { __noTAcommand ; } ; __x ; )'
+  assert_failure
+  assert_output --partial 'unexpected error occured:'
+  assert_line '  script:     prompt or not inside a function'
+  assert_line '  function:   __x'
+  assert_line '  command:'
+  assert_line '    plain:    __noTAcommand'
+  assert_line '    expanded: __noTAcommand'
+  assert_line '  line:       1'
+  assert_line '  exit code:  127'
 }

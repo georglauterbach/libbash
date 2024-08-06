@@ -11,12 +11,12 @@ function setup_file() {
 
 function setup() { source load 'log' 'utils' ; }
 
-@test "'utils' is correctly sourced" {
+@test "module is correctly sourced" {
   run bash -c "( source load 'utils' ; )"
   assert_success
 }
 
-@test "'utils' is correctly sourced with other modules" {
+@test "module is correctly sourced with other modules" {
   run bash -c "( source load 'errors' 'log' 'utils' ; )"
   assert_success
 

@@ -12,12 +12,17 @@ function setup_file() {
 
 function setup() { source load log ; }
 
-@test "logs are sourced and 'log' is a function" {
+@test "module is sourced and 'log' is a function" {
   run bash -c 'source load "log"'
   assert_success
 
   source load log
   [[ $(type -t log) == 'function' ]]
+  assert_success
+}
+
+@test "module is correctly sourced with other modules" {
+  run bash -c 'source load "log" "errors" "utils"'
   assert_success
 }
 
