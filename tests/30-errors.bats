@@ -1,5 +1,7 @@
 bats_require_minimum_version '1.10.0'
 
+# shellcheck disable=SC2016
+
 load 'bats_support/load'
 load 'bats_assert/load'
 
