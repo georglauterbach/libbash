@@ -67,6 +67,7 @@ function setup_file() {
   assert_output '$(eval date)'
 
   export __SOME_VAR='This is a message'
+  # shellcheck disable=SC2016
   run apply_shell_expansion 'Message: ${__SOME_VAR}'
   assert_success
   assert_output 'Message: This is a message'
