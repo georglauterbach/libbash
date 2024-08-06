@@ -1,7 +1,5 @@
 bats_require_minimum_version '1.10.0'
 
-# shellcheck disable=SC2016
-
 load 'bats_support/load'
 load 'bats_assert/load'
 
@@ -42,8 +40,10 @@ function setup_file() {
   assert_success
   assert_output 'These are lines'
 
+  # shellcheck disable=SC2016
   run remove_newlines $'These\nare\nlines $(and a command)'
   assert_success
+  # shellcheck disable=SC2016
   assert_output 'These are lines $(and a command)'
 }
 
@@ -60,8 +60,10 @@ function setup_file() {
   assert_success
   assert_output 'some String'
 
+  # shellcheck disable=SC2016
   run apply_shell_expansion '$(eval date)'
   assert_success
+  # shellcheck disable=SC2016
   assert_output '$(eval date)'
 
   export __SOME_VAR='This is a message'
@@ -69,12 +71,16 @@ function setup_file() {
   assert_success
   assert_output 'Message: This is a message'
 
+  # shellcheck disable=SC2016
   run apply_shell_expansion '$(${__SOME_VAR})'
   assert_success
+  # shellcheck disable=SC2016
   assert_output '$(This is a message)'
 
+  # shellcheck disable=SC2016
   run apply_shell_expansion '${__SOME_VAR}; $(eval date)'
   assert_success
+  # shellcheck disable=SC2016
   assert_output 'This is a message; $(eval date)'
 }
 
