@@ -325,5 +325,36 @@ function is_in_path() {
 #
 # $1 :: executable to check
 function is_not_in_path() {
-  ! is_in_path "${1:?}"
+  ! is_in_path "${1}"
+}
+
+# ### Check Whether a Directory is Empty
+#
+# This function checks whether a directory
+# contains files or other directories, and
+# returns false if so.
+#
+# #### Arguments
+#
+# $1 :: directory to check
+function dir_is_empty() {
+  parameter_is_not_empty "${1}" || {
+    log 'error' 'No name for an executable provided'
+    return 1
+  }
+
+  [[ -n $(find "${1}" -maxdepth 0 -empty) ]]
+}
+
+# ### Check Whether a Directory is Not Empty
+#
+# This function checks whether a directory
+# contains files or other directories, and
+# returns true if so.
+#
+# #### Arguments
+#
+# $1 :: directory to check
+function dir_is_not_empty() {
+  ! dir_is_empty "${1}"
 }

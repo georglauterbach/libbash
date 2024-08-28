@@ -410,3 +410,41 @@ function setup() { source load 'log' 'utils' ; }
   run is_not_in_path ls
   assert_failure
 }
+
+@test "dir is empty or not works correctly" {
+  local TEST_DIR='/tmp/.libbash_tests/test_dir'
+  rm -rf "${TEST_DIR}"
+  mkdir -p "${TEST_DIR}"
+
+  run dir_is_empty "${TEST_DIR}"
+  assert_success
+
+  run dir_is_not_empty "${TEST_DIR}"
+  assert_failure
+
+  touch "${TEST_DIR}/test_file"
+
+  run dir_is_empty "${TEST_DIR}"
+  assert_failure
+
+  run dir_is_not_empty "${TEST_DIR}"
+  assert_success
+
+  rm "${TEST_DIR}/test_file"
+  mkdir "${TEST_DIR}/test_dir_2"
+
+  run dir_is_empty "${TEST_DIR}"
+  assert_failure
+
+  run dir_is_not_empty "${TEST_DIR}"
+  assert_success
+
+  rmdir "${TEST_DIR}/test_dir_2"
+  touch "${TEST_DIR}/.hidden_file"
+
+  run dir_is_empty "${TEST_DIR}"
+  assert_failure
+
+  run dir_is_not_empty "${TEST_DIR}"
+  assert_success
+}
