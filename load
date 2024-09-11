@@ -7,7 +7,7 @@
 # executed by   scripts that use `libbash`
 # task          perform library initialization
 
-if [[ ! -v __LIBBASH__IS_LOADED ]]; then
+if [[ ! -v LIBBASH__IS_LOADED ]]; then
   # ### Show an Error
   #
   # Indicates an error has happened in `libbash`. Used to display
@@ -111,9 +111,9 @@ if [[ ! -v __LIBBASH__IS_LOADED ]]; then
   export -f libbash__debug
 
   export LIBBASH_EXIT_IN_INTERACTIVE_MODE=${LIBBASH_EXIT_IN_INTERACTIVE_MODE:-0}
-  export __LIBBASH__IS_LOADED=1
-  readonly __LIBBASH__IS_LOADED
-fi # if ! ${__LIBBASH__IS_LOADED:-false}
+  export LIBBASH__IS_LOADED=1
+  readonly LIBBASH__IS_LOADED
+fi # if ! ${LIBBASH__IS_LOADED:-false}
 
 # ### The Start of `libbash`
 #
