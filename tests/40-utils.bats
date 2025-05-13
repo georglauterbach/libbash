@@ -448,3 +448,83 @@ function setup() { source load 'log' 'utils' ; }
   run dir_is_not_empty "${TEST_DIR}"
   assert_success
 }
+
+@test "dir is empty or not works correctly" {
+  local SHOULD_BE_TRUE_1='TRUE'
+  local SHOULD_BE_TRUE_2='true'
+  local SHOULD_BE_TRUE_3='True'
+  local SHOULD_BE_TRUE_4='TRue'
+  local SHOULD_BE_TRUE_5='TRUe'
+  local SHOULD_BE_TRUE_6='tRUE'
+  local SHOULD_BE_TRUE_7='trUE'
+  local SHOULD_BE_TRUE_8='truE'
+  local SHOULD_BE_TRUE_9='trUE'
+  local SHOULD_BE_TRUE_10='YES'
+  local SHOULD_BE_TRUE_11='yes'
+  local SHOULD_BE_TRUE_12='y'
+  local SHOULD_BE_TRUE_13='YeS'
+
+  local SHOULD_BE_FALSE_1='False'
+  local SHOULD_BE_FALSE_2='false'
+  local SHOULD_BE_FALSE_3='FALSE'
+  local SHOULD_BE_FALSE_4='No'
+  local SHOULD_BE_FALSE_5='no'
+  local SHOULD_BE_FALSE_6='ye'
+
+  run value_is_true "${SHOULD_BE_TRUE_1}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_TRUE_2}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_TRUE_3}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_TRUE_4}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_TRUE_5}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_TRUE_6}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_TRUE_7}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_TRUE_8}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_TRUE_9}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_TRUE_10}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_TRUE_11}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_TRUE_12}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_TRUE_13}"
+  assert_success
+
+  run value_is_true "${SHOULD_BE_FALSE_1}"
+  assert_failure
+
+  run value_is_true "${SHOULD_BE_FALSE_2}"
+  assert_failure
+
+  run value_is_true "${SHOULD_BE_FALSE_3}"
+  assert_failure
+
+  run value_is_true "${SHOULD_BE_FALSE_4}"
+  assert_failure
+
+  run value_is_true "${SHOULD_BE_FALSE_5}"
+  assert_failure
+
+  run value_is_true "${SHOULD_BE_FALSE_6}"
+  assert_failure
+}

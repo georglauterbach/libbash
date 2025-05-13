@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# version       0.1.1
+# version       0.2.0
 # sourced by    ../load
 # task          provides error handlers
 
@@ -357,4 +357,18 @@ function dir_is_empty() {
 # $1 :: directory to check
 function dir_is_not_empty() {
   ! dir_is_empty "${1}"
+}
+
+# ### Checks Whether a Variable Evaluates to True
+#
+# This function checks, when expanding the string
+# and making it lowercase, whether this string
+# is "true", "yes" or "y".
+#
+# #### Arguments
+#
+# $1 :: name of environment variable to check
+function value_is_true() {
+  declare -n __VAR=${1}
+  [[ ${__VAR,,} =~ ^(true|y(es)?)$ ]]
 }
