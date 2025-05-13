@@ -471,60 +471,60 @@ function setup() { source load 'log' 'utils' ; }
   local SHOULD_BE_FALSE_5='no'
   local SHOULD_BE_FALSE_6='ye'
 
-  run value_is_true "${SHOULD_BE_TRUE_1}"
+  run value_is_true SHOULD_BE_TRUE_1
   assert_success
 
-  run value_is_true "${SHOULD_BE_TRUE_2}"
+  run value_is_true SHOULD_BE_TRUE_2
   assert_success
 
-  run value_is_true "${SHOULD_BE_TRUE_3}"
+  run value_is_true SHOULD_BE_TRUE_3
   assert_success
 
-  run value_is_true "${SHOULD_BE_TRUE_4}"
+  run value_is_true SHOULD_BE_TRUE_4
   assert_success
 
-  run value_is_true "${SHOULD_BE_TRUE_5}"
+  run value_is_true SHOULD_BE_TRUE_5
   assert_success
 
-  run value_is_true "${SHOULD_BE_TRUE_6}"
+  run value_is_true SHOULD_BE_TRUE_6
   assert_success
 
-  run value_is_true "${SHOULD_BE_TRUE_7}"
+  run value_is_true SHOULD_BE_TRUE_7
   assert_success
 
-  run value_is_true "${SHOULD_BE_TRUE_8}"
+  run value_is_true SHOULD_BE_TRUE_8
   assert_success
 
-  run value_is_true "${SHOULD_BE_TRUE_9}"
+  run value_is_true SHOULD_BE_TRUE_9
   assert_success
 
-  run value_is_true "${SHOULD_BE_TRUE_10}"
+  run value_is_true SHOULD_BE_TRUE_10
   assert_success
 
-  run value_is_true "${SHOULD_BE_TRUE_11}"
+  run value_is_true SHOULD_BE_TRUE_11
   assert_success
 
-  run value_is_true "${SHOULD_BE_TRUE_12}"
+  run value_is_true SHOULD_BE_TRUE_12
   assert_success
 
-  run value_is_true "${SHOULD_BE_TRUE_13}"
+  run value_is_true SHOULD_BE_TRUE_13
   assert_success
 
-  run value_is_true "${SHOULD_BE_FALSE_1}"
+  run value_is_true SHOULD_BE_FALSE_1
   assert_failure
 
-  run value_is_true "${SHOULD_BE_FALSE_2}"
+  run value_is_true SHOULD_BE_FALSE_2
   assert_failure
 
-  run value_is_true "${SHOULD_BE_FALSE_3}"
+  run value_is_true SHOULD_BE_FALSE_3
   assert_failure
 
-  run value_is_true "${SHOULD_BE_FALSE_4}"
+  run value_is_true SHOULD_BE_FALSE_4
   assert_failure
 
-  run value_is_true "${SHOULD_BE_FALSE_5}"
+  run value_is_true SHOULD_BE_FALSE_5
   assert_failure
 
-  run value_is_true "${SHOULD_BE_FALSE_6}"
+  run value_is_true SHOULD_BE_FALSE_6
   assert_failure
 }
