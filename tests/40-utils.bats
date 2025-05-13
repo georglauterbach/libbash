@@ -449,7 +449,7 @@ function setup() { source load 'log' 'utils' ; }
   assert_success
 }
 
-@test "dir is empty or not works correctly" {
+@test "value_is_true should work" {
   local SHOULD_BE_TRUE_1='TRUE'
   local SHOULD_BE_TRUE_2='true'
   local SHOULD_BE_TRUE_3='True'
