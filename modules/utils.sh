@@ -134,7 +134,7 @@ function exit_failure() {
     exit 1
   fi
 
-  parameter_is_not_empty "${1}" && log 'error' "${1}"
+  parameter_is_not_empty "${1:-}" && log 'error' "${1}"
   exit "${CODE}"
 }
 
