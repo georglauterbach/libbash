@@ -18,5 +18,6 @@ ignoreWords:
   - Lauterbach
 
   # multiple words written as one
+  - cooldown
   - devcontainers
   - libbash
