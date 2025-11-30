@@ -67,7 +67,7 @@ function __libbash__main() {
     return 0
   fi
 
-  export LIBBASH_VERSION=0.9.0
+  export LIBBASH_VERSION=9.0.0
   log 'trace' "Finished 'libbash ${LIBBASH_VERSION}' initialization"
 }
 
