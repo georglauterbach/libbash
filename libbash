@@ -1,3 +1,5 @@
+#! /usr/bin/env bash
+
 # libbash - a collection of useful functions for your Bash scripts
 #
 # Copyright (C) Georg Lauterbach
