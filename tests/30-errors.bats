@@ -11,23 +11,23 @@ function setup_file() {
 }
 
 @test "module is correctly sourced" {
-  run bash -c 'source load "errors"'
+  run bash -c 'source libbash "errors"'
   assert_success
 
-  run bash -c 'source load "errors" ; trap ;'
+  run bash -c 'source libbash "errors" ; trap ;'
   assert_success
   assert_output --regexp 'log_unexpected_error.*ERR'
 }
 
 @test "module is correctly sourced with other modules" {
-  run bash -c 'source load "errors" "log" "utils"'
+  run bash -c 'source libbash "errors" "log" "utils"'
   assert_success
 }
 
 @test "'escape_newlines' works" {
   export LOG_LEVEL='error'
-  # shellcheck source=../load
-  source load 'errors'
+  # shellcheck source=../libbash
+  source libbash 'errors'
   trap - ERR
 
   run remove_newlines
@@ -51,8 +51,8 @@ function setup_file() {
 
 @test "'apply_shell_expansion' works" {
   export LOG_LEVEL='error'
-  # shellcheck source=../load
-  source load 'errors'
+  # shellcheck source=../libbash
+  source libbash 'errors'
   trap - ERR
 
   run apply_shell_expansion
@@ -89,13 +89,13 @@ function setup_file() {
 }
 
 @test "provoking a fault triggers an error" {
-  run bash -c "( LOG_LEVEL=error ; source load 'errors' ; log 'warn' 'Test' ; )"
+  run bash -c "( LOG_LEVEL=error ; source libbash 'errors' ; log 'warn' 'Test' ; )"
   assert_failure
   assert_output --partial "log module not loaded but 'log' called with log level other than 'error' (arguments: warn Test)"
 }
 
 @test "log output on error is correct" {
-  run bash -c '( LOG_LEVEL=error ; source load "errors" "log" "utils" ; false ; )'
+  run bash -c '( LOG_LEVEL=error ; source libbash "errors" "log" "utils" ; false ; )'
   assert_failure
   assert_output --partial 'unexpected error occurred:'
   assert_line '    script:     prompt or outside of function'
@@ -106,7 +106,7 @@ function setup_file() {
   assert_line '    line:       1'
   assert_line '    exit code:  1'
 
-  run -127 bash -c '( LOG_LEVEL=error ; source load "errors" "log" "utils" ; function __x() { __noTAcommand ; } ; __x ; )'
+  run -127 bash -c '( LOG_LEVEL=error ; source libbash "errors" "log" "utils" ; function __x() { __noTAcommand ; } ; __x ; )'
   assert_failure
   assert_output --partial 'unexpected error occurred:'
   assert_line '    script:     prompt or outside of function'

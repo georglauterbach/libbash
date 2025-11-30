@@ -7,8 +7,8 @@ load 'bats_assert/load'
 BATS_TEST_NAME_PREFIX='90-generic          :: '
 
 @test "'cri.sh' makes the correct decision" {
-  # shellcheck source=../load
-  source load 'log' 'cri'
+  # shellcheck source=../libbash
+  source libbash 'log' 'cri'
 
   local DOCKER_IS_IN_PATH PODMAN_IS_IN_PATH
   DOCKER_IS_IN_PATH="$(command -v docker || :)"

@@ -10,19 +10,19 @@ function setup_file() {
   export LOG_LEVEL='debug'
 }
 
-# shellcheck source=../load
-function setup() { source load 'log' 'utils' ; }
+# shellcheck source=../libbash
+function setup() { source libbash 'log' 'utils' ; }
 
 @test "module is correctly sourced" {
-  run bash -c "( source load 'utils' ; )"
+  run bash -c "( source libbash 'utils' ; )"
   assert_success
 }
 
 @test "module is correctly sourced with other modules" {
-  run bash -c "( source load 'errors' 'log' 'utils' ; )"
+  run bash -c "( source libbash 'errors' 'log' 'utils' ; )"
   assert_success
 
-  run bash -c "( source load 'utils' 'errors' 'log' ; )"
+  run bash -c "( source libbash 'utils' 'errors' 'log' ; )"
   assert_success
 }
 
@@ -35,7 +35,7 @@ function setup() { source load 'log' 'utils' ; }
   assert_failure
   assert_output --partial 'string to split is required'
 
-  local PREFIX="export LOG_LEVEL=error ; source load 'log' 'utils' ; split_into_array FOO"
+  local PREFIX="export LOG_LEVEL=error ; source libbash 'log' 'utils' ; split_into_array FOO"
   # shellcheck disable=SC2016
   local SUFFIX='; echo "${FOO[*]}"'
 
@@ -356,46 +356,46 @@ function setup() { source load 'log' 'utils' ; }
   assert_output --partial 'No question provided'
 
   # default = no
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' <<< ''"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' <<< ''"
   assert_failure
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< ''"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< ''"
   assert_success
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'y'"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'y'"
   assert_success
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' n <<< 'y'"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' n <<< 'y'"
   assert_success
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' n <<< 'yes'"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' n <<< 'yes'"
   assert_success
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'Yes'"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'Yes'"
   assert_success
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'Y'"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'Y'"
   assert_success
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' n <<< 'Y'"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' n <<< 'Y'"
   assert_success
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'n'"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'n'"
   assert_failure
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'N'"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'N'"
   assert_failure
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'no'"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'no'"
   assert_failure
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'No'"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'No'"
   assert_failure
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' jibberish <<< 'y'"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' jibberish <<< 'y'"
   assert_success
 
-  run bash -c "source load 'log' 'utils' ; ask_yes_no_question 'Is P=NP' jibberish <<< 'n'"
+  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' jibberish <<< 'n'"
   assert_failure
 }
 

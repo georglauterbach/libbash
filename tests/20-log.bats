@@ -11,21 +11,21 @@ function setup_file() {
   export TEST_STRING='jfk FJHAE aea728 djKJ  k/('
 }
 
-# shellcheck source=../load
-function setup() { source load log ; }
+# shellcheck source=../libbash
+function setup() { source libbash log ; }
 
 @test "module is sourced and 'log' is a function" {
-  run bash -c 'source load "log"'
+  run bash -c 'source libbash "log"'
   assert_success
 
-  # shellcheck source=../load
-  source load log
+  # shellcheck source=../libbash
+  source libbash log
   [[ $(type -t log) == 'function' ]]
   assert_success
 }
 
 @test "module is correctly sourced with other modules" {
-  run bash -c 'source load "log" "errors" "utils"'
+  run bash -c 'source libbash "log" "errors" "utils"'
   assert_success
 }
 
