@@ -3,6 +3,7 @@ bats_require_minimum_version '1.10.0'
 load 'bats_support/load'
 load 'bats_assert/load'
 
+# shellcheck disable=SC2034
 BATS_TEST_NAME_PREFIX='30-errors           :: '
 
 function setup_file() {
@@ -25,6 +26,7 @@ function setup_file() {
 
 @test "'escape_newlines' works" {
   export LOG_LEVEL='error'
+  # shellcheck source=../load
   source load 'errors'
   trap - ERR
 
@@ -49,6 +51,7 @@ function setup_file() {
 
 @test "'apply_shell_expansion' works" {
   export LOG_LEVEL='error'
+  # shellcheck source=../load
   source load 'errors'
   trap - ERR
 
@@ -88,29 +91,29 @@ function setup_file() {
 @test "provoking a fault triggers an error" {
   run bash -c "( LOG_LEVEL=error ; source load 'errors' ; log 'warn' 'Test' ; )"
   assert_failure
-  assert_output --partial "log module was not loaded but 'log' was called with log level not 'error'"
+  assert_output --partial "log module not loaded but 'log' called with log level other than 'error' (arguments: warn Test)"
 }
 
 @test "log output on error is correct" {
   run bash -c '( LOG_LEVEL=error ; source load "errors" "log" "utils" ; false ; )'
   assert_failure
-  assert_output --partial 'unexpected error occured:'
-  assert_line '  script:     prompt or not inside a function'
-  assert_line '  function:   error did not happen inside a function'
-  assert_line '  command:'
-  assert_line '    plain:    false'
-  assert_line '    expanded: false'
-  assert_line '  line:       1'
-  assert_line '  exit code:  1'
+  assert_output --partial 'unexpected error occurred:'
+  assert_line '    script:     prompt or outside of function'
+  assert_line '    function:   prompt or outside of function'
+  assert_line '    command:'
+  assert_line '      plain:    false'
+  assert_line '      expanded: false'
+  assert_line '    line:       1'
+  assert_line '    exit code:  1'
 
   run -127 bash -c '( LOG_LEVEL=error ; source load "errors" "log" "utils" ; function __x() { __noTAcommand ; } ; __x ; )'
   assert_failure
-  assert_output --partial 'unexpected error occured:'
-  assert_line '  script:     prompt or not inside a function'
-  assert_line '  function:   __x'
-  assert_line '  command:'
-  assert_line '    plain:    __noTAcommand'
-  assert_line '    expanded: __noTAcommand'
-  assert_line '  line:       1'
-  assert_line '  exit code:  127'
+  assert_output --partial 'unexpected error occurred:'
+  assert_line '    script:     prompt or outside of function'
+  assert_line '    function:   __x'
+  assert_line '    command:'
+  assert_line '      plain:    __noTAcommand'
+  assert_line '      expanded: __noTAcommand'
+  assert_line '    line:       1'
+  assert_line '    exit code:  127'
 }

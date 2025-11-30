@@ -3,6 +3,7 @@ bats_require_minimum_version '1.10.0'
 load 'bats_support/load'
 load 'bats_assert/load'
 
+# shellcheck disable=SC2034
 BATS_TEST_NAME_PREFIX='10-sourcing         :: '
 
 function setup_file() {
@@ -23,9 +24,9 @@ function setup_file() {
   )
 }
 
-@test "sourcing succeeds from 'modules/' directory" {
+@test "sourcing succeeds from '.github/' directory" {
   (
-    cd "modules/" || exit 1
+    cd ".github/" || exit 1
     # shellcheck source=load
     run bash -c ' source ../load'
     assert_success
@@ -45,9 +46,9 @@ function setup_file() {
   )
 }
 
-@test "sourcing with parameters succeeds from 'modules/' directory" {
+@test "sourcing with parameters succeeds from '.github/' directory" {
   (
-    cd "modules/"
+    cd ".github/"
     run source ../load 'log' 'cri'
     assert_success
   )
@@ -63,12 +64,12 @@ function setup_file() {
 
 @test "sourcing a module more than once results in an error" {
   run source load 'log' 'log'
-  assert_failure 3
+  assert_failure 2
 }
 
 @test "sourcing an unknown module results in an error" {
   run source load 'somethingOdd'
-  assert_failure 4
+  assert_failure 3
 }
 
 @test "sourcing a module twice results in an error" {
@@ -77,6 +78,7 @@ function setup_file() {
 }
 
 @test "internal helper functions work correctly" {
+  # shellcheck source=../load
   source load
 
   run __libbash__show_call_stack
@@ -121,6 +123,7 @@ function setup_file() {
   run -127 __libbash__post_init
   assert_failure
 
+  # shellcheck source=../load
   source load 'log' 'utils'
   LOG_LEVEL='trace'
   run libbash__debug

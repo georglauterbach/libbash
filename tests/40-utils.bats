@@ -3,12 +3,14 @@ bats_require_minimum_version '1.10.0'
 load 'bats_support/load'
 load 'bats_assert/load'
 
+# shellcheck disable=SC2034
 BATS_TEST_NAME_PREFIX='40-utils            :: '
 
 function setup_file() {
-  export LOG_LEVEL='trace'
+  export LOG_LEVEL='debug'
 }
 
+# shellcheck source=../load
 function setup() { source load 'log' 'utils' ; }
 
 @test "module is correctly sourced" {
@@ -27,11 +29,11 @@ function setup() { source load 'log' 'utils' ; }
 @test "'split_into_array' works correctly" {
   run split_into_array
   assert_failure
-  assert_output --partial 'Array name is required'
+  assert_output --partial 'array name is required'
 
   run split_into_array FOO
   assert_failure
-  assert_output --partial 'String to split is required'
+  assert_output --partial 'string to split is required'
 
   local PREFIX="export LOG_LEVEL=error ; source load 'log' 'utils' ; split_into_array FOO"
   # shellcheck disable=SC2016

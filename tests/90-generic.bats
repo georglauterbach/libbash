@@ -3,9 +3,11 @@ bats_require_minimum_version '1.10.0'
 load 'bats_support/load'
 load 'bats_assert/load'
 
+# shellcheck disable=SC2034
 BATS_TEST_NAME_PREFIX='90-generic          :: '
 
 @test "'cri.sh' makes the correct decision" {
+  # shellcheck source=../load
   source load 'log' 'cri'
 
   local DOCKER_IS_IN_PATH PODMAN_IS_IN_PATH

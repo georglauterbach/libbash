@@ -3,6 +3,7 @@ bats_require_minimum_version '1.10.0'
 load 'bats_support/load'
 load 'bats_assert/load'
 
+# shellcheck disable=SC2034
 BATS_TEST_NAME_PREFIX='20-log              :: '
 
 function setup_file() {
@@ -10,12 +11,14 @@ function setup_file() {
   export TEST_STRING='jfk FJHAE aea728 djKJ  k/('
 }
 
+# shellcheck source=../load
 function setup() { source load log ; }
 
 @test "module is sourced and 'log' is a function" {
   run bash -c 'source load "log"'
   assert_success
 
+  # shellcheck source=../load
   source load log
   [[ $(type -t log) == 'function' ]]
   assert_success
@@ -144,5 +147,5 @@ function setup() { source load log ; }
   export LOG_LEVEL='warn'
   run log 'invalid' "${TEST_STRING}"
   assert_success
-  assert_line --partial "Provided log level 'invalid' unknown"
+  assert_line --partial "'log' called with unknown log level (use 'error', 'warn', 'info', 'debug', or 'trace')"
 }

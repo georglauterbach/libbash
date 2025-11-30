@@ -1,0 +1,22 @@
+---
+version: '0.2'
+
+ignorePaths: []
+dictionaryDefinitions: []
+import: []
+
+dictionaries:
+  - en_US
+  - bash
+
+words: []
+
+ignoreWords:
+  # names
+  - georglauterbach
+  - Georg
+  - Lauterbach
+
+  # multiple words written as one
+  - devcontainers
+  - libbash
