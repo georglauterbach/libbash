@@ -6,7 +6,7 @@
   "features": {
     "ghcr.io/georglauterbach/dev-container-features/vscode-cache-extensions:0.1": {},
     "ghcr.io/georglauterbach/dev-container-features/hermes:11.2.3": {},
-    "ghcr.io/georglauterbach/dev-container-features/lang-bash:0.1.1": {}
+    "ghcr.io/georglauterbach/dev-container-features/lang-sh:0.2.0": {}
   },
   "containerUser": "ubuntu",
   "remoteUser": "ubuntu",
