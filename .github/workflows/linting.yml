@@ -10,12 +10,12 @@ permissions:
   contents: read
 
 env:
-  IMAGE_TAG_EC: '2.7.0'
-  IMAGE_TAG_SHELLCHECK: 'v0.9.0'
+  IMAGE_TAG_EC: v3.6.0
+  IMAGE_TAG_SC: v0.11.0
 
 jobs:
   EditorConfig:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -24,9 +24,11 @@ jobs:
 
       - name: Run the Linter
         run: |
-          docker run --rm --tty --volume "${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE}:ro" --workdir "${GITHUB_WORKSPACE}" \
+          docker run --rm --tty                                         \
+            --volume "${GITHUB_WORKSPACE}:/editorconfig:ro"             \
+            --workdir '/editorconfig'                                   \
             "docker.io/mstruebing/editorconfig-checker:${IMAGE_TAG_EC}" \
-            ec -config "${GITHUB_WORKSPACE}/.editorconfig.json"
+            ec -config .editorconfig.json
 
   ShellCheck:
     runs-on: ubuntu-22.04
@@ -40,13 +42,11 @@ jobs:
         run: |
           set -e -u -o pipefail
 
-          readarray -d '' FILES < <(find "${GITHUB_WORKSPACE}/tests/" \
-            -maxdepth 1 -type f -regextype egrep -iregex '.*\.bats' -print0)
+          readarray -d '' FILES < <(find tests/ -maxdepth 1 -type f -iregex '.*\.bats' -print0)
+          FILES+=('libbash')
 
-          FILES+=("${GITHUB_WORKSPACE}/libbash")
-
-          docker run --rm --tty                                            \
-            --volume "${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE}:ro"          \
-            --workdir "${GITHUB_WORKSPACE}"                                \
-            "docker.io/koalaman/shellcheck-alpine:${IMAGE_TAG_SHELLCHECK}" \
-            shellcheck --source-path=${GITHUB_WORKSPACE} "${FILES[@]}"
+          docker run --rm --tty                                    \
+            --volume "${GITHUB_WORKSPACE}:/shellcheck:ro"          \
+            --workdir '/shellcheck'                                \
+            "docker.io/koalaman/shellcheck-alpine:${IMAGE_TAG_SC}" \
+            shellcheck --rcfile=.shellcheckrc "${FILES[@]}"

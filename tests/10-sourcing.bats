@@ -1,3 +1,5 @@
+# shellcheck disable=SC2030,SC2031
+
 bats_require_minimum_version '1.10.0'
 
 load 'bats_support/load'

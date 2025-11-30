@@ -1,3 +1,5 @@
+# shellcheck disable=SC2030,SC2031
+
 bats_require_minimum_version '1.10.0'
 
 load 'bats_support/load'
@@ -452,26 +454,28 @@ function setup() { source libbash 'log' 'utils' ; }
 }
 
 @test "value_is_true should work" {
-  local SHOULD_BE_TRUE_1='TRUE'
-  local SHOULD_BE_TRUE_2='true'
-  local SHOULD_BE_TRUE_3='True'
-  local SHOULD_BE_TRUE_4='TRue'
-  local SHOULD_BE_TRUE_5='TRUe'
-  local SHOULD_BE_TRUE_6='tRUE'
-  local SHOULD_BE_TRUE_7='trUE'
-  local SHOULD_BE_TRUE_8='truE'
-  local SHOULD_BE_TRUE_9='trUE'
-  local SHOULD_BE_TRUE_10='YES'
-  local SHOULD_BE_TRUE_11='yes'
-  local SHOULD_BE_TRUE_12='y'
-  local SHOULD_BE_TRUE_13='YeS'
-
-  local SHOULD_BE_FALSE_1='False'
-  local SHOULD_BE_FALSE_2='false'
-  local SHOULD_BE_FALSE_3='FALSE'
-  local SHOULD_BE_FALSE_4='No'
-  local SHOULD_BE_FALSE_5='no'
-  local SHOULD_BE_FALSE_6='ye'
+  # shellcheck disable=SC2034
+  local                       \
+    SHOULD_BE_TRUE_1='TRUE'   \
+    SHOULD_BE_TRUE_2='true'   \
+    SHOULD_BE_TRUE_3='True'   \
+    SHOULD_BE_TRUE_4='TRue'   \
+    SHOULD_BE_TRUE_5='TRUe'   \
+    SHOULD_BE_TRUE_6='tRUE'   \
+    SHOULD_BE_TRUE_7='trUE'   \
+    SHOULD_BE_TRUE_8='truE'   \
+    SHOULD_BE_TRUE_9='trUE'   \
+    SHOULD_BE_TRUE_10='YES'   \
+    SHOULD_BE_TRUE_11='yes'   \
+    SHOULD_BE_TRUE_12='y'     \
+    SHOULD_BE_TRUE_13='YeS'   \
+                              \
+    SHOULD_BE_FALSE_1='False' \
+    SHOULD_BE_FALSE_2='false' \
+    SHOULD_BE_FALSE_3='FALSE' \
+    SHOULD_BE_FALSE_4='No'    \
+    SHOULD_BE_FALSE_5='no'    \
+    SHOULD_BE_FALSE_6='ye'
 
   run value_is_true SHOULD_BE_TRUE_1
   assert_success

@@ -3,6 +3,8 @@
 # Copyright (C) Georg Lauterbach
 # GitHub: https://github.com/georglauterbach/libbash
 
+# shellcheck disable=SC2329
+
 # ### The Start of `libbash`
 #
 # This function calls the initialization routines for `libbash`
