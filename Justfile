@@ -22,4 +22,5 @@ export ROOT_DIRECTORY := justfile_directory()
 
 # run a specific test
 @test name:
-	bash "{{ROOT_DIRECTORY}}/tests/bats_core/bin/bats" --timing {{ROOT_DIRECTORY}}/tests/*-{{name}}.bats
+	bash "{{ROOT_DIRECTORY}}/tests/bats_core/bin/bats" \
+		--timing {{ROOT_DIRECTORY}}/tests/*-{{name}}.bats
