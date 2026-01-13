@@ -5,7 +5,7 @@
 To clone this repository with all submodules, run
 
 ``` CONSOLE
-$ git clone --recurse-submodules -j $(nproc) git@github.com:georglauterbach/libbash.git
+$ git clone --recurse-submodules -j 2 git@github.com:georglauterbach/libbash.git
 Cloning into 'libbash'...
 remote: Enumerating objects: 76, done.
 remote: Counting objects: 100% (76/76), done.
@@ -27,24 +27,13 @@ Take care of the following constraints.
 ### Robustness
 
 Bash is a fragile language. Take special care of side effects or unwanted
-failures when writing code. Writing robust Bash is a very complicated thing
-to do, be assured. Writing idiomatic code is even harder.
+failures when writing code. Writing robust Bash is a rather complicated..
+Writing idiomatic Bash is even harder..
 
 ### Style
 
-The code in this repository is (heavily) opinionated when it comes to formatting.
-Please adjust to the already present style. Library scripts will always start
-the same way:
-
-``` BASH
-#! /bin/bash
-
-# version       <SEMVER VERSION>
-# executed by   <CALLER / EXECUTOR>
-# task          <TASK>
-
-SCRIPT='<SCRIPT NAME>' # optional
-```
+The code in this repository is opinionated. Please adjust to the already
+present style.
 
 ## CI/CD
 

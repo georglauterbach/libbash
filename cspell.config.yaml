@@ -20,4 +20,5 @@ ignoreWords:
   # multiple words written as one
   - cooldown
   - devcontainers
+  - Justfile
   - libbash
