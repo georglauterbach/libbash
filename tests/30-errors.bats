@@ -91,9 +91,11 @@ function setup_file() {
 }
 
 @test "provoking a fault triggers an error" {
-  run bash -c "( LOG_LEVEL=error ; source libbash 'errors' ; log 'warn' 'Test' ; )"
+  run bash -c "( LOG_LEVEL=error ; source libbash 'errors' ; false ; )"
   assert_failure
-  assert_output --partial "log module not loaded but 'log' called with log level other than 'error' (arguments: warn Test)"
+  assert_line '    script:     prompt or outside of function'
+  assert_line '      plain:    false'
+  assert_line '    exit code:  1'
 }
 
 @test "log output on error is correct" {

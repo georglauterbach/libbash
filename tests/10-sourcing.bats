@@ -62,6 +62,19 @@ function setup_file() {
   )
 }
 
+@test "sourcing without parameters works" {
+  # shellcheck source=../libbash
+  source libbash
+  run test -v LIBBASH__IS_LOADED
+  assert_success
+  run bash -c '[[ ${LIBBASH__IS_LOADED} == "true" ]]'
+  assert_success
+  run bash -c '[[ ${LIBBASH__EXIT_IN_INTERACTIVE_MODE} == "false" ]]'
+  assert_success
+  run bash -c '[[ ${#LIBBASH__LOADED_MODULES[@]} -eq 0 ]]'
+  assert_success
+}
+
 @test "sourcing a module more than once results in an error" {
   run source libbash 'log' 'log'
   assert_failure 2
@@ -81,11 +94,11 @@ function setup_file() {
   # shellcheck source=../libbash
   source libbash
 
-  run __libbash__show_call_stack
+  run libbash__show_call_stack
   assert_success
 
   function test_show_call_stack_1 {
-    __libbash__show_call_stack
+    libbash__show_call_stack
   }
 
   function test_show_call_stack_2 {
@@ -100,10 +113,6 @@ function setup_file() {
   run __libbash__show_error 'message'
   assert_success
   assert_line --regexp 'ERROR.*message'
-
-  run __libbash__exit_with_error_and_callstack 'message'
-  assert_failure
-  assert_output --regexp 'ERROR.*message'
 
   run -127 __libbash__main
   assert_failure
@@ -128,5 +137,6 @@ function setup_file() {
   LOG_LEVEL='trace'
   run libbash__debug
   assert_success
-  assert_output --partial 'Loaded modules: log utils'
+  assert_output --partial 'loaded modules: log utils'
+  assert_output --partial 'exit in interactive mode: false'
 }
