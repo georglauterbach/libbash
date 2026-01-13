@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# libbash 10.0.0-pre - a collection of useful functions for your Bash scripts
+# libbash 10.0.0 - a collection of useful functions for your Bash scripts
 #
 # Copyright (C) Georg Lauterbach
 # GitHub: https://github.com/georglauterbach/libbash
@@ -35,7 +35,7 @@ function libbash__main() {
   LIBBASH__DIRECTORY=$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")
   LIBBASH__EXIT_IN_INTERACTIVE_MODE=${LIBBASH__EXIT_IN_INTERACTIVE_MODE:-false}
   LIBBASH__LOADED_MODULES=()
-  LIBBASH__VERSION=10.0.0-pre
+  LIBBASH__VERSION=10.0.0
 
   # ! export all variables here first, even if not
   # ! all modules are sourced to satisfy shellcheck
