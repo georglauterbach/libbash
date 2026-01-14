@@ -1,12 +1,23 @@
 #! /usr/bin/env bash
 
-# libbash 10.0.0 - a collection of useful functions for your Bash scripts
+# libbash 11.0.0 - a collection of useful functions for your Bash scripts
 #
 # Copyright (C) Georg Lauterbach
 # GitHub: https://github.com/georglauterbach/libbash
 #
-# Underscored functions are not unset when libbash has been loaded
-# successfully. They are required by other functions in libbash.
+# ---
+#
+# Upon successful loading of libbash, all functions of all loaded modules
+# become available and you MAY use them.
+#
+# Certain modules require other functions or variables (e.g., for logging
+# or error handling) that do not belong to a module directly. Such
+# functions are prefixed with `libbash__` and variables with `LIBBASH__`,
+# and you MAY use them, but you MUST NOT change them.
+#
+# Finally, there are functions and variables that do not belong to modules
+# and that are prefixed with `__libbash__` (and `__LIBBASH__` respectively).
+# You MUST NOT change or use these functions and variables.
 
 # cSpell: ignore Georg Lauterbach
 
@@ -35,7 +46,7 @@ function libbash__main() {
   LIBBASH__DIRECTORY=$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")
   LIBBASH__EXIT_IN_INTERACTIVE_MODE=${LIBBASH__EXIT_IN_INTERACTIVE_MODE:-false}
   LIBBASH__LOADED_MODULES=()
-  LIBBASH__VERSION=10.0.0
+  LIBBASH__VERSION=11.0.0
 
   # ! export all variables here first, even if not
   # ! all modules are sourced to satisfy shellcheck
@@ -109,13 +120,14 @@ function libbash__finish() {
     unset LIBBASH__DIRECTORY
     unset LIBBASH__EXIT_IN_INTERACTIVE_MODE
     unset LIBBASH__LOADED_MODULES
+    unset LIBBASH__LOG_IS_LOADED
     unset LIBBASH__VERSION
 
     unset -f libbash__debug
     unset -f libbash__show_call_stack
 
     unset -f __libbash__show_error
-    unset -f __libbash__exit_checked
+    unset -f libbash__exit_checked
   fi
 
   unset -f libbash__main
@@ -132,7 +144,7 @@ function libbash__finish() {
 #
 # Shows some debug information that `libbash` has collected.
 function libbash__debug() {
-  if ! ${__LIBBASH__LOG_IS_LOADED:-false}; then
+  if ! ${LIBBASH__LOG_IS_LOADED:-false}; then
     __libbash__show_error "Debug functionality requires the log module to be loaded and 'LOG_LEVEL' set to 'debug' or 'trace'"
     return 1
   fi
@@ -167,26 +179,16 @@ function libbash__show_call_stack() {
 }
 export -f libbash__show_call_stack
 
-# ### Show an Error
-#
-# Indicates an error has happened in `libbash`. Used to display
-# errors even when the log module is not (or has not yet been)
-# loaded.
-function __libbash__show_error() {
-  printf "%s \e[91mERROR\e[0m %s: %s\n" \
-    "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${SCRIPT:-$(basename "${0}")}" "${*}" >&2
-}
-export -f __libbash__show_error
-
 # ### Exit With Conditions
 #
-# This function will exit when not running interactively or when
-# 'LIBBASH__EXIT_IN_INTERACTIVE_MODE' is set to 'true'.
+# This function will call `exit` when not running interactively
+# or when 'LIBBASH__EXIT_IN_INTERACTIVE_MODE' is set to 'true'.
+# Otherwise, it calls `return`.
 #
 # #### Arguments
 #
 # $1 :: the return code (optional, default=1)
-function __libbash__exit_checked() {
+function libbash__exit_checked() {
   local CODE=${1:-1}
   local METHOD='return'
 
@@ -197,11 +199,22 @@ function __libbash__exit_checked() {
   if [[ ${CODE} =~ ^[0-9]$ ]]; then
     "${METHOD}" "${CODE}"
   else
-    __libbash__show_error "Supplied non-number code ('${CODE}') to __libbash__exit_checked"
+    __libbash__show_error "Supplied non-number code ('${CODE}') to libbash__exit_checked"
     "${METHOD}" 1
   fi
 }
-export -f __libbash__exit_checked
+export -f libbash__exit_checked
+
+# ### Show an Error
+#
+# Indicates an error has happened in `libbash`. Used to display
+# errors even when the log module is not (or has not yet been)
+# loaded.
+function __libbash__show_error() {
+  printf "%s \e[91mERROR\e[0m %s: %s\n" \
+    "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${SCRIPT:-$(basename "${0}")}" "${*}" >&2
+}
+export -f __libbash__show_error
 
 # Load the 'cri' module
 function libbash__load_module_cri() {
@@ -229,7 +242,21 @@ function libbash__load_module_log() {
   export LIBBASH__LOG_COLOR_WARN='\e[93m'
   export LIBBASH__LOG_COLOR_ERROR='\e[91m'
 
-  export __LIBBASH__LOG_IS_LOADED=true
+  export LIBBASH__LOG_IS_LOADED=true
+
+  # ### The Actual Logger
+  #
+  # This function is used by `log` to print the messages.
+  function __libbash__log_generic() {
+    local LEVEL=${1:?libbash bug: log level message format must be provided to __libbash__log_generic}
+    local COLOR="LIBBASH__LOG_COLOR_${LEVEL^^}"
+    shift 1
+
+    # shellcheck disable=SC2059
+    printf "%s ${!COLOR}%-5s${LIBBASH__LOG_COLOR_RESET} %s: %s\n" \
+      "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${LEVEL^^}" "${SCRIPT:-$(basename "${0}")}" "${*}"
+  }
+  export -f __libbash__log_generic
 
   # ### The Logging Functions
   #
@@ -237,43 +264,33 @@ function libbash__load_module_log() {
   # expect from a log function: you provide the log level as the
   # first argument and the message in the consecutive ones. The
   # default log level is 'info'. The global log level is defined
-  # in the
+  # in the `LOG_LEVEL` variables. The global variable `SCRIPT`
+  # defines a prefix of the message that is being logged.
   #
   # #### Log Level
   #
   # The provided log level, as well as the environment variable
-  # `LOG_LEVEL`, Can be one of
+  # `LOG_LEVEL`, can be one of
   #
-  #   meaning - what to log
-  #   -------------------------------------------------
-  #   trace   - log trace information
-  #   debug   - log debug information
-  #   info    - log informational output
-  #   warn    - log warnings
-  #   error   - log critical errors and aborts
+  # - trace (log all messages)
+  # - debug
+  # - info
+  # - warn
+  # - error
+  # - off (log no messages)
   #
-  # where a higher level includes the level below. The
-  # default log level is 'info' (2).
+  # The default log level is 'info'.
   #
   # #### Return Codes
   #
-  # This function is infallible. Hence, it always returns with
-  # return code 0, even when issues appeared.
+  # This function is infallible.
   #
   # #### Arguments
   #
-  # $1 :: log level
-  # $2 :: message (strictly speaking optional, no default / empty string)
+  # $1     :: log level
+  # ${@:1} :: message
   function log() {
-    function __log_generic() {
-      local LEVEL=${1:?libbash bug: log level message format must be provided to __log_generic}
-      local COLOR="LIBBASH__LOG_COLOR_${LEVEL^^}"
-      shift 1
-
-      # shellcheck disable=SC2059
-      printf "%s ${!COLOR}%-5s${LIBBASH__LOG_COLOR_RESET} %s: %s\n" \
-        "$(date +"%Y-%m-%dT%H:%M:%S.%6N%:z" || :)" "${LEVEL^^}" "${SCRIPT:-$(basename "${0}")}" "${*}"
-    }
+    [[ ${LOG_LEVEL:-} == off ]] && return 0
 
     if [[ -z ${1+set} ]]; then
       log 'warn' "'log' called without log level"
@@ -286,13 +303,13 @@ function libbash__load_module_log() {
       return 0
     fi
 
-    local MESSAGE_LOG_LEVEL="${1}"
+    local MESSAGE_LOG_LEVEL=${1}
     shift 1
 
-    # ! scoping of dictionaries beyond `source` / in the global namespace is
-    # ! even more horrendous that normal scoping in Bash - hence, we avoid it
-    declare -A LOG_LEVEL_MAPPING=( ["error"]="0" ["warn"]="1" ["info"]="2" ["debug"]="3" ["trace"]="4" )
-
+    # Scoping of dictionaries beyond `source` / in the global namespace is
+    # even more horrendous that normal scoping in Bash - hence, we avoid it
+    # and put the dictionary here.
+    declare -A LOG_LEVEL_MAPPING=([off]=0 [error]=1 [warn]=2 [info]=3 [debug]=4 [trace]=5 )
     if [[ -z ${LOG_LEVEL_MAPPING[${LOG_LEVEL:=info}]:-} ]]; then
       local OLD_LOG_LEVEL=${LOG_LEVEL}
       export LOG_LEVEL='debug'
@@ -302,12 +319,10 @@ function libbash__load_module_log() {
     [[ ${LOG_LEVEL_MAPPING[${LOG_LEVEL}]} -lt ${LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} ]] && return 0
 
     if [[ ${LOG_LEVEL_MAPPING[${MESSAGE_LOG_LEVEL}]} -lt 2 ]]; then
-      __log_generic "${MESSAGE_LOG_LEVEL}" "${*}" >&2
+      __libbash__log_generic "${MESSAGE_LOG_LEVEL}" "${*}" >&2
     else
-      __log_generic "${MESSAGE_LOG_LEVEL}" "${*}"
+      __libbash__log_generic "${MESSAGE_LOG_LEVEL}" "${*}"
     fi
-
-    return 0
   }
 }
 
