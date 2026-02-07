@@ -8,19 +8,21 @@ set dotenv-load       := false
 
 export ROOT_DIRECTORY := justfile_directory()
 
-# show this help
-@_default:
+[private]
+@default:
 	just --list
 
-# run all tests
-@tests:
-	bash "{{ROOT_DIRECTORY}}/tests/bats_core/bin/bats" \
-		--jobs 2                                       \
-		--no-parallelize-within-files                  \
-		--timing                                       \
-		{{ROOT_DIRECTORY}}/tests/*.bats
+# Run a single or all tests
+test name="":
+	#! /bin/bash
 
-# run a specific test
-@test name:
-	bash "{{ROOT_DIRECTORY}}/tests/bats_core/bin/bats" \
-		--timing {{ROOT_DIRECTORY}}/tests/*-{{name}}.bats
+	if [[ -n "{{name}}" ]]; then
+		bash "{{ROOT_DIRECTORY}}/tests/bats_core/bin/bats" \
+			--timing {{ROOT_DIRECTORY}}/tests/*-{{name}}.bats
+	else
+		bash "{{ROOT_DIRECTORY}}/tests/bats_core/bin/bats" \
+			--jobs 2                                       \
+			--no-parallelize-within-files                  \
+			--timing                                       \
+			{{ROOT_DIRECTORY}}/tests/*.bats
+	fi
