@@ -33,35 +33,6 @@ function setup_file() {
   )
 }
 
-@test "sourcing with parameters succeeds from repository root" {
-  run bash -c 'source libbash "log" "cri"'
-  assert_success
-}
-
-@test "sourcing with parameters succeeds from 'tests/' directory" {
-  (
-    cd "tests/" || exit 1
-    run source ../libbash 'log' 'cri'
-    assert_success
-  )
-}
-
-@test "sourcing with parameters succeeds from '.github/' directory" {
-  (
-    cd ".github/"
-    run source ../libbash 'log' 'cri'
-    assert_success
-  )
-}
-
-@test "sourcing with parameters succeeds from '.github/workflows' directory" {
-  (
-    cd ".github/workflows/"
-    run source ../../libbash 'log' 'cri'
-    assert_success
-  )
-}
-
 @test "sourcing without parameters works" {
   # shellcheck source=../libbash
   source libbash
@@ -94,11 +65,11 @@ function setup_file() {
   # shellcheck source=../libbash
   source libbash
 
-  run libbash__show_call_stack
+  run libbash::debug::show_call_stack
   assert_success
 
   function test_show_call_stack_1 {
-    libbash__show_call_stack
+    libbash::debug::show_call_stack
   }
 
   function test_show_call_stack_2 {
@@ -110,11 +81,11 @@ function setup_file() {
   assert_output --partial 'call stack (most recent call first):'
   assert_output --partial 'test_show_call_stack'
 
-  run __libbash__show_error 'message'
+  run libbash::debug::show_error 'message'
   assert_success
   assert_line --regexp 'ERROR.*message'
 
-  run -127 __libbash__main
+  run -127 __libbash::__main__
   assert_failure
 
   run -127 __libbash__run_preflight_checks
@@ -135,7 +106,7 @@ function setup_file() {
   # shellcheck source=../libbash
   source libbash 'log' 'utils'
   LOG_LEVEL='trace'
-  run libbash__debug
+  run libbash::debug::print_libbash_debug_information
   assert_success
   assert_output --partial 'loaded modules: log utils'
   assert_output --partial 'exit in interactive mode: false'

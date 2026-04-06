@@ -28,16 +28,16 @@ function setup() { source libbash 'log' 'utils' ; }
   assert_success
 }
 
-@test "'split_into_array' works correctly" {
-  run split_into_array
+@test "'libbash::utils::split_into_array' works correctly" {
+  run libbash::utils::split_into_array
   assert_failure
   assert_output --partial 'array name is required'
 
-  run split_into_array FOO
+  run libbash::utils::split_into_array FOO
   assert_failure
   assert_output --partial 'string to split is required'
 
-  local PREFIX="export LOG_LEVEL=error ; source libbash 'log' 'utils' ; split_into_array FOO"
+  local PREFIX="export LOG_LEVEL=error ; source libbash 'log' 'utils' ; libbash::utils::split_into_array FOO"
   # shellcheck disable=SC2016
   local SUFFIX='; echo "${FOO[*]}"'
 
@@ -90,328 +90,328 @@ function setup() { source libbash 'log' 'utils' ; }
   assert_output 'a b c d'
 }
 
-@test "'line_is_comment_or_blank' works correctly" {
-  run line_is_comment_or_blank '# nkdadjn'
+@test "'libbash::utils::line_is_comment_or_blank' works correctly" {
+  run libbash::utils::line_is_comment_or_blank '# nkdadjn'
   assert_success
-  run line_is_comment_or_blank '    # nkdadjn'
+  run libbash::utils::line_is_comment_or_blank '    # nkdadjn'
   assert_success
-  run line_is_comment_or_blank '    #### nk#dadjn #'
+  run libbash::utils::line_is_comment_or_blank '    #### nk#dadjn #'
   assert_success
-  run line_is_comment_or_blank '#### nkdadjn'
+  run libbash::utils::line_is_comment_or_blank '#### nkdadjn'
   assert_success
-  run line_is_comment_or_blank '// kdawnjd' '//'
+  run libbash::utils::line_is_comment_or_blank '// kdawnjd' '//'
   assert_success
-  run line_is_comment_or_blank '   // kdawnjd' '//'
+  run libbash::utils::line_is_comment_or_blank '   // kdawnjd' '//'
   assert_success
-  run line_is_comment_or_blank '// kdawnj//d' '//'
+  run libbash::utils::line_is_comment_or_blank '// kdawnj//d' '//'
   assert_success
-  run line_is_comment_or_blank '//' '//'
+  run libbash::utils::line_is_comment_or_blank '//' '//'
   assert_success
-  run line_is_comment_or_blank ''
+  run libbash::utils::line_is_comment_or_blank ''
   assert_success
 
-  run line_is_comment_or_blank 'nkdadjn'
+  run libbash::utils::line_is_comment_or_blank 'nkdadjn'
   assert_failure
-  run line_is_comment_or_blank 'n#kdadjn'
+  run libbash::utils::line_is_comment_or_blank 'n#kdadjn'
   assert_failure
-  run line_is_comment_or_blank 'nkdadjn #'
+  run libbash::utils::line_is_comment_or_blank 'nkdadjn #'
   assert_failure
-  run line_is_comment_or_blank '/' '//'
-  assert_failure
-
-  run line_is_comment_or_blank ' '
-  assert_success
-
-  run line_is_comment_or_blank '# '
-  assert_success
-
-  run line_is_comment_or_blank ' #    '
-  assert_success
-
-  run line_is_comment_or_blank ' # ' '//'
+  run libbash::utils::line_is_comment_or_blank '/' '//'
   assert_failure
 
-  run line_is_comment_or_blank ' //' '//'
+  run libbash::utils::line_is_comment_or_blank ' '
   assert_success
 
-  run line_is_comment_or_blank '//  ' '//'
+  run libbash::utils::line_is_comment_or_blank '# '
   assert_success
 
-  run line_is_comment_or_blank ' dnawdjka'
+  run libbash::utils::line_is_comment_or_blank ' #    '
+  assert_success
+
+  run libbash::utils::line_is_comment_or_blank ' # ' '//'
   assert_failure
 
-  run line_is_comment_or_blank 'dnawdjka'
+  run libbash::utils::line_is_comment_or_blank ' //' '//'
+  assert_success
+
+  run libbash::utils::line_is_comment_or_blank '//  ' '//'
+  assert_success
+
+  run libbash::utils::line_is_comment_or_blank ' dnawdjka'
   assert_failure
 
-  run line_is_comment_or_blank 'd#nawdjka'
+  run libbash::utils::line_is_comment_or_blank 'dnawdjka'
+  assert_failure
+
+  run libbash::utils::line_is_comment_or_blank 'd#nawdjka'
   assert_failure
 }
 
-@test "'escape' works correctly" {
+@test "'libbash::utils::escape' works correctly" {
   set -E
   shopt -s inherit_errexit
 
-  run escape 'abc.bca' '.'
+  run libbash::utils::escape 'abc.bca' '.'
   assert_output 'abc\.bca'
 
-  run escape 'abc.b.ca' '.'
+  run libbash::utils::escape 'abc.b.ca' '.'
   assert_output 'abc\.b\.ca'
 
-  run escape 'abcbca' '.'
+  run libbash::utils::escape 'abcbca' '.'
   assert_output 'abcbca'
 
-  run escape 'uff' 'f'
+  run libbash::utils::escape 'uff' 'f'
   assert_success
   assert_output 'u\f\f'
 
   # shellcheck disable=SC1003
-  run escape 'dka' '\\'
+  run libbash::utils::escape 'dka' '\\'
   assert_failure
   assert_output --partial 'Escape character is not allowed to be or contain a backslash'
-  assert_output --partial "(use 'escape_backslash')"
+  assert_output --partial "(use 'libbash::utils::escape_backslash')"
 
-  run escape
+  run libbash::utils::escape
   assert_failure
-  assert_output --partial 'No string to be escaped provided'
+  assert_output --partial 'No string to be libbash::utils::escaped provided'
 
-  run escape 'dka'
+  run libbash::utils::escape 'dka'
   assert_failure
-  assert_output --partial 'No escape character(s) provided'
+  assert_output --partial 'No libbash::utils::escape character(s) provided'
 }
 
-@test "'escape_backslash' works correctly" {
+@test "'libbash::utils::escape_backslash' works correctly" {
   # shellcheck disable=SC1003
-  run escape_backslash '\'
+  run libbash::utils::escape_backslash '\'
   # shellcheck disable=SC1003
   assert_output '\\'
 
   # shellcheck disable=SC1003
-  run escape_backslash '\\'
+  run libbash::utils::escape_backslash '\\'
   # shellcheck disable=SC1003
   assert_output '\\\\'
 
   # shellcheck disable=SC1003
-  run escape_backslash '\ \\'
+  run libbash::utils::escape_backslash '\ \\'
   # shellcheck disable=SC1003
   assert_output '\\ \\\\'
 
   # shellcheck disable=SC1003
-  run escape_backslash '\'
+  run libbash::utils::escape_backslash '\'
   assert_success
   # shellcheck disable=SC1003
   assert_output '\\'
 
   # shellcheck disable=SC1003
-  run escape_backslash '\\'
+  run libbash::utils::escape_backslash '\\'
   assert_success
   # shellcheck disable=SC1003
   assert_output '\\\\'
 
-  run escape_backslash 'a'
+  run libbash::utils::escape_backslash 'a'
   assert_success
   assert_output 'a'
 
-  run escape_backslash '\a'
+  run libbash::utils::escape_backslash '\a'
   assert_success
   assert_output '\\a'
 
   # shellcheck disable=SC1003
-  run escape_backslash 'a\'
+  run libbash::utils::escape_backslash 'a\'
   assert_success
   # shellcheck disable=SC1003
   assert_output 'a\\'
 
-  run escape_backslash 'a\a'
+  run libbash::utils::escape_backslash 'a\a'
   assert_success
   assert_output 'a\\a'
 
-  run escape_backslash 'a\\\aa'
+  run libbash::utils::escape_backslash 'a\\\aa'
   assert_success
   assert_output 'a\\\\\\aa'
 }
 
 @test "exit wrappers work correctly" {
-  run exit_success
+  run libbash::utils::exit_success
   assert_success
 
-  run exit_failure 1
+  run libbash::utils::exit_failure 1
   assert_failure 1
 
-  run exit_failure 2
+  run libbash::utils::exit_failure 2
   assert_failure 2
 
-  run exit_failure 0
+  run libbash::utils::exit_failure 0
   assert_failure 1
-  assert_output --partial "'exit_failure' was called with exit code 0 or >127"
+  assert_output --partial "'libbash::utils::exit_failure' was called with exit code 0 or >127"
 
-  run exit_failure a
+  run libbash::utils::exit_failure a
   assert_failure 1
-  assert_output --partial "'exit_failure' was called with non-number exit code"
+  assert_output --partial "'libbash::utils::exit_failure' was called with non-number exit code"
 
-  run exit_failure 2 'oh my god!'
+  run libbash::utils::exit_failure 2 'oh my god!'
   assert_failure 2
   assert_output --partial 'oh my god!'
 
-  function test_exit_failure_show_callstack
+  function test_libbash::utils::exit_failure_show_callstack
   {
-    exit_failure_show_callstack 4 'noooooo'
+    libbash::utils::exit_failure_show_callstack 4 'noooooo'
   }
 
-  run test_exit_failure_show_callstack
+  run test_libbash::utils::exit_failure_show_callstack
   assert_failure 4
   assert_output --partial 'call stack (most recent call first):'
-  assert_output --partial 'exit_failure_show_callstack'
+  assert_output --partial 'libbash::utils::exit_failure_show_callstack'
   assert_output --partial 'noooooo'
 }
 
 @test "return wrappers work correctly" {
-  run return_success
+  run libbash::utils::return_success
   assert_success
 
-  run return_failure 1
+  run libbash::utils::return_failure 1
   assert_failure 1
 
-  run return_failure 2
+  run libbash::utils::return_failure 2
   assert_failure 2
 
-  run return_failure 0
+  run libbash::utils::return_failure 0
   assert_failure 1
-  assert_output --partial "'return_failure' was called with exit code 0 or >127"
+  assert_output --partial "'libbash::utils::return_failure' was called with exit code 0 or >127"
 
-  run return_failure a
+  run libbash::utils::return_failure a
   assert_failure 1
-  assert_output --partial "'return_failure' was called with non-number exit code"
+  assert_output --partial "'libbash::utils::return_failure' was called with non-number exit code"
 
-  run return_failure 2 'Hey :D'
+  run libbash::utils::return_failure 2 'Hey :D'
   assert_failure
   assert_output --partial 'Hey :D'
 }
 
-@test "'var_is_set' works correctly" {
-  run var_is_set
+@test "'libbash::utils::var_is_set' works correctly" {
+  run libbash::utils::var_is_set
   assert_failure
 
   unset __DEFINITELY_UNSET__
-  run var_is_set __DEFINITELY_UNSET__
+  run libbash::utils::var_is_set __DEFINITELY_UNSET__
   assert_failure
 
   export __DEFINITELY_SET__=
-  run var_is_set __DEFINITELY_SET__
+  run libbash::utils::var_is_set __DEFINITELY_SET__
   assert_success
 
   export __DEFINITELY_SET__='somevalue'
-  run var_is_set __DEFINITELY_SET__
+  run libbash::utils::var_is_set __DEFINITELY_SET__
   assert_success
 }
 
-@test "'var_is_set_and_not_empty' works correctly" {
-  run var_is_set_and_not_empty
+@test "'libbash::utils::var_is_set_and_not_empty' works correctly" {
+  run libbash::utils::var_is_set_and_not_empty
   assert_failure
 
   unset __DEFINITELY_UNSET__
-  run var_is_set_and_not_empty __DEFINITELY_UNSET__
+  run libbash::utils::var_is_set_and_not_empty __DEFINITELY_UNSET__
   assert_failure
 
   export __DEFINITELY_SET__=
-  run var_is_set_and_not_empty __DEFINITELY_SET__
+  run libbash::utils::var_is_set_and_not_empty __DEFINITELY_SET__
   assert_failure
 
   export __DEFINITELY_SET__='somevalue'
-  run var_is_set __DEFINITELY_SET__
+  run libbash::utils::var_is_set __DEFINITELY_SET__
   assert_success
 }
 
-@test "'parameter_is_not_empty' works correctly" {
-  run parameter_is_not_empty
+@test "'libbash::utils::parameter_is_not_empty' works correctly" {
+  run libbash::utils::parameter_is_not_empty
   assert_failure
 
-  run parameter_is_not_empty ''
+  run libbash::utils::parameter_is_not_empty ''
   assert_failure
 
-  run parameter_is_not_empty 'a'
+  run libbash::utils::parameter_is_not_empty 'a'
   assert_success
 }
 
-@test "'ask_question' works correctly" {
+@test "'libbash::utils::ask_question' works correctly" {
   TEST_STRING='no one knows'
 
-  run ask_question
+  run libbash::utils::ask_question
   assert_failure
   assert_output --partial 'No question provided'
 
-  run ask_question 'Is P=NP?'
+  run libbash::utils::ask_question 'Is P=NP?'
   assert_failure
   assert_output --partial 'No variable to store result in provided'
 
-  ask_question 'Is P=NP' TEST_VARIABLE <<< "${TEST_STRING}"
+  libbash::utils::ask_question 'Is P=NP' TEST_VARIABLE <<< "${TEST_STRING}"
   [[ ${TEST_VARIABLE} == "${TEST_STRING}" ]]
 
-  ask_question 'Is P=NP' TEST_VARIABLE <<< ""
+  libbash::utils::ask_question 'Is P=NP' TEST_VARIABLE <<< ""
   [[ -z ${TEST_VARIABLE} ]]
 }
 
-@test "'ask_yes_no_question' works correctly" {
+@test "'libbash::utils::ask_yes_no_question' works correctly" {
   TEST_STRING='no one knows'
 
-  run ask_yes_no_question
+  run libbash::utils::ask_yes_no_question
   assert_failure
   assert_output --partial 'No question provided'
 
   # default = no
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' <<< ''"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' <<< ''"
   assert_failure
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< ''"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' y <<< ''"
   assert_success
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'y'"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' y <<< 'y'"
   assert_success
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' n <<< 'y'"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' n <<< 'y'"
   assert_success
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' n <<< 'yes'"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' n <<< 'yes'"
   assert_success
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'Yes'"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' y <<< 'Yes'"
   assert_success
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'Y'"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' y <<< 'Y'"
   assert_success
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' n <<< 'Y'"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' n <<< 'Y'"
   assert_success
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'n'"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' y <<< 'n'"
   assert_failure
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'N'"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' y <<< 'N'"
   assert_failure
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'no'"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' y <<< 'no'"
   assert_failure
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' y <<< 'No'"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' y <<< 'No'"
   assert_failure
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' jibberish <<< 'y'"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' jibberish <<< 'y'"
   assert_success
 
-  run bash -c "source libbash 'log' 'utils' ; ask_yes_no_question 'Is P=NP' jibberish <<< 'n'"
+  run bash -c "source libbash 'log' 'utils' ; libbash::utils::ask_yes_no_question 'Is P=NP' jibberish <<< 'n'"
   assert_failure
 }
 
 @test "executble in PATH checks work correctly" {
-  run is_in_path nadwadkwdnakdnwndakwdnakdnwdnakwdnakjwdnakwjda
+  run libbash::utils::is_in_path nadwadkwdnakdnwndakwdnakdnwdnakwdnakjwdnakwjda
   assert_failure
 
-  run is_in_path ls
+  run libbash::utils::is_in_path ls
   assert_success
 
-  run is_not_in_path nadwadkwdnakdnwndakwdnakdnwdnakwdnakjwdnakwjda
+  run libbash::utils::is_not_in_path nadwadkwdnakdnwndakwdnakdnwdnakwdnakjwdnakwjda
   assert_success
 
-  run is_not_in_path ls
+  run libbash::utils::is_not_in_path ls
   assert_failure
 }
 
@@ -420,40 +420,40 @@ function setup() { source libbash 'log' 'utils' ; }
   rm -rf "${TEST_DIR}"
   mkdir -p "${TEST_DIR}"
 
-  run dir_is_empty "${TEST_DIR}"
+  run libbash::utils::dir_is_empty "${TEST_DIR}"
   assert_success
 
-  run dir_is_not_empty "${TEST_DIR}"
+  run libbash::utils::dir_is_not_empty "${TEST_DIR}"
   assert_failure
 
   touch "${TEST_DIR}/test_file"
 
-  run dir_is_empty "${TEST_DIR}"
+  run libbash::utils::dir_is_empty "${TEST_DIR}"
   assert_failure
 
-  run dir_is_not_empty "${TEST_DIR}"
+  run libbash::utils::dir_is_not_empty "${TEST_DIR}"
   assert_success
 
   rm "${TEST_DIR}/test_file"
   mkdir "${TEST_DIR}/test_dir_2"
 
-  run dir_is_empty "${TEST_DIR}"
+  run libbash::utils::dir_is_empty "${TEST_DIR}"
   assert_failure
 
-  run dir_is_not_empty "${TEST_DIR}"
+  run libbash::utils::dir_is_not_empty "${TEST_DIR}"
   assert_success
 
   rmdir "${TEST_DIR}/test_dir_2"
   touch "${TEST_DIR}/.hidden_file"
 
-  run dir_is_empty "${TEST_DIR}"
+  run libbash::utils::dir_is_empty "${TEST_DIR}"
   assert_failure
 
-  run dir_is_not_empty "${TEST_DIR}"
+  run libbash::utils::dir_is_not_empty "${TEST_DIR}"
   assert_success
 }
 
-@test "value_is_true should work" {
+@test "libbash::utils::value_is_true should work" {
   # shellcheck disable=SC2034
   local                       \
     SHOULD_BE_TRUE_1='TRUE'   \
@@ -477,60 +477,60 @@ function setup() { source libbash 'log' 'utils' ; }
     SHOULD_BE_FALSE_5='no'    \
     SHOULD_BE_FALSE_6='ye'
 
-  run value_is_true SHOULD_BE_TRUE_1
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_1
   assert_success
 
-  run value_is_true SHOULD_BE_TRUE_2
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_2
   assert_success
 
-  run value_is_true SHOULD_BE_TRUE_3
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_3
   assert_success
 
-  run value_is_true SHOULD_BE_TRUE_4
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_4
   assert_success
 
-  run value_is_true SHOULD_BE_TRUE_5
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_5
   assert_success
 
-  run value_is_true SHOULD_BE_TRUE_6
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_6
   assert_success
 
-  run value_is_true SHOULD_BE_TRUE_7
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_7
   assert_success
 
-  run value_is_true SHOULD_BE_TRUE_8
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_8
   assert_success
 
-  run value_is_true SHOULD_BE_TRUE_9
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_9
   assert_success
 
-  run value_is_true SHOULD_BE_TRUE_10
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_10
   assert_success
 
-  run value_is_true SHOULD_BE_TRUE_11
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_11
   assert_success
 
-  run value_is_true SHOULD_BE_TRUE_12
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_12
   assert_success
 
-  run value_is_true SHOULD_BE_TRUE_13
+  run libbash::utils::value_is_true SHOULD_BE_TRUE_13
   assert_success
 
-  run value_is_true SHOULD_BE_FALSE_1
+  run libbash::utils::value_is_true SHOULD_BE_FALSE_1
   assert_failure
 
-  run value_is_true SHOULD_BE_FALSE_2
+  run libbash::utils::value_is_true SHOULD_BE_FALSE_2
   assert_failure
 
-  run value_is_true SHOULD_BE_FALSE_3
+  run libbash::utils::value_is_true SHOULD_BE_FALSE_3
   assert_failure
 
-  run value_is_true SHOULD_BE_FALSE_4
+  run libbash::utils::value_is_true SHOULD_BE_FALSE_4
   assert_failure
 
-  run value_is_true SHOULD_BE_FALSE_5
+  run libbash::utils::value_is_true SHOULD_BE_FALSE_5
   assert_failure
 
-  run value_is_true SHOULD_BE_FALSE_6
+  run libbash::utils::value_is_true SHOULD_BE_FALSE_6
   assert_failure
 }

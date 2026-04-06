@@ -42,9 +42,9 @@ body:
     attributes:
       label: Which module is affected by this bug?
       options:
-        - cri
         - errors
         - log
+        - utils
     validations:
       required: true
 

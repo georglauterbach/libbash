@@ -22,13 +22,15 @@ source "$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")/libbash")" 'errors' 'log'
 SCRIPT='some script'
 ```
 
+## Conventions
+
+`libbash` loads functions from modules with the following naming convention: A function from the `utils` modules called `exit_checked` is loaded as `libbash::utils::exit_checked`. Certain modules (especially `errors`) export functions like `libbash::errors::__apply_shell_expansion__`. Functions whose names begin and end with `__` are not supposed to be used nor altered by you. They are used internally by `libbash`. You can get a list of all functions loaded by `libbash` by running `declare -F | grep libbash`.
+
+`libbash` also loads environment variables. You can get a list of all environment variables loaded by `libbash` by running `env | grep -i ^LIBBASH__`.
+
 ## Modules
 
 When you load `libbash`, you don't have to use all the code that `libbash` actually contains. `libbash` provides different modules. When you source the `load` script, you can provide the modules you would like to use as arguments.
-
-### `cri`
-
-This module provides the `setup_container_runtime` function to detect the container runtime. It will set the `CRI` variable to `docker` or `podman` or return with exit status 1 if no container runtime could be identified.
 
 ### `errors`
 
@@ -50,7 +52,7 @@ The log level itself can be changed anytime by setting `LOG_LEVEL` to one of the
 
 ### `utils`
 
-This module provides various miscellaneous functions, like `escape` to escape characters or `exit_failure` to exit with an error. Take a look at the function `__libbash__load_module_utils` in [`libbash`](./libbash) to see all the functions in this module.
+This module provides various miscellaneous functions, like `libbash::utils::escape` to libbash::utils::escape characters or `libbash::utils::exit_failure` to exit with an error. Take a look at the function `__libbash::__load_module__::utils` in [`libbash`](./libbash) to see all the functions in this module.
 
 ## Environment Variables
 

@@ -18,7 +18,7 @@ function setup_file() {
 
   run bash -c 'source libbash "errors" ; trap ;'
   assert_success
-  assert_output --regexp 'log_unexpected_error.*ERR'
+  assert_output --regexp 'libbash::errors::__log_unexpected_error__.*ERR'
 }
 
 @test "module is correctly sourced with other modules" {
@@ -26,65 +26,65 @@ function setup_file() {
   assert_success
 }
 
-@test "'escape_newlines' works" {
+@test "'libbash::utils::escape_newlines' works" {
   export LOG_LEVEL='error'
   # shellcheck source=../libbash
   source libbash 'errors'
   trap - ERR
 
-  run remove_newlines
+  run libbash::errors::__remove_newlines__
   assert_success
   assert_output 'unknown'
 
-  run remove_newlines $'a\nb\nc'
+  run libbash::errors::__remove_newlines__ $'a\nb\nc'
   assert_success
   assert_output 'a b c'
 
-  run remove_newlines $'These\nare\nlines'
+  run libbash::errors::__remove_newlines__ $'These\nare\nlines'
   assert_success
   assert_output 'These are lines'
 
   # shellcheck disable=SC2016
-  run remove_newlines $'These\nare\nlines $(and a command)'
+  run libbash::errors::__remove_newlines__ $'These\nare\nlines $(and a command)'
   assert_success
   # shellcheck disable=SC2016
   assert_output 'These are lines $(and a command)'
 }
 
-@test "'apply_shell_expansion' works" {
+@test "'libbash::errors::__apply_shell_expansion__' works" {
   export LOG_LEVEL='error'
   # shellcheck source=../libbash
   source libbash 'errors'
   trap - ERR
 
-  run apply_shell_expansion
+  run libbash::errors::__apply_shell_expansion__
   assert_success
   assert_output 'unknown'
 
-  run apply_shell_expansion 'some String'
+  run libbash::errors::__apply_shell_expansion__ 'some String'
   assert_success
   assert_output 'some String'
 
   # shellcheck disable=SC2016
-  run apply_shell_expansion '$(eval date)'
+  run libbash::errors::__apply_shell_expansion__ '$(eval date)'
   assert_success
   # shellcheck disable=SC2016
   assert_output '$(eval date)'
 
   export __SOME_VAR='This is a message'
   # shellcheck disable=SC2016
-  run apply_shell_expansion 'Message: ${__SOME_VAR}'
+  run libbash::errors::__apply_shell_expansion__ 'Message: ${__SOME_VAR}'
   assert_success
   assert_output 'Message: This is a message'
 
   # shellcheck disable=SC2016
-  run apply_shell_expansion '$(${__SOME_VAR})'
+  run libbash::errors::__apply_shell_expansion__ '$(${__SOME_VAR})'
   assert_success
   # shellcheck disable=SC2016
   assert_output '$(This is a message)'
 
   # shellcheck disable=SC2016
-  run apply_shell_expansion '${__SOME_VAR}; $(eval date)'
+  run libbash::errors::__apply_shell_expansion__ '${__SOME_VAR}; $(eval date)'
   assert_success
   # shellcheck disable=SC2016
   assert_output 'This is a message; $(eval date)'
