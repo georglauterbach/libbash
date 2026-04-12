@@ -1,6 +1,6 @@
 # libbash
 
-[![Unit Tests](https://img.shields.io/github/actions/workflow/status/georglauterbach/libbash/test-bats.yml?branch=main&color=blue&label=UNIT%20TESTS&logo=github&logoColor=white&style=for-the-badge)](https://github.com/georglauterbach/libbash/actions/workflows/test-bats.yml) [![Linters](https://img.shields.io/github/actions/workflow/status/georglauterbach/libbash/linting.yml?branch=main&color=blue&label=LINTERS&logo=github&logoColor=white&style=for-the-badge)](https://github.com/georglauterbach/libbash/actions/workflows/linting.yml)
+[![Unit Tests](https://img.shields.io/github/actions/workflow/status/georglauterbach/libbash/test.yml?branch=main&color=blue&label=TESTS&logo=github&logoColor=white&style=for-the-badge)](https://github.com/georglauterbach/libbash/actions/workflows/test.yml) [![Linters](https://img.shields.io/github/actions/workflow/status/georglauterbach/libbash/lint.yml?branch=main&color=blue&label=LINTERS&logo=github&logoColor=white&style=for-the-badge)](https://github.com/georglauterbach/libbash/actions/workflows/lint.yml)
 
 ## About
 
