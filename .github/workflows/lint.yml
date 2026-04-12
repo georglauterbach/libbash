@@ -1,52 +1,37 @@
 ---
-name: Linting
+name: Lint
+run-name: Lint
 
-on:
-  pull_request:
+on: # yamllint disable-line rule:truthy
+  workflow_dispatch:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ '**' ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
 
 permissions:
   contents: read
 
-env:
-  IMAGE_TAG_EC: v3.6.0
-  IMAGE_TAG_SC: v0.11.0
-
 jobs:
-  EditorConfig:
-    runs-on: ubuntu-24.04
+  lint_all:
+    name: Lint
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          persist-credentials: false
 
-      - name: Run the Linter
-        run: |
-          docker run --rm --tty                                         \
-            --volume "${GITHUB_WORKSPACE}:/editorconfig:ro"             \
-            --workdir '/editorconfig'                                   \
-            "docker.io/mstruebing/editorconfig-checker:${IMAGE_TAG_EC}" \
-            ec -config .editorconfig.json
-
-  ShellCheck:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - name: Run Linter
+        uses: georglauterbach/linter@v0.2.1
         with:
-          fetch-depth: 0
-
-      - name: Run the Linter
-        run: |
-          set -e -u -o pipefail
-
-          readarray -d '' FILES < <(find tests/ -maxdepth 1 -type f -iregex '.*\.bats' -print0)
-          FILES+=('libbash')
-
-          docker run --rm --tty                                    \
-            --volume "${GITHUB_WORKSPACE}:/shellcheck:ro"          \
-            --workdir '/shellcheck'                                \
-            "docker.io/koalaman/shellcheck-alpine:${IMAGE_TAG_SC}" \
-            shellcheck --rcfile=.shellcheckrc "${FILES[@]}"
+          shellcheck_config: .github/linter/shellcheck.conf

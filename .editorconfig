@@ -15,8 +15,11 @@ insert_final_newline = true
 charset              = utf-8
 indent_style         = space
 indent_size          = 2
-tab_width            = 4
+tab_width            = 2
 insert_final_newline = true
+
+[.gitmodules]
+indent_style         = tab
 
 [Justfile]
 indent_style         = tab

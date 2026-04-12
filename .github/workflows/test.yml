@@ -1,24 +1,33 @@
 ---
-name: Testing
+name: Test
+run-name: Test
 
-on:
+on: # yamllint disable-line rule:truthy
   workflow_dispatch:
   push:
     branches: ['**']
     paths:
-      - modules/**
       - tests/**
       - libbash
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
-  BATS:
-    name: Run BATS
+  bats:
+    name: BATS
     runs-on: ubuntu-22.04
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
           submodules: recursive
+          persist-credentials: false
 
       - name: Run test suite
         run: bash tests/bats_core/bin/bats --jobs 2 --no-parallelize-within-files --timing tests/*.bats
