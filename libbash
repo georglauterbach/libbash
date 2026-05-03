@@ -45,7 +45,7 @@ function libbash::__main__() {
   LIBBASH__DIRECTORY=$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")
   LIBBASH__EXIT_IN_INTERACTIVE_MODE=${LIBBASH__EXIT_IN_INTERACTIVE_MODE:-false}
   LIBBASH__LOADED_MODULES=()
-  LIBBASH__VERSION=11.0.0
+  LIBBASH__VERSION=12.1.0
   LIBBASH__LOG__DATE_FORMAT_SPECIFIER=%Y-%m-%dT%H:%M:%S%:z
 
   # ! export all variables here first, even if not
