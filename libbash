@@ -185,9 +185,9 @@ export -f libbash::debug::show_call_stack
 # errors even when the log module is not (or has not yet been)
 # loaded.
 function libbash::debug::show_error() {
-  printf "%s \e[91mERROR\e[0m %s: %s\n"                 \
+  printf "%s \e[91mERROR\e[0m %s: %s\n"                      \
     "$(date +"${LIBBASH__LOG__DATE_FORMAT_SPECIFIER}" || :)" \
-    "${SCRIPT:-$(basename "${0}")}"                     \
+    "${SCRIPT:-$(basename "${0}")}"                          \
     "${*}" >&2
 }
 export -f libbash::debug::show_error
@@ -213,7 +213,7 @@ function libbash::__load_module__::log() {
 
     # shellcheck disable=SC2059
     printf "%s ${!COLOR}%-5s${LIBBASH__LOG__COLOR_RESET} %s: %s\n" \
-      "$(date +"${LIBBASH__LOG__DATE_FORMAT_SPECIFIER}" || :)"          \
+      "$(date +"${LIBBASH__LOG__DATE_FORMAT_SPECIFIER}" || :)"     \
       "${LEVEL^^}"                                                 \
       "${SCRIPT:-$(basename "${0}")}"                              \
       "${*}"
