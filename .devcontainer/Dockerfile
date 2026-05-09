@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:25.10
+FROM docker.io/ubuntu:26.04
 
 # We accept the following hadolint issues because
 # this is a Development Container.
