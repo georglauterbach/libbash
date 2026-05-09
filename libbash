@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# libbash 12.1.0 - a collection of useful functions for your Bash scripts
+# libbash 12.1.1 - a collection of useful functions for your Bash scripts
 #
 # Copyright (C) Georg Lauterbach
 # GitHub: https://github.com/georglauterbach/libbash
@@ -45,7 +45,7 @@ function libbash::__main__() {
   LIBBASH__DIRECTORY=$(realpath -eL "$(dirname "${BASH_SOURCE[0]}")")
   LIBBASH__EXIT_IN_INTERACTIVE_MODE=${LIBBASH__EXIT_IN_INTERACTIVE_MODE:-false}
   LIBBASH__LOADED_MODULES=()
-  LIBBASH__VERSION=12.1.0
+  LIBBASH__VERSION=12.1.1
   LIBBASH__LOG__DATE_FORMAT_SPECIFIER=%Y-%m-%dT%H:%M:%S%:z
 
   # ! export all variables here first, even if not
