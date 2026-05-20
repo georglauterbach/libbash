@@ -1,11 +1,10 @@
 #! /usr/bin/env bash
 
-# libbash 12.1.1 - a collection of useful functions for your Bash scripts
-#
-# Copyright (C) Georg Lauterbach
-# GitHub: https://github.com/georglauterbach/libbash
-#
-# ---
+# Copyright (c) 2024 - PRESENT Georg Lauterbach
+# MIT License
+# https://github.com/georglauterbach/libbash
+
+# A collection of useful functions for your Bash scripts
 #
 # `libbash` loads functions from modules with the following naming convention:
 # A function from the `utils` modules called `exit_checked` is loaded as
@@ -19,7 +18,6 @@
 # environment variables loaded by `libbash` by running `env | grep -i ^LIBBASH__`.
 
 # cSpell: ignore Georg Lauterbach
-
 # shellcheck disable=SC2329
 
 # Ensure this script is available as a whole (e.g., when downloaded)
