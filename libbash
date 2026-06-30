@@ -92,7 +92,7 @@ function libbash::__main__() {
 
   LIBBASH__IS_LOADED=true
   libbash::__finish_loading__ 0
-  libbash::log::log 'trace' "Finished 'libbash ${LIBBASH__VERSION}' initialization"
+  libbash::log::log 'trace' "Finished initialization of libbash ${LIBBASH__VERSION}"
 }
 
 # ### Cleanup
