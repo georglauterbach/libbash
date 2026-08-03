@@ -2,17 +2,6 @@
 version: 2
 
 updates:
-  - package-ecosystem: devcontainers
-    directory: /
-    cooldown:
-      default-days: 7
-    schedule:
-      interval: monthly
-    assignees: [ georglauterbach ]
-    labels:
-      - kind::update
-      - area::infrastructure
-
   - package-ecosystem: github-actions
     directory: /
     cooldown:
@@ -23,3 +12,14 @@ updates:
     labels:
       - kind::update
       - area::ci
+
+  - package-ecosystem: devcontainers
+    directory: /
+    cooldown:
+      default-days: 7
+    schedule:
+      interval: monthly
+    assignees: [ georglauterbach ]
+    labels:
+      - kind::update
+      - area::infrastructure

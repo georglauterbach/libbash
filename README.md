@@ -1,9 +1,5 @@
 # libbash
 
-[![Unit Tests](https://img.shields.io/github/actions/workflow/status/georglauterbach/libbash/test.yml?branch=main&color=blue&label=TESTS&logo=github&logoColor=white&style=for-the-badge)](https://github.com/georglauterbach/libbash/actions/workflows/test.yml) [![Linters](https://img.shields.io/github/actions/workflow/status/georglauterbach/libbash/lint.yml?branch=main&color=blue&label=LINTERS&logo=github&logoColor=white&style=for-the-badge)](https://github.com/georglauterbach/libbash/actions/workflows/lint.yml)
-
-## About
-
 `libbash` is a collection of useful functions, checked by [_ShellCheck_](https://github.com/koalaman/shellcheck) and by [_BATS_](https://github.com/bats-core/bats-core), for your **Bash** scripts. `libbash` is **not** POSIX compatible and supports Bash v5.0.0 or newer.
 
 ## Usage
