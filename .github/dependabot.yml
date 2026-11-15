@@ -10,7 +10,6 @@ updates:
       interval: monthly
     assignees: [ georglauterbach ]
     labels:
-      - kind::update
       - area::ci
 
   - package-ecosystem: devcontainers
@@ -21,5 +20,4 @@ updates:
       interval: monthly
     assignees: [ georglauterbach ]
     labels:
-      - kind::update
       - area::infrastructure
