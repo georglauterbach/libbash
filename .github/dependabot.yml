@@ -9,8 +9,7 @@ updates:
     schedule:
       interval: monthly
     assignees: [ georglauterbach ]
-    labels:
-      - area::ci
+    labels: [ area::ci ]
 
   - package-ecosystem: devcontainers
     directory: /
@@ -19,5 +18,4 @@ updates:
     schedule:
       interval: monthly
     assignees: [ georglauterbach ]
-    labels:
-      - area::infrastructure
+    labels: [ area::infrastructure ]
